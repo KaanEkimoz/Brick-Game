@@ -4,10 +4,12 @@ public class Tetromino : MonoBehaviour
 {//Subject
     public static event Action<Tetromino> OnLanded;
     public static event Action OnLandEnded;
-    float fallTimer;
+    
+    private float _fallTimer;
     public float timeBetweenFallsInSeconds = 1;
     public bool canAutoFall = true;
     public bool allowRotation = true;
+    public bool isTetrominoI;
     [HideInInspector] public bool isLanded;
     void Update()
     {
@@ -18,38 +20,47 @@ public class Tetromino : MonoBehaviour
     }
     void CheckUserInput()
     {
-        if (Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKey(KeyCode.S))
             MoveToTheDirection(Vector3.down);
 
         if (Input.GetKeyDown(KeyCode.R) && allowRotation)
-            Rotate();
+            RotateTheTetromino();
 
         if (Input.GetKeyDown(KeyCode.A))
             MoveToTheDirection(Vector3.left);
         if (Input.GetKeyDown(KeyCode.D))
             MoveToTheDirection(Vector3.right);
     }
-    private void Rotate()
+    private void RotateTheTetromino()
     {
         transform.Rotate(0, 0, -90);
         foreach (Transform mino in transform)
         {
-            if (Grid.GameGrid.IsPositionFilled(mino.position))
+            if (isTetrominoI)
+            {
+                if (transform.rotation.eulerAngles.z == 270 || transform.rotation.eulerAngles.z == 90)
+                {
+                    //GameGrid.GameGridInstance.IsPositionFilled(Round)
+                }
+            }
+            //After rotating it, if any mino is not inside the grid; shifts the all the minos (up, right or left)
+            if (GameGrid.GameGridInstance.CheckIsInsideGrid(mino.position) == false)
+            {
+                if (mino.position.y < GameGrid.GridPosition.y)
+                    transform.position += Vector3.up;
+
+                if (mino.position.x < GameGrid.GridPosition.x)
+                    transform.position += Vector3.right;
+                else if (mino.position.x > GameGrid.GridPosition.x + GameGrid.GridWidth)
+                    transform.position += Vector3.left;
+
+                break;
+            }
+            if(GameGrid.GameGridInstance.IsPositionFilled(mino.position))
             {
                 if(transform.position.x > mino.position.x)
                     transform.position += Vector3.right;
                 else if(transform.position.x < mino.position.x)
-                    transform.position += Vector3.left;
-            }
-            //After rotating it, if any mino is not inside the grid; shifts the all the minos (up, right or left)
-            if (Grid.GameGrid.CheckIsInsideGrid(mino.position) == false)
-            {
-                if (mino.position.y <= Grid.GameGrid.transform.position.y)
-                    transform.position += Vector3.up;
-
-                if (mino.position.x <= Grid.GameGrid.transform.position.x)
-                    transform.position += Vector3.right;
-                else if (mino.position.x >= Grid.GameGrid.transform.position.x + Grid.GridWidth)
                     transform.position += Vector3.left;
             }
         }
@@ -59,12 +70,12 @@ public class Tetromino : MonoBehaviour
         if (IsTimePeriodPassed())
         {
             MoveToTheDirection(Vector3.down);
-            fallTimer = Time.time;
+            _fallTimer = Time.time;
         }
     }
     bool IsTimePeriodPassed()
     {
-        return Time.time - fallTimer >= timeBetweenFallsInSeconds && canAutoFall;
+        return Time.time - _fallTimer >= timeBetweenFallsInSeconds && canAutoFall;
     }
     void MoveToTheDirection(Vector3 pos)
     {
@@ -75,9 +86,9 @@ public class Tetromino : MonoBehaviour
     {
         foreach (Transform mino in transform)
         {
-            Vector3 nextPos = Grid.GameGrid.Round(mino.position + direction);
+            Vector3 nextPos = GameGrid.GameGridInstance.Round(mino.position + direction);
 
-            if (Grid.GameGrid.CheckIsInsideGrid(nextPos) == false || Grid.GameGrid.IsPositionFilled(nextPos) )
+            if (GameGrid.GameGridInstance.CheckIsInsideGrid(nextPos) == false || GameGrid.GameGridInstance.IsPositionFilled(nextPos) )
             {
                 return false;
             }
