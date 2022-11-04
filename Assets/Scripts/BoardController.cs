@@ -1,7 +1,4 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 public class BoardController : MonoBehaviour
 {
@@ -9,25 +6,18 @@ public class BoardController : MonoBehaviour
 
     public GameObject gridUnitPrefab;
     public int gridSizeX, gridSizeY;
-    public bool isSacrificing = false;
-
     public GameObject tetrisText;
-
+    
     private GridUnit[,] fullGrid;
-
     private void Awake()
     {
         Instance = this;
     }
-
     void Start()
     {
         CreateGrid();
         tetrisText.SetActive(false);
     }
-    /// <summary>
-    /// Creates a grid of sized based off of gridSizeX and gridSizeY public variables
-    /// </summary>
     private void CreateGrid()
     {
         fullGrid = new GridUnit[gridSizeX, gridSizeY];
@@ -46,18 +36,10 @@ public class BoardController : MonoBehaviour
     /// </summary>
     /// <param name="coordToTest">The x,y coordinate to test</param>
     /// <returns>Returns true if the coordinate to test is a vaild coordinate on the tetris board</returns>
-    public bool IsInBounds(Vector2Int coordToTest)
+    public bool IsInGrid(Vector2Int coordToTest)
     {
-        if (coordToTest.x < 0 || coordToTest.x >= gridSizeX || coordToTest.y < 0)
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
+        return coordToTest.x >= 0 && coordToTest.x < gridSizeX && coordToTest.y >= 0;
     }
-    
     /// <summary>
     /// Checks to see if a given coordinate is occupied by a tetris piece
     /// </summary>
@@ -65,29 +47,22 @@ public class BoardController : MonoBehaviour
     /// <returns>Returns true if the coordinate is not occupied by a tetris piece</returns>
     public bool IsPosEmpty(Vector2Int coordToTest)
     {
-        if(coordToTest.y >= 20)
+        //if it is not inside of the Grid, it's empty
+        if(coordToTest.y >= gridSizeY)
         {
             return true;
         }
-
-        if(fullGrid[coordToTest.x, coordToTest.y].isOccupied)
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
+        return !fullGrid[coordToTest.x, coordToTest.y].isOccupied;
     }
     /// <summary>
     /// Called when a piece is set in place. Sets the grid location to an occupied state.
     /// </summary>
     /// <param name="coords">The x,y coordinates to be occupied.</param>
-    /// <param name="tileGO">GameObject of the specific tile on this grid location.</param>
-    public void OccupyPos(Vector2Int coords, GameObject tileGO)
+    /// <param name="tileGameObject">GameObject of the specific tile on this grid location.</param>
+    public void OccupyPos(Vector2Int coords, GameObject tileGameObject)
     {
         fullGrid[coords.x, coords.y].isOccupied = true;
-        fullGrid[coords.x, coords.y].tileOnGridUnit = tileGO;
+        fullGrid[coords.x, coords.y].tileOnGridUnit = tileGameObject;
     }
     /// <summary>
     /// Checks line by line from bottom to top to see if that line is full and should be cleared.
@@ -129,7 +104,6 @@ public class BoardController : MonoBehaviour
                 ClearLine(y);
             }
         }
-
         //Once the lines have been cleared, the lines above those will drop to fill in the empty space
         if (linesToClear.Count > 0)
         {
@@ -196,62 +170,8 @@ public class BoardController : MonoBehaviour
             PieceController curPC = fullGrid[x, lineToClear].tileOnGridUnit.GetComponent<TileController>().pieceController;
             curPC.tiles[fullGrid[x, lineToClear].tileOnGridUnit.GetComponent<TileController>().tileIndex] = null;
             Destroy(fullGrid[x, lineToClear].tileOnGridUnit);
-            if (!curPC.AnyTilesLeft()) { Destroy(curPC.gameObject); }
             fullGrid[x, lineToClear].tileOnGridUnit = null;
             fullGrid[x, lineToClear].isOccupied = false;
         }
-    }
-    /// <summary>
-    /// Clears out the references to the piece being occupied on the grid unit,
-    /// then drops all pieces above them by one unit.
-    /// </summary>
-    /// <param name="pieceCoords">Array of coordinates where where the pieces were occupying</param>
-    public void PieceRemoved(Vector2Int[] pieceCoords)
-    {
-        foreach(Vector2Int coords in pieceCoords)
-        {
-            GridUnit curGridUnit = fullGrid[coords.x, coords.y];
-            curGridUnit.tileOnGridUnit = null;
-            curGridUnit.isOccupied = false;
-        }
-
-        for(int i = 0; i < pieceCoords.Length; i++)
-        {
-            for(int y = pieceCoords[i].y + 1; y < gridSizeY; y++)
-            {
-                GridUnit curGridUnit = fullGrid[pieceCoords[i].x, y];
-                if (curGridUnit.isOccupied)
-                {
-                    MoveTileDown(curGridUnit);
-                }
-            }
-        }
-        CheckLineClears();
-    }
-    /// <summary>
-    /// Determines which pieces are unavailable to be 'sacrificed.' Any piece where one tile is at the top of a given
-    /// column is unable to be sacrificed.
-    /// </summary>
-    /// <returns>Returns a list of tiles unable to be sacrificed.</returns>
-    public List<GameObject> GetUnavailablePieces()
-    {
-        List<GameObject> unavaiablePieces = new List<GameObject>();
-
-        for (int x = 0; x < gridSizeX; x++) {
-            for(int y = gridSizeY - 1; y >= 0; y--)
-            {
-                if (fullGrid[x, y].isOccupied)
-                {
-                    GameObject curPC = fullGrid[x, y].tileOnGridUnit.GetComponent<TileController>().pieceController.gameObject;
-                    if (!unavaiablePieces.Any(test => test.GetInstanceID() == curPC.GetInstanceID()))
-                    {
-                        unavaiablePieces.Add(curPC);
-                    }
-                    y = -1;
-                }
-            }
-        }
-        Debug.Log("there are " + unavaiablePieces.Count + " Unavailable pieces");
-        return unavaiablePieces;
     }
 }

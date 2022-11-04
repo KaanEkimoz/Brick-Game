@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
@@ -11,21 +10,16 @@ public class PiecesController : MonoBehaviour {
 
     public GameObject piecePrefab;
     public Vector2Int spawnPos;
-    public float dropTime;
-    public int turnsToSac;
+    public float dropTimeInSeconds;
     public Coroutine dropCurPiece;
     public Vector2Int[,] JLSTZ_OFFSET_DATA { get; private set; }
     public Vector2Int[,] I_OFFSET_DATA { get; private set; }
     public Vector2Int[,] O_OFFSET_DATA { get; private set; }
-    public List<GameObject> piecesInGame;
-    public GameObject pieceToDestroy = null;
-    public GameObject sacText, gameOverText;
+    //public List<GameObject> piecesInGame;
+    public GameObject gameOverText;
 
-    GameObject curPiece = null;
-    PieceController curPieceController = null;
-    List<GameObject> availablePieces;
-
-    int turnCounter;
+    GameObject curPiece;
+    PieceController curPieceController;
 
     /// <summary>
     /// Called as soon as the instance is enabled. Sets the singleton and offset data arrays.
@@ -34,7 +28,6 @@ public class PiecesController : MonoBehaviour {
     {
         Instance = this;
         
-
         JLSTZ_OFFSET_DATA = new Vector2Int[5, 4];
         JLSTZ_OFFSET_DATA[0, 0] = Vector2Int.zero;
         JLSTZ_OFFSET_DATA[0, 1] = Vector2Int.zero;
@@ -99,9 +92,6 @@ public class PiecesController : MonoBehaviour {
     /// </summary>
     private void Start()
     {
-        piecesInGame = new List<GameObject>();
-        availablePieces = new List<GameObject>();
-        sacText.SetActive(false);
         gameOverText.SetActive(false);
     }
 
@@ -132,7 +122,6 @@ public class PiecesController : MonoBehaviour {
             {
                 return;
             }
-            turnCounter = 0;
             SpawnPiece();
         }
         if (Input.GetKeyDown(KeyCode.R)){
@@ -146,19 +135,6 @@ public class PiecesController : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Z))
         {
             curPieceController.RotatePiece(false, true);
-        }
-
-        if (Input.GetButtonDown("Fire1") && pieceToDestroy != null)
-        {
-            turnCounter = 0;
-            sacText.SetActive(false);
-            foreach(GameObject pc in piecesInGame)
-            {
-                pc.GetComponent<PieceController>().EnablePiece();
-            }
-            DestroyPiece();
-            BoardController.Instance.isSacrificing = false;
-            SpawnPiece();
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha0))
@@ -195,12 +171,13 @@ public class PiecesController : MonoBehaviour {
     /// <summary>
     /// Drops the piece the current piece the player is controlling by one unit.
     /// </summary>
-    /// <returns>Function is called on a loop based on the 'dropTime' variable.</returns>
+    /// <returns>Function is called on a loop based on the 'dropTimeInSeconds' variable.</returns>
     IEnumerator DropCurPiece()
-    {     
-        while (!BoardController.Instance.isSacrificing) {
+    {
+        while (true)
+        {
             MoveCurPiece(Vector2Int.down);
-            yield return new WaitForSeconds(dropTime);
+            yield return new WaitForSeconds(dropTimeInSeconds);
         }
     }
 
@@ -209,7 +186,6 @@ public class PiecesController : MonoBehaviour {
     /// </summary>
     public void PieceSet()
     {
-        //if(dropCurPiece == null) { return; }
         StopCoroutine(dropCurPiece);
     }
 
@@ -221,48 +197,16 @@ public class PiecesController : MonoBehaviour {
         PieceSet();
         gameOverText.SetActive(true);
     }
-
-    /// <summary>
-    /// Removes the specified piece from the list of current pieces in the game.
-    /// </summary>
-    /// <param name="pieceToRem">Game Object of the Tetris piece to be removed.</param>
-    public void RemovePiece(GameObject pieceToRem)
-    {
-        piecesInGame.Remove(pieceToRem);
-    }
-
-    /// <summary>
-    /// Makes any necessary changes when destroying a piece.
-    /// </summary>
-    void DestroyPiece()
-    {
-        PieceController curPC = pieceToDestroy.GetComponent<PieceController>();
-        Vector2Int[] tileCoords = curPC.GetTileCoords();
-        RemovePiece(pieceToDestroy);
-        Destroy(pieceToDestroy);
-        BoardController.Instance.PieceRemoved(tileCoords);
-    }
-
     /// <summary>
     /// Spawns a new Tetris piece.
     /// </summary>
     public void SpawnPiece()
-    {     
-        turnCounter++;
-        if(turnCounter >= turnsToSac && CanSacrifice())
-        {
-            Debug.Log("Attempting Sacrifice");
-            sacText.SetActive(true);
-            BoardController.Instance.isSacrificing = true;
-            return;
-        }
+    {
         GameObject localGameObject = Instantiate(piecePrefab, transform);
         curPiece = localGameObject;
         PieceType randPiece = (PieceType)Random.Range(0, 7);        
         curPieceController = curPiece.GetComponent<PieceController>();
         curPieceController.SpawnPiece(randPiece);
-        
-        //piecesInGame.Add(localGameObject);
 
         dropCurPiece = StartCoroutine(DropCurPiece());
     }
@@ -274,32 +218,7 @@ public class PiecesController : MonoBehaviour {
         PieceType randPiece = (PieceType)id;
         curPieceController = curPiece.GetComponent<PieceController>();
         curPieceController.SpawnPiece(randPiece);
-
-        piecesInGame.Add(localGameObject);
     }
-
-    /// <summary>
-    /// Checks to see if the sacrificing operation can be made.
-    /// </summary>
-    /// <returns>True if operation can be made. False if it can't</returns>
-    bool CanSacrifice()
-    {
-        availablePieces.Clear();
-        availablePieces.AddRange(piecesInGame);
-        Debug.Log("there are " + piecesInGame.Count + " total pieces");
-        List<GameObject> unavailablePieces = BoardController.Instance.GetUnavailablePieces();
-        int numAvailablePieces = piecesInGame.Count - unavailablePieces.Count;
-        if(numAvailablePieces < 2) { return false; }
-        foreach (GameObject pc in unavailablePieces)
-        {
-            availablePieces.Remove(pc);
-            pc.GetComponent<PieceController>().DisablePiece();
-        }
-        
-        Debug.Log("there are " + availablePieces.Count + " available pieces");
-        return true;
-    }
-
     /// <summary>
     /// Moves the current piece controlled by the player.
     /// </summary>

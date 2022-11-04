@@ -156,7 +156,6 @@ MonoBehaviour:
     type: 3}
   gridSizeX: 10
   gridSizeY: 20
-  isSacrificing: 0
   tetrisText: {fileID: 1111786589}
 --- !u!4 &279749851
 Transform:
@@ -439,7 +438,7 @@ MonoBehaviour:
   piecePrefab: {fileID: 8166984776352965085, guid: e5b112a1e2354c340ae67380821a6fbb,
     type: 3}
   spawnPos: {x: 4, y: 21}
-  dropTime: 0.25
+  dropTimeInSeconds: 0.75
   turnsToSac: 10
   piecesInGame: []
   pieceToDestroy: {fileID: 0}

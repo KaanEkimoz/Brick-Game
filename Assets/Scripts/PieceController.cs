@@ -1,7 +1,4 @@
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-
 public enum PieceType { O, I, S, Z, L, J, T }
 
 public class PieceController : MonoBehaviour {
@@ -9,12 +6,9 @@ public class PieceController : MonoBehaviour {
     public PieceType curType;
     public Sprite[] tileSprites;
 
-    public int rotationIndex { get; private set; }
-    public int setDelayTime;
-    public bool isDisabledFromSacrifice;
+    public int RotationIndex { get; private set; }
 
     public TileController[] tiles;
-    //Vector2Int spawnLocation = new Vector2Int(4, 21);
     Vector2Int spawnLocation;
 
     /// <summary>
@@ -23,7 +17,7 @@ public class PieceController : MonoBehaviour {
     private void Awake()
     {
         spawnLocation = PiecesController.Instance.spawnPos;
-        rotationIndex = 0;
+        RotationIndex = 0;
 
         tiles = new TileController[4];
         for(int i = 1; i <= tiles.Length; i++)
@@ -40,7 +34,6 @@ public class PieceController : MonoBehaviour {
     /// <param name="newType">Type of tetris piece to be spawned.</param>
     public void SpawnPiece(PieceType newType)
     {
-        isDisabledFromSacrifice = false;
         curType = newType;
         tiles[0].UpdatePosition(spawnLocation);
 
@@ -94,10 +87,6 @@ public class PieceController : MonoBehaviour {
                 tiles[3].UpdatePosition(spawnLocation + Vector2Int.right);
                 SetTileSprites(tileSprites[6]);
                 break;
-
-            default:
-
-                break;
         }
 
         int index = 0;
@@ -107,64 +96,6 @@ public class PieceController : MonoBehaviour {
             index++;
         }
     }
-
-    /// <summary>
-    /// Called when the piece is disabled from being sacrificed. Sets tile sprites gray.
-    /// </summary>
-    public void DisablePiece()
-    {
-        isDisabledFromSacrifice = true;
-        for(int i = 0; i < tiles.Length; i++)
-        {
-            if (tiles[i] == null)
-            {
-                continue;
-            }
-            tiles[i].ShowDisabledSprite();
-        }
-    }
-
-    /// <summary>
-    /// Called after sacrifice operation is complete, sets tile sprite color back to original values.
-    /// </summary>
-    public void EnablePiece()
-    {
-        isDisabledFromSacrifice = false;
-        for (int i = 0; i < tiles.Length; i++)
-        {
-            if (tiles[i] == null)
-            {
-                continue;
-            }
-            tiles[i].ShowOriginalSprite();
-        }
-    }
-
-    /// <summary>
-    /// Gets the coordinates of all active tiles attached to this piece.
-    /// </summary>
-    /// <returns>Returns array of coordinates for currently active tiles on the piece.</returns>
-    public Vector2Int[] GetTileCoords()
-    {
-        List<Vector2Int> curTileCoords = new List<Vector2Int>();
-
-        for (int i = 0; i < tiles.Length; i++)
-        {
-            if (tiles[i] == null)
-            {
-                continue;
-            }
-            curTileCoords.Add(tiles[i].coordinates);
-        }
-        curTileCoords = curTileCoords.OrderBy(x => x.x).ThenByDescending(x => x.y).ToList();
-        foreach(Vector2Int v2i in curTileCoords)
-        {
-            Debug.Log("CurtIle is " + v2i.ToString());
-        }
-        Vector2Int[] curCoords = curTileCoords.ToArray();
-        return curCoords;
-    }
-
     /// <summary>
     /// Sets the sprites of all tiles on this piece
     /// </summary>
@@ -180,7 +111,6 @@ public class PieceController : MonoBehaviour {
             tiles[i].gameObject.GetComponent<SpriteRenderer>().sprite = newSpr;
         }
     }
-
     /// <summary>
     /// Checks if the piece is able to be moved by the specified amount. A piece cannot be moved if there
     /// is already another piece there or the piece would end up out of bounds.
@@ -198,25 +128,6 @@ public class PieceController : MonoBehaviour {
         }
         return true;
     }
-
-    /// <summary>
-    /// Checks to see if there are any tiles left for the given piece.
-    /// </summary>
-    /// <returns>True if there are still tiles left. False if the piece has no remaining tiles.</returns>
-    public bool AnyTilesLeft()
-    {
-        for(int i = 0; i < tiles.Length; i++)
-        {
-            if(tiles[i] != null)
-            {
-                return true;
-            }
-        }
-        Debug.Log("no tiles left");
-        PiecesController.Instance.RemovePiece(gameObject);
-        return false;
-    }
-
     /// <summary>
     /// Moves the piece by the specified amount.
     /// </summary>
@@ -253,9 +164,9 @@ public class PieceController : MonoBehaviour {
     /// <param name="shouldOffset">Set to true if offset operations should be attempted.</param>
     public void RotatePiece(bool clockwise, bool shouldOffset)
     {
-        int oldRotationIndex = rotationIndex;
-        rotationIndex += clockwise ? 1 : -1;
-        rotationIndex = Mod(rotationIndex, 4);
+        int oldRotationIndex = RotationIndex;
+        RotationIndex += clockwise ? 1 : -1;
+        RotationIndex = Mod(RotationIndex, 4);
 
         for(int i = 0; i < tiles.Length; i++)
         {
@@ -268,7 +179,7 @@ public class PieceController : MonoBehaviour {
             return;
         }
 
-        bool canOffset = Offset(oldRotationIndex, rotationIndex);
+        bool canOffset = Offset(oldRotationIndex, RotationIndex);
 
         if (!canOffset)
         {
