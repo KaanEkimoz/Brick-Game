@@ -10,8 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4026427489629804568}
   - component: {fileID: 4026427489629804571}
+  - component: {fileID: 2264945163142584198}
   m_Layer: 0
-  m_Name: T (3)
+  m_Name: Tile4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28,7 +29,7 @@ Transform:
   m_LocalPosition: {x: 0, y: -1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 4026427490633741292}
+  m_Father: {fileID: 9018375194726877483}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &4026427489629804571
@@ -82,6 +83,24 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &2264945163142584198
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4026427489629804569}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 529c122119c60ef40b9bf5e296659210, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  coordinates: {x: 0, y: 0}
+  originalSpr: {fileID: 0}
+  hoverSpr: {fileID: 0}
+  disableSpr: {fileID: 0}
+  pieceController: {fileID: 0}
+  tileIndex: 0
 --- !u!1 &4026427489791603298
 GameObject:
   m_ObjectHideFlags: 0
@@ -92,8 +111,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4026427489791603301}
   - component: {fileID: 4026427489791603300}
+  - component: {fileID: 1052146618359382976}
   m_Layer: 0
-  m_Name: T
+  m_Name: Tile1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -110,7 +130,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 4026427490633741292}
+  m_Father: {fileID: 9018375194726877483}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &4026427489791603300
@@ -164,6 +184,24 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1052146618359382976
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4026427489791603298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 529c122119c60ef40b9bf5e296659210, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  coordinates: {x: 0, y: 0}
+  originalSpr: {fileID: 0}
+  hoverSpr: {fileID: 0}
+  disableSpr: {fileID: 0}
+  pieceController: {fileID: 0}
+  tileIndex: 0
 --- !u!1 &4026427490633741293
 GameObject:
   m_ObjectHideFlags: 0
@@ -173,7 +211,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4026427490633741292}
-  - component: {fileID: -3032223541576558727}
+  - component: {fileID: -6249801619534743663}
   m_Layer: 0
   m_Name: Tetromino_T
   m_TagString: Untagged
@@ -192,14 +230,11 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 4026427489791603301}
-  - {fileID: 4026427490934409656}
-  - {fileID: 4026427490782733324}
-  - {fileID: 4026427489629804568}
+  - {fileID: 9018375194726877483}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-3032223541576558727
+--- !u!114 &-6249801619534743663
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -208,13 +243,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 4026427490633741293}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e6cf066479d85a4ca9f7c4ad6e59249, type: 3}
+  m_Script: {fileID: 11500000, guid: f56e9f7fee9dc5044b1bd6aaeb65a917, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeBetweenFallsInSeconds: 1
-  canAutoFall: 1
-  allowRotation: 1
-  isLanded: 0
+  curType: 0
+  tileSprites: []
+  setDelayTime: 0
+  isDisabledFromSacrifice: 0
+  tiles: []
 --- !u!1 &4026427490782733325
 GameObject:
   m_ObjectHideFlags: 0
@@ -225,8 +261,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4026427490782733324}
   - component: {fileID: 4026427490782733327}
+  - component: {fileID: 7193553640284541909}
   m_Layer: 0
-  m_Name: T (2)
+  m_Name: Tile3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -243,7 +280,7 @@ Transform:
   m_LocalPosition: {x: -1, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 4026427490633741292}
+  m_Father: {fileID: 9018375194726877483}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &4026427490782733327
@@ -297,6 +334,24 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &7193553640284541909
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4026427490782733325}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 529c122119c60ef40b9bf5e296659210, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  coordinates: {x: 0, y: 0}
+  originalSpr: {fileID: 0}
+  hoverSpr: {fileID: 0}
+  disableSpr: {fileID: 0}
+  pieceController: {fileID: 0}
+  tileIndex: 0
 --- !u!1 &4026427490934409657
 GameObject:
   m_ObjectHideFlags: 0
@@ -307,8 +362,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4026427490934409656}
   - component: {fileID: 4026427490934409659}
+  - component: {fileID: 95982443647088811}
   m_Layer: 0
-  m_Name: T (1)
+  m_Name: Tile2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -325,7 +381,7 @@ Transform:
   m_LocalPosition: {x: 1, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 4026427490633741292}
+  m_Father: {fileID: 9018375194726877483}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &4026427490934409659
@@ -379,3 +435,55 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &95982443647088811
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4026427490934409657}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 529c122119c60ef40b9bf5e296659210, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  coordinates: {x: 0, y: 0}
+  originalSpr: {fileID: 0}
+  hoverSpr: {fileID: 0}
+  disableSpr: {fileID: 0}
+  pieceController: {fileID: 0}
+  tileIndex: 0
+--- !u!1 &8995706411876385117
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9018375194726877483}
+  m_Layer: 0
+  m_Name: Tiles
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9018375194726877483
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8995706411876385117}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4026427489791603301}
+  - {fileID: 4026427490934409656}
+  - {fileID: 4026427490782733324}
+  - {fileID: 4026427489629804568}
+  m_Father: {fileID: 4026427490633741292}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
