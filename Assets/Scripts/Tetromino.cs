@@ -36,13 +36,6 @@ public class Tetromino : MonoBehaviour
         transform.Rotate(0, 0, -90);
         foreach (Transform mino in transform)
         {
-            if (isTetrominoI)
-            {
-                if (transform.rotation.eulerAngles.z == 270 || transform.rotation.eulerAngles.z == 90)
-                {
-                    //GameGrid.GameGridInstance.IsPositionFilled(Round)
-                }
-            }
             //After rotating it, if any mino is not inside the grid; shifts the all the minos (up, right or left)
             if (GameGrid.GameGridInstance.CheckIsInsideGrid(mino.position) == false)
             {
@@ -87,7 +80,6 @@ public class Tetromino : MonoBehaviour
         foreach (Transform mino in transform)
         {
             Vector3 nextPos = GameGrid.GameGridInstance.Round(mino.position + direction);
-
             if (GameGrid.GameGridInstance.CheckIsInsideGrid(nextPos) == false || GameGrid.GameGridInstance.IsPositionFilled(nextPos) )
             {
                 return false;

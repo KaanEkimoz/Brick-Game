@@ -38,8 +38,6 @@ public class GameGrid : MonoBehaviour
     }
     public bool IsPositionFilled(Vector2 pos)
     {
-        if(CheckIsInsideGrid(pos) == false) 
-            return true;
         if(grid[Mathf.RoundToInt(pos.x), Mathf.RoundToInt(pos.y)] != null) 
             return true;
         return false;
