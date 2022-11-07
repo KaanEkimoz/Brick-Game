@@ -305,12 +305,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 980ddd2c96049724b94efadb95e4869e, type: 3}
---- !u!1 &930655486 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1144371782096719858, guid: 980ddd2c96049724b94efadb95e4869e,
-    type: 3}
-  m_PrefabInstance: {fileID: 444451706}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1008183751
 GameObject:
   m_ObjectHideFlags: 0
@@ -439,10 +433,6 @@ MonoBehaviour:
     type: 3}
   spawnPos: {x: 4, y: 21}
   dropTimeInSeconds: 0.75
-  turnsToSac: 10
-  piecesInGame: []
-  pieceToDestroy: {fileID: 0}
-  sacText: {fileID: 930655486}
   gameOverText: {fileID: 1425518171}
 --- !u!4 &2012844363
 Transform:

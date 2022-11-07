@@ -1,6 +1,5 @@
 using UnityEngine;
 public enum PieceType { O, I, S, Z, L, J, T }
-
 public class PieceController : MonoBehaviour {
 
     public PieceType curType;

@@ -4,18 +4,17 @@ public class TileController : MonoBehaviour {
     [HideInInspector]public Vector2Int coordinates;
     [HideInInspector]public PieceController pieceController;
     [HideInInspector]public int tileIndex;
-    /// <summary>
-    /// Initializes variables on the instance
-    /// </summary>
-    /// <param name="myPC">Reference to the piece controller this tile is associated with</param>
-    /// <param name="index">Index of the tile on the piece</param>
+    
     public void InitializeTile(PieceController myPC, int index)
     {
+        // Initializes variables on the instance
         pieceController = myPC;
+        
+        //Index of the tile on the piece
         tileIndex = index;
     }
     /// <summary>
-    /// Checks to see if the tile can be moved to the specified positon.
+    /// Checks to see if the tile can be moved to the specified position.
     /// </summary>
     /// <param name="endPos">Coordinates of the position you are trying to move the tile to</param>
     /// <returns>True if the tile can be moved there. False if the tile cannot be moved there</returns>
@@ -72,8 +71,8 @@ public class TileController : MonoBehaviour {
     {
 
         Vector2Int relativePos = coordinates - originPos;
-        Vector2Int[] rotMatrix = clockwise ? new Vector2Int[2] { new Vector2Int(0, -1), new Vector2Int(1, 0) }
-                                           : new Vector2Int[2] { new Vector2Int(0, 1), new Vector2Int(-1, 0) };
+        Vector2Int[] rotMatrix = clockwise ? new[] { new Vector2Int(0, -1), new Vector2Int(1, 0) }
+                                           : new[] { new Vector2Int(0, 1), new Vector2Int(-1, 0) };
         int newXPos = (rotMatrix[0].x * relativePos.x) + (rotMatrix[1].x * relativePos.y);
         int newYPos = (rotMatrix[0].y * relativePos.x) + (rotMatrix[1].y * relativePos.y);
         Vector2Int newPos = new Vector2Int(newXPos, newYPos);

@@ -1,25 +1,20 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
-
-public class PiecesController : MonoBehaviour {
+public partial class PiecesController : MonoBehaviour {
 
     public static PiecesController Instance;
 
     public GameObject piecePrefab;
     public Vector2Int spawnPos;
     public float dropTimeInSeconds;
-    public Coroutine dropCurPiece;
     public Vector2Int[,] JLSTZ_OFFSET_DATA { get; private set; }
     public Vector2Int[,] I_OFFSET_DATA { get; private set; }
     public Vector2Int[,] O_OFFSET_DATA { get; private set; }
-    //public List<GameObject> piecesInGame;
-    public GameObject gameOverText;
 
-    GameObject curPiece;
-    PieceController curPieceController;
+    private GameObject curPiece;
+    private PieceController curPieceController;
+    private Coroutine dropCurPiece;
 
     /// <summary>
     /// Called as soon as the instance is enabled. Sets the singleton and offset data arrays.
@@ -86,88 +81,6 @@ public class PiecesController : MonoBehaviour {
         O_OFFSET_DATA[0, 2] = new Vector2Int(-1, -1);
         O_OFFSET_DATA[0, 3] = Vector2Int.left;
     }
-
-    /// <summary>
-    /// Called at the first frame instance is enabled. Sets some variables.
-    /// </summary>
-    private void Start()
-    {
-        gameOverText.SetActive(false);
-    }
-
-    /// <summary>
-    /// Called once every frame. Checks for player input.
-    /// </summary>
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            curPieceController.SendPieceToFloor();
-        }
-        if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            MoveCurPiece(Vector2Int.down);
-        }
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            MoveCurPiece(Vector2Int.left);
-        }
-        if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            MoveCurPiece(Vector2Int.right);
-        }
-        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
-        {
-            if(curPieceController != null)
-            {
-                return;
-            }
-            SpawnPiece();
-        }
-        if (Input.GetKeyDown(KeyCode.R)){
-            SceneManager.LoadScene(0);
-        }
-
-        if (Input.GetKeyDown(KeyCode.X) || Input.GetKeyDown(KeyCode.Space))
-        {
-            curPieceController.RotatePiece(true, true);
-        }
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            curPieceController.RotatePiece(false, true);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha0))
-        {
-            SpawnDebug(0);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            SpawnDebug(1);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            SpawnDebug(2);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            SpawnDebug(3);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            SpawnDebug(4);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha5))
-        {
-            SpawnDebug(5);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha6))
-        {
-            SpawnDebug(6);
-        }
-
-    }
-
     /// <summary>
     /// Drops the piece the current piece the player is controlling by one unit.
     /// </summary>
@@ -178,7 +91,7 @@ public class PiecesController : MonoBehaviour {
         {
             MoveCurPiece(Vector2Int.down);
             yield return new WaitForSeconds(dropTimeInSeconds);
-        }
+        } 
     }
 
     /// <summary>
@@ -188,14 +101,12 @@ public class PiecesController : MonoBehaviour {
     {
         StopCoroutine(dropCurPiece);
     }
-
     /// <summary>
     /// Makes any necessary changes once the game has ended.
     /// </summary>
     public void GameOver()
     {
         PieceSet();
-        gameOverText.SetActive(true);
     }
     /// <summary>
     /// Spawns a new Tetris piece.
@@ -210,15 +121,6 @@ public class PiecesController : MonoBehaviour {
 
         dropCurPiece = StartCoroutine(DropCurPiece());
     }
-
-    public void SpawnDebug(int id)
-    {
-        GameObject localGameObject = GameObject.Instantiate(piecePrefab, transform);
-        curPiece = localGameObject;
-        PieceType randPiece = (PieceType)id;
-        curPieceController = curPiece.GetComponent<PieceController>();
-        curPieceController.SpawnPiece(randPiece);
-    }
     /// <summary>
     /// Moves the current piece controlled by the player.
     /// </summary>
@@ -230,5 +132,13 @@ public class PiecesController : MonoBehaviour {
             return;
         }
         curPieceController.MovePiece(movement);
+    }
+    private void StartGame()
+    {
+        if(curPieceController != null)
+        {
+            return;
+        }
+        SpawnPiece();
     }
 }
