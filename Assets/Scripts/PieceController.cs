@@ -11,7 +11,7 @@ public class PieceController : MonoBehaviour {
     Vector2Int spawnLocation;
 
     /// <summary>
-    /// Called as soon as the piece is initialized. Initialiezes some necessary values.
+    /// Called as soon as the piece is initialized. Initializes some necessary values.
     /// </summary>
     private void Awake()
     {
@@ -116,7 +116,7 @@ public class PieceController : MonoBehaviour {
     /// </summary>
     /// <param name="movement">X,Y amount to move the piece</param>
     /// <returns></returns>
-    public bool CanMovePiece(Vector2Int movement)
+    private bool CanMovePiece(Vector2Int movement)
     {
         for (int i = 0; i < tiles.Length; i++)
         {
