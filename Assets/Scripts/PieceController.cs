@@ -3,112 +3,30 @@ public enum PieceType { O, I, S, Z, L, J, T }
 public class PieceController : MonoBehaviour {
 
     public PieceType curType;
-    public Sprite[] tileSprites;
-
     public int RotationIndex { get; private set; }
-
-    public TileController[] tiles;
-    Vector2Int spawnLocation;
-
+    [HideInInspector]public TileController[] tiles;
+    [HideInInspector]public TileController[] ghostTiles;
     /// <summary>
     /// Called as soon as the piece is initialized. Initializes some necessary values.
     /// </summary>
     private void Awake()
     {
-        spawnLocation = PiecesController.Instance.spawnPos;
-        RotationIndex = 0;
-
         tiles = new TileController[4];
         for(int i = 1; i <= tiles.Length; i++)
         {
             string tileName = "Tile" + i;
             TileController newTile = transform.Find("Tiles").Find(tileName).GetComponent<TileController>();
             tiles[i - 1] = newTile;
-        } 
-    }
-
-    /// <summary>
-    /// Moves the attached tiles to form the Tetris piece specified. Also sets the correct color of tile sprite.
-    /// </summary>
-    /// <param name="newType">Type of tetris piece to be spawned.</param>
-    public void SpawnPiece(PieceType newType)
-    {
-        curType = newType;
-        tiles[0].UpdatePosition(spawnLocation);
-
-        switch (curType)
-        {
-            case PieceType.I:
-                tiles[1].UpdatePosition(spawnLocation + Vector2Int.left);
-                tiles[2].UpdatePosition(spawnLocation + (Vector2Int.right * 2));
-                tiles[3].UpdatePosition(spawnLocation + Vector2Int.right);
-                SetTileSprites(tileSprites[0]);
-                break;
-
-            case PieceType.J:
-                tiles[1].UpdatePosition(spawnLocation + Vector2Int.left);
-                tiles[2].UpdatePosition(spawnLocation + new Vector2Int(-1, 1));
-                tiles[3].UpdatePosition(spawnLocation + Vector2Int.right);
-                SetTileSprites(tileSprites[1]);
-                break;
-
-            case PieceType.L:
-                tiles[1].UpdatePosition(spawnLocation + Vector2Int.left);
-                tiles[2].UpdatePosition(spawnLocation + new Vector2Int(1, 1));
-                tiles[3].UpdatePosition(spawnLocation + Vector2Int.right);
-                SetTileSprites(tileSprites[2]);
-                break;
-
-            case PieceType.O:
-                tiles[1].UpdatePosition(spawnLocation + Vector2Int.right);
-                tiles[2].UpdatePosition(spawnLocation + new Vector2Int(1, 1));
-                tiles[3].UpdatePosition(spawnLocation + Vector2Int.up);
-                SetTileSprites(tileSprites[3]);
-                break;
-
-            case PieceType.S:
-                tiles[1].UpdatePosition(spawnLocation + Vector2Int.left);
-                tiles[2].UpdatePosition(spawnLocation + new Vector2Int(1, 1));
-                tiles[3].UpdatePosition(spawnLocation + Vector2Int.up);
-                SetTileSprites(tileSprites[4]);
-                break;
-
-            case PieceType.T:
-                tiles[1].UpdatePosition(spawnLocation + Vector2Int.left);
-                tiles[2].UpdatePosition(spawnLocation + Vector2Int.up);
-                tiles[3].UpdatePosition(spawnLocation + Vector2Int.right);
-                SetTileSprites(tileSprites[5]);
-                break;
-
-            case PieceType.Z:
-                tiles[1].UpdatePosition(spawnLocation + Vector2Int.up);
-                tiles[2].UpdatePosition(spawnLocation + new Vector2Int(-1, 1));
-                tiles[3].UpdatePosition(spawnLocation + Vector2Int.right);
-                SetTileSprites(tileSprites[6]);
-                break;
         }
 
-        int index = 0;
-        foreach(TileController ti in tiles)
+        ghostTiles = new TileController[4];
+        for(int i = 1; i <= ghostTiles.Length; i++)
         {
-            ti.InitializeTile(this, index);
-            index++;
+            string tileName = "GhostTile" + i;
+            TileController newTile = transform.Find("GhostTiles").Find(tileName).GetComponent<TileController>();
+            ghostTiles[i - 1] = newTile;
         }
-    }
-    /// <summary>
-    /// Sets the sprites of all tiles on this piece
-    /// </summary>
-    /// <param name="newSpr">New sprite to set for this tile</param>
-    public void SetTileSprites(Sprite newSpr)
-    {
-        for(int i = 0; i < tiles.Length; i++)
-        {
-            if(tiles[i] == null)
-            {
-                continue;
-            }
-            tiles[i].gameObject.GetComponent<SpriteRenderer>().sprite = newSpr;
-        }
+        RotationIndex = 0;
     }
     /// <summary>
     /// Checks if the piece is able to be moved by the specified amount. A piece cannot be moved if there
@@ -151,12 +69,11 @@ public class PieceController : MonoBehaviour {
         {
             tiles[i].MoveTile(movement);
         }
-
         return true;
     }
 
     /// <summary>
-    /// Rotates the piece by 90 degrees in specified direction. Offest operations should almost always be attempted,
+    /// Rotates the piece by 90 degrees in specified direction. Offset operations should almost always be attempted,
     /// unless you are rotating the piece back to its original position.
     /// </summary>
     /// <param name="clockwise">Set to true if rotating clockwise. Set to False if rotating CCW</param>
@@ -170,7 +87,7 @@ public class PieceController : MonoBehaviour {
         for(int i = 0; i < tiles.Length; i++)
         {
             tiles[i].RotateTile(tiles[0].coordinates, clockwise);
-
+            ghostTiles[i].RotateTile(ghostTiles[0].coordinates,clockwise);
         }
 
         if (!shouldOffset)
@@ -263,8 +180,10 @@ public class PieceController : MonoBehaviour {
             }
         }
         BoardController.Instance.CheckLineClears();
-        PiecesController.Instance.PieceSet();
-        PiecesController.Instance.SpawnPiece();
+        PiecesController.Instance.StopDropCurPiece();
+        
+        PieceSpawner pieceSpawner = FindObjectOfType<PieceSpawner>();
+        pieceSpawner.SpawnPiece();
     }
 
     /// <summary>

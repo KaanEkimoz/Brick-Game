@@ -6,7 +6,7 @@ public partial class PiecesController
     {
         if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
         {
-            curPieceController.SendPieceToFloor();
+            CurPieceController.SendPieceToFloor();
         }
         if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S))
         {
@@ -30,11 +30,11 @@ public partial class PiecesController
 
         if (Input.GetKeyDown(KeyCode.X) || Input.GetKeyDown(KeyCode.Space))
         {
-            curPieceController.RotatePiece(true, true);
+            CurPieceController.RotatePiece(true, true);
         }
         if (Input.GetKeyDown(KeyCode.Z))
         {
-            curPieceController.RotatePiece(false, true);
+            CurPieceController.RotatePiece(false, true);
         }
 
         

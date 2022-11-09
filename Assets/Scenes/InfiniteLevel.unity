@@ -394,12 +394,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 444451706}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1425518171 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1144371782665694089, guid: 980ddd2c96049724b94efadb95e4869e,
-    type: 3}
-  m_PrefabInstance: {fileID: 444451706}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2012844361
 GameObject:
   m_ObjectHideFlags: 0
@@ -410,6 +404,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2012844363}
   - component: {fileID: 2012844362}
+  - component: {fileID: 2012844364}
   m_Layer: 0
   m_Name: PiecesController
   m_TagString: Untagged
@@ -429,11 +424,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc83243d28c7eba4099965e71bcf9894, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  piecePrefab: {fileID: 8166984776352965085, guid: e5b112a1e2354c340ae67380821a6fbb,
-    type: 3}
-  spawnPos: {x: 4, y: 21}
   dropTimeInSeconds: 0.75
-  gameOverText: {fileID: 1425518171}
 --- !u!4 &2012844363
 Transform:
   m_ObjectHideFlags: 0
@@ -448,3 +439,27 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2012844364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2012844361}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e86a88115e52324e8e437ab99e963c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  piecePrefab: {fileID: 4026427490633741293, guid: 925857a2d4ee66847b7633b087b94a93,
+    type: 3}
+  spawnPosition: {x: 5, y: 20}
+  tiles: []
+  tileSprites:
+  - {fileID: 21300000, guid: 21c0b52be99f11141a405cbab181b8ca, type: 3}
+  - {fileID: 21300000, guid: c5593e46287cdb64488ae65f2c50a8f4, type: 3}
+  - {fileID: 21300000, guid: 56ef0a8984de540468a1bf9965d89eba, type: 3}
+  - {fileID: 21300000, guid: 080b94d7809dea7469e6bee687a29eb5, type: 3}
+  - {fileID: 21300000, guid: 7913d285460eea240ae18cc5999b1d89, type: 3}
+  - {fileID: 21300000, guid: 130b679cf70b38448b9a4b3471553f59, type: 3}
+  - {fileID: 21300000, guid: 15836c844e00d6c4ea2fe4863a64b263, type: 3}

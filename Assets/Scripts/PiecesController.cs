@@ -1,21 +1,23 @@
+using System;
 using System.Collections;
 using UnityEngine;
-using Random = UnityEngine.Random;
-public partial class PiecesController : MonoBehaviour {
+public partial class PiecesController : MonoBehaviour 
+{//Observer
 
     public static PiecesController Instance;
-
-    public GameObject piecePrefab;
-    public Vector2Int spawnPos;
+    
     public float dropTimeInSeconds;
     public Vector2Int[,] JLSTZ_OFFSET_DATA { get; private set; }
     public Vector2Int[,] I_OFFSET_DATA { get; private set; }
     public Vector2Int[,] O_OFFSET_DATA { get; private set; }
 
-    private GameObject curPiece;
-    private PieceController curPieceController;
+    public static GameObject CurPiece;
+    public static PieceController CurPieceController;
     private Coroutine dropCurPiece;
-
+    private void OnEnable()
+    {
+        PieceSpawner.PieceSpawned += StartDropCurPiece;
+    }
     /// <summary>
     /// Called as soon as the instance is enabled. Sets the singleton and offset data arrays.
     /// </summary>
@@ -81,6 +83,10 @@ public partial class PiecesController : MonoBehaviour {
         O_OFFSET_DATA[0, 2] = new Vector2Int(-1, -1);
         O_OFFSET_DATA[0, 3] = Vector2Int.left;
     }
+    private void StartDropCurPiece()
+    {
+        dropCurPiece = StartCoroutine(DropCurPiece());
+    }
     /// <summary>
     /// Drops the piece the current piece the player is controlling by one unit.
     /// </summary>
@@ -93,11 +99,10 @@ public partial class PiecesController : MonoBehaviour {
             yield return new WaitForSeconds(dropTimeInSeconds);
         } 
     }
-
     /// <summary>
     /// Once the piece is set in it's final location, the coroutine called to repeatedly drop the piece is stopped.
     /// </summary>
-    public void PieceSet()
+    public void StopDropCurPiece()
     {
         StopCoroutine(dropCurPiece);
     }
@@ -106,20 +111,7 @@ public partial class PiecesController : MonoBehaviour {
     /// </summary>
     public void GameOver()
     {
-        PieceSet();
-    }
-    /// <summary>
-    /// Spawns a new Tetris piece.
-    /// </summary>
-    public void SpawnPiece()
-    {
-        GameObject localGameObject = Instantiate(piecePrefab, transform);
-        curPiece = localGameObject;
-        PieceType randPiece = (PieceType)Random.Range(0, 7);        
-        curPieceController = curPiece.GetComponent<PieceController>();
-        curPieceController.SpawnPiece(randPiece);
-
-        dropCurPiece = StartCoroutine(DropCurPiece());
+        StopDropCurPiece();
     }
     /// <summary>
     /// Moves the current piece controlled by the player.
@@ -127,18 +119,20 @@ public partial class PiecesController : MonoBehaviour {
     /// <param name="movement">X,Y amount the piece should be moved by</param>
     public void MoveCurPiece(Vector2Int movement)
     {
-        if(curPiece == null)
+        if(CurPiece == null)
         {
             return;
         }
-        curPieceController.MovePiece(movement);
+        CurPieceController.MovePiece(movement);
     }
     private void StartGame()
     {
-        if(curPieceController != null)
+        if(CurPieceController != null)
         {
             return;
         }
-        SpawnPiece();
+        
+        PieceSpawner pieceSpawner = FindObjectOfType<PieceSpawner>();
+        pieceSpawner.SpawnPiece();
     }
 }
