@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 public partial class PiecesController : MonoBehaviour 
-{//Observer
+{
 
     public static PiecesController Instance;
     
@@ -18,6 +18,12 @@ public partial class PiecesController : MonoBehaviour
     {
         PieceSpawner.PieceSpawned += StartDropCurPiece;
     }
+
+    private void OnDisable()
+    {
+        PieceSpawner.PieceSpawned -= StartDropCurPiece;
+    }
+
     /// <summary>
     /// Called as soon as the instance is enabled. Sets the singleton and offset data arrays.
     /// </summary>
@@ -93,6 +99,7 @@ public partial class PiecesController : MonoBehaviour
     /// <returns>Function is called on a loop based on the 'dropTimeInSeconds' variable.</returns>
     IEnumerator DropCurPiece()
     {
+        //TO DO: Add Pause Conditions
         while (true)
         {
             MoveCurPiece(Vector2Int.down);
@@ -117,7 +124,7 @@ public partial class PiecesController : MonoBehaviour
     /// Moves the current piece controlled by the player.
     /// </summary>
     /// <param name="movement">X,Y amount the piece should be moved by</param>
-    public void MoveCurPiece(Vector2Int movement)
+    private void MoveCurPiece(Vector2Int movement)
     {
         if(CurPiece == null)
         {

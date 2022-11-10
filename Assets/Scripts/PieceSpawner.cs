@@ -3,14 +3,22 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class PieceSpawner : MonoBehaviour
-{//Subject
+{
     public GameObject piecePrefab;
     public Vector2Int spawnPosition;
     public Sprite[] tileSprites;
+    public static PieceType NextPieceType;
+    public PieceType curPieceType;
     
     public static Action PieceSpawned;
+    public static Action NextPieceChanged;
     
     private TileController[] tiles;
+
+    private void Start()
+    {
+        NextPieceType = (PieceType)Random.Range(0, 7);
+    }
 
     /// <summary>
     /// Moves the attached tiles to form the Tetris piece specified. Also sets the correct color of tile sprite.
@@ -100,8 +108,10 @@ public class PieceSpawner : MonoBehaviour
     {
         GameObject curPiece = Instantiate(piecePrefab, transform);
         InitializeCurPiece(curPiece);
-        PieceType randPiece = (PieceType)Random.Range(0, 7);
-        UpdateTiles(randPiece,PiecesController.CurPieceController);
+        curPieceType = NextPieceType;
+        NextPieceType = (PieceType) Random.Range(0, 7);
+        NextPieceChanged?.Invoke();
+        UpdateTiles(curPieceType,PiecesController.CurPieceController);
         PieceSpawned?.Invoke();
     }
     private void InitializeCurPiece(GameObject curPiece)

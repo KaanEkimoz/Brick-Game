@@ -3,7 +3,7 @@ using UnityEngine;
 public class BoardController : MonoBehaviour
 {
     public static BoardController Instance;
-
+    public static int TotalClearedLines = 0;
     public GameObject gridUnitPrefab;
     public int gridSizeX, gridSizeY;
     public GameObject tetrisText;
@@ -173,5 +173,8 @@ public class BoardController : MonoBehaviour
             fullGrid[x, lineToClear].tileOnGridUnit = null;
             fullGrid[x, lineToClear].isOccupied = false;
         }
+
+        TotalClearedLines++;
+        Debug.Log(TotalClearedLines);
     }
 }

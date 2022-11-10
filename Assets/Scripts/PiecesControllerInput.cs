@@ -29,13 +29,19 @@ public partial class PiecesController
         }
         if (Input.GetKeyDown(KeyCode.X) || Input.GetKeyDown(KeyCode.Space))
         {
-            CurPieceController.RotatePiece(true, true);
+            RotateClockwise();
         }
         if (Input.GetKeyDown(KeyCode.Z))
         {
-            CurPieceController.RotatePiece(false, true);
+            RotateCounterClockwise();
         }
-
-        
+    }
+    private void RotateClockwise()
+    {
+        CurPieceController.RotatePiece(true, true);
+    }
+    private void RotateCounterClockwise()
+    {
+        CurPieceController.RotatePiece(false, true);
     }
 }

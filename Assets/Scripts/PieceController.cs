@@ -1,22 +1,30 @@
-using System;
 using UnityEngine;
 public enum PieceType { O, I, S, Z, L, J, T }
 public class PieceController : MonoBehaviour {
 
     public PieceType curType;
-    public int RotationIndex { get; private set; }
     [HideInInspector]public TileController[] tiles;
     [HideInInspector]public TileController[] ghostTiles;
-
+    private int RotationIndex { get; set; }
     private void OnEnable()
     {
         PieceSpawner.PieceSpawned += UpdateGhostTiles;
     }
-
+    private void OnDisable()
+    {
+        PieceSpawner.PieceSpawned -= UpdateGhostTiles;
+    }
     /// <summary>
     /// Called as soon as the piece is initialized. Initializes some necessary values.
     /// </summary>
     private void Awake()
+    {
+        InitializeTiles();
+        InitializeGhostTiles();
+        
+        RotationIndex = 0;
+    }
+    private void InitializeTiles()
     {
         tiles = new TileController[4];
         for(int i = 1; i <= tiles.Length; i++)
@@ -25,7 +33,9 @@ public class PieceController : MonoBehaviour {
             TileController newTile = transform.Find("Tiles").Find(tileName).GetComponent<TileController>();
             tiles[i - 1] = newTile;
         }
-
+    }
+    private void InitializeGhostTiles()
+    {
         ghostTiles = new TileController[4];
         {
             for(int i = 1; i <= ghostTiles.Length; i++)
@@ -36,10 +46,7 @@ public class PieceController : MonoBehaviour {
             }
             
         }
-        
-        RotationIndex = 0;
     }
-
     private void UpdateGhostTiles()
     {
         for (int i = 1; i <= ghostTiles.Length; i++)
@@ -50,7 +57,6 @@ public class PieceController : MonoBehaviour {
         }
         SendGhostPieceToFloor();
     }
-
     /// <summary>
     /// Checks if the piece is able to be moved by the specified amount. A piece cannot be moved if there
     /// is already another piece there or the piece would end up out of bounds.
@@ -59,9 +65,9 @@ public class PieceController : MonoBehaviour {
     /// <returns></returns>
     private bool CanMovePiece(Vector2Int movement)
     {
-        for (int i = 0; i < tiles.Length; i++)
+        foreach (var tile in tiles)
         {
-            if (!tiles[i].CanTileMove(movement + tiles[i].coordinates))
+            if (!tile.CanTileMove(movement + tile.coordinates))
             {
                 return false;
             }
@@ -69,15 +75,22 @@ public class PieceController : MonoBehaviour {
         return true;
     }
     /// <summary>
+    /// Drops piece down as far as it can go.
+    /// </summary>
+    public void SendPieceToFloor()
+    {
+        while (MovePiece(Vector2Int.down)) {}
+    }
+    /// <summary>
     /// Moves the piece by the specified amount.
     /// </summary>
     /// <param name="movement">X,Y amount to move the piece</param>
-    /// <returns>True if the piece was able to be moved. False if the move couln't be completed.</returns>
+    /// <returns>True if the piece was able to be moved. False if the move couldn't be completed.</returns>
     public bool MovePiece(Vector2Int movement)
     {
-        for (int i = 0; i < tiles.Length; i++)
+        foreach (var tile in tiles)
         {
-            if (!tiles[i].CanTileMove(movement + tiles[i].coordinates))
+            if (!tile.CanTileMove(movement + tile.coordinates))
             {
                 Debug.Log("Cant Go there!");
                 if(movement == Vector2Int.down)
@@ -88,15 +101,14 @@ public class PieceController : MonoBehaviour {
             }
         }
 
-        for(int i = 0; i< tiles.Length; i++)
+        foreach (var tile in tiles)
         {
-            tiles[i].MoveTile(movement);
+            tile.MoveTile(movement);
         }
         UpdateGhostTiles();
         return true;
         
     }
-
     /// <summary>
     /// Rotates the piece by 90 degrees in specified direction. Offset operations should almost always be attempted,
     /// unless you are rotating the piece back to its original position.
@@ -109,9 +121,9 @@ public class PieceController : MonoBehaviour {
         RotationIndex += clockwise ? 1 : -1;
         RotationIndex = Mod(RotationIndex, 4);
 
-        for(int i = 0; i < tiles.Length; i++)
+        foreach (var t in tiles)
         {
-            tiles[i].RotateTile(tiles[0].coordinates, clockwise);
+            t.RotateTile(tiles[0].coordinates, clockwise);
         }
 
         if (!shouldOffset)
@@ -128,7 +140,6 @@ public class PieceController : MonoBehaviour {
         
         UpdateGhostTiles();
     }
-
     /// <summary>
     /// True modulo operation that works for positive and negative values.
     /// </summary>
@@ -148,7 +159,6 @@ public class PieceController : MonoBehaviour {
     /// <returns>True if one of the tests passed and a final location was found. False if all test failed.</returns>
     bool Offset(int oldRotIndex, int newRotIndex)
     {
-        Vector2Int offsetVal1, offsetVal2, endOffset;
         Vector2Int[,] curOffsetData;
         
         if(curType == PieceType.O)
@@ -164,14 +174,14 @@ public class PieceController : MonoBehaviour {
             curOffsetData = PiecesController.Instance.JLSTZ_OFFSET_DATA;
         }
 
-        endOffset = Vector2Int.zero;
+        Vector2Int endOffset = Vector2Int.zero;
 
         bool movePossible = false;
 
         for (int testIndex = 0; testIndex < 5; testIndex++)
         {
-            offsetVal1 = curOffsetData[testIndex, oldRotIndex];
-            offsetVal2 = curOffsetData[testIndex, newRotIndex];
+            var offsetVal1 = curOffsetData[testIndex, oldRotIndex];
+            var offsetVal2 = curOffsetData[testIndex, newRotIndex];
             endOffset = offsetVal1 - offsetVal2;
             if (CanMovePiece(endOffset))
             {
@@ -194,11 +204,11 @@ public class PieceController : MonoBehaviour {
     /// <summary>
     /// Sets the piece in its permanent location.
     /// </summary>
-    public void SetPiece()
+    private void SetPiece()
     {
-        for(int i = 0; i < tiles.Length; i++)
+        foreach (var tile in tiles)
         {
-            if (!tiles[i].SetTile())
+            if (!tile.SetTile())
             {
                 Debug.Log("GAME OVER!");
                 PiecesController.Instance.GameOver();
@@ -208,23 +218,20 @@ public class PieceController : MonoBehaviour {
         BoardController.Instance.CheckLineClears();
         PiecesController.Instance.StopDropCurPiece();
         
+        DestroyGhostTiles();
         PieceSpawner pieceSpawner = FindObjectOfType<PieceSpawner>();
         pieceSpawner.SpawnPiece();
     }
-
-    /// <summary>
-    /// Drops piece down as far as it can go.
-    /// </summary>
-    public void SendPieceToFloor()
+    private void DestroyGhostTiles()
     {
-        while (MovePiece(Vector2Int.down)) {}
+        Destroy(transform.Find("GhostTiles").gameObject);
     }
 
-    public void SendGhostPieceToFloor()
+    
+    private void SendGhostPieceToFloor()
     {
         while(MoveGhostPiece(Vector2Int.down)) {}
     }
-
     private bool MoveGhostPiece(Vector2Int movement)
     {
         for (int i = 0; i < ghostTiles.Length; i++)
