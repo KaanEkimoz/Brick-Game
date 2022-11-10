@@ -11,7 +11,6 @@ public class PieceSpawner : MonoBehaviour
     public static Action PieceSpawned;
     
     private TileController[] tiles;
-    private TileController[] ghostTiles;
 
     /// <summary>
     /// Moves the attached tiles to form the Tetris piece specified. Also sets the correct color of tile sprite.
@@ -20,7 +19,7 @@ public class PieceSpawner : MonoBehaviour
     private void UpdateTiles(PieceType newType, PieceController pieceController)
     {
         PieceType curType = newType;
-        TileController[]  tiles = pieceController.tiles;
+        tiles = pieceController.tiles;
         tiles[0].UpdatePosition(spawnPosition);
 
         switch (curType)
@@ -81,7 +80,6 @@ public class PieceSpawner : MonoBehaviour
             tile.InitializeTile(pieceController, index);
             index++;
         }
-        
     }
     /// <summary>
     /// Sets the sprites of all tiles on this piece

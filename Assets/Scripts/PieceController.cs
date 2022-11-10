@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 public enum PieceType { O, I, S, Z, L, J, T }
 public class PieceController : MonoBehaviour {
@@ -6,6 +7,12 @@ public class PieceController : MonoBehaviour {
     public int RotationIndex { get; private set; }
     [HideInInspector]public TileController[] tiles;
     [HideInInspector]public TileController[] ghostTiles;
+
+    private void OnEnable()
+    {
+        PieceSpawner.PieceSpawned += UpdateGhostTiles;
+    }
+
     /// <summary>
     /// Called as soon as the piece is initialized. Initializes some necessary values.
     /// </summary>
@@ -20,14 +27,30 @@ public class PieceController : MonoBehaviour {
         }
 
         ghostTiles = new TileController[4];
-        for(int i = 1; i <= ghostTiles.Length; i++)
         {
-            string tileName = "GhostTile" + i;
-            TileController newTile = transform.Find("GhostTiles").Find(tileName).GetComponent<TileController>();
-            ghostTiles[i - 1] = newTile;
+            for(int i = 1; i <= ghostTiles.Length; i++)
+            {
+                string tileName = "GhostTile" + i;
+                TileController newTile = transform.Find("GhostTiles").Find(tileName).GetComponent<TileController>();
+                ghostTiles[i - 1] = newTile;
+            }
+            
         }
+        
         RotationIndex = 0;
     }
+
+    private void UpdateGhostTiles()
+    {
+        for (int i = 1; i <= ghostTiles.Length; i++)
+        {
+            Vector2Int newPos = new Vector2Int((int) tiles[i - 1].gameObject.transform.position.x,
+                (int) tiles[i - 1].gameObject.transform.position.y);
+            ghostTiles[i - 1].UpdatePosition(newPos);
+        }
+        SendGhostPieceToFloor();
+    }
+
     /// <summary>
     /// Checks if the piece is able to be moved by the specified amount. A piece cannot be moved if there
     /// is already another piece there or the piece would end up out of bounds.
@@ -69,7 +92,9 @@ public class PieceController : MonoBehaviour {
         {
             tiles[i].MoveTile(movement);
         }
+        UpdateGhostTiles();
         return true;
+        
     }
 
     /// <summary>
@@ -87,7 +112,6 @@ public class PieceController : MonoBehaviour {
         for(int i = 0; i < tiles.Length; i++)
         {
             tiles[i].RotateTile(tiles[0].coordinates, clockwise);
-            ghostTiles[i].RotateTile(ghostTiles[0].coordinates,clockwise);
         }
 
         if (!shouldOffset)
@@ -101,6 +125,8 @@ public class PieceController : MonoBehaviour {
         {
             RotatePiece(!clockwise, false);
         }
+        
+        UpdateGhostTiles();
     }
 
     /// <summary>
@@ -192,5 +218,26 @@ public class PieceController : MonoBehaviour {
     public void SendPieceToFloor()
     {
         while (MovePiece(Vector2Int.down)) {}
+    }
+
+    public void SendGhostPieceToFloor()
+    {
+        while(MoveGhostPiece(Vector2Int.down)) {}
+    }
+
+    private bool MoveGhostPiece(Vector2Int movement)
+    {
+        for (int i = 0; i < ghostTiles.Length; i++)
+        {
+            if (!ghostTiles[i].CanTileMove(movement+ ghostTiles[i].coordinates))
+            {
+                return false;
+            }
+        }
+        for(int i = 0; i< ghostTiles.Length; i++)
+        {
+            ghostTiles[i].MoveTile(movement);
+        }
+        return true;
     }
 }

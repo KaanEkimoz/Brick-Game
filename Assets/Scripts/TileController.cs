@@ -1,6 +1,8 @@
 using UnityEngine;
-public class TileController : MonoBehaviour {
+public class TileController : MonoBehaviour
+{
 
+    public bool isGhostTile;
     [HideInInspector]public Vector2Int coordinates;
     [HideInInspector]public PieceController pieceController;
     [HideInInspector]public int tileIndex;
@@ -55,6 +57,9 @@ public class TileController : MonoBehaviour {
     /// <returns>True if the tile is on the board. False if tile is above playing field, GAME OVER.</returns>
     public bool SetTile()
     {
+        if (isGhostTile)
+            return false;
+        
         if (coordinates.y >= BoardController.Instance.gridSizeY)
         {
             return false;

@@ -27,7 +27,6 @@ public partial class PiecesController
         if (Input.GetKeyDown(KeyCode.R)){
             SceneManager.LoadScene(0);
         }
-
         if (Input.GetKeyDown(KeyCode.X) || Input.GetKeyDown(KeyCode.Space))
         {
             CurPieceController.RotatePiece(true, true);
