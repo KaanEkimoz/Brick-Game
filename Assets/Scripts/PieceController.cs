@@ -226,17 +226,15 @@ public class PieceController : MonoBehaviour {
     {
         Destroy(transform.Find("GhostTiles").gameObject);
     }
-
-    
     private void SendGhostPieceToFloor()
     {
         while(MoveGhostPiece(Vector2Int.down)) {}
     }
     private bool MoveGhostPiece(Vector2Int movement)
     {
-        for (int i = 0; i < ghostTiles.Length; i++)
+        foreach (var t in ghostTiles)
         {
-            if (!ghostTiles[i].CanTileMove(movement+ ghostTiles[i].coordinates))
+            if (!t.CanTileMove(movement+ t.coordinates))
             {
                 return false;
             }

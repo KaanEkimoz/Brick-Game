@@ -5,43 +5,44 @@ public partial class PiecesController
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
-        {
-            CurPieceController.SendPieceToFloor();
-        }
+            SendPieceToFloor();
         if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S))
-        {
-            MoveCurPiece(Vector2Int.down);
-        }
-        if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.D))
-        {
-            MoveCurPiece(Vector2Int.left);
-        }
-        if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.A))
-        {
-            MoveCurPiece(Vector2Int.right);
-        }
+            MoveDown();
+        if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
+            MoveRight();
+        if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
+            MoveLeft();
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
-        {
             StartGame();
-        }
-        if (Input.GetKeyDown(KeyCode.R)){
+        if (Input.GetKeyDown(KeyCode.R))
             SceneManager.LoadScene(0);
-        }
         if (Input.GetKeyDown(KeyCode.X) || Input.GetKeyDown(KeyCode.Space))
-        {
             RotateClockwise();
-        }
         if (Input.GetKeyDown(KeyCode.Z))
-        {
             RotateCounterClockwise();
-        }
     }
-    private void RotateClockwise()
+    public void RotateClockwise()
     {
         CurPieceController.RotatePiece(true, true);
     }
-    private void RotateCounterClockwise()
+    public void RotateCounterClockwise()
     {
         CurPieceController.RotatePiece(false, true);
+    }
+    public void SendPieceToFloor()
+    {
+        CurPieceController.SendPieceToFloor();
+    }
+    public void MoveDown()
+    {
+        MoveCurPiece(Vector2Int.down);
+    }
+    public void MoveRight()
+    {
+        MoveCurPiece(Vector2Int.right);
+    }
+    public void MoveLeft()
+    {
+        MoveCurPiece(Vector2Int.left);
     }
 }

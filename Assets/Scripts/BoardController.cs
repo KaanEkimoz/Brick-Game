@@ -1,14 +1,17 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 public class BoardController : MonoBehaviour
 {
     public static BoardController Instance;
-    public static int TotalClearedLines = 0;
+    public int totalClearedLines;
     public GameObject gridUnitPrefab;
     public int gridSizeX, gridSizeY;
     public GameObject tetrisText;
-    
     private GridUnit[,] fullGrid;
+
+    public static Action<int> LinesCleared;
+    public static Action<int> TotalLineClearedLinesChanged;
     private void Awake()
     {
         Instance = this;
@@ -83,7 +86,7 @@ public class BoardController : MonoBehaviour
             {
                 if (!fullGrid[x, y].isOccupied){
                     lineClear = false;
-                    consecutiveLineClears = 0;
+                    //consecutiveLineClears = 0;
                 }
             }
             if (lineClear)
@@ -104,6 +107,8 @@ public class BoardController : MonoBehaviour
                 ClearLine(y);
             }
         }
+        Debug.Log(consecutiveLineClears);
+        LinesCleared?.Invoke(consecutiveLineClears);
         //Once the lines have been cleared, the lines above those will drop to fill in the empty space
         if (linesToClear.Count > 0)
         {
@@ -173,8 +178,7 @@ public class BoardController : MonoBehaviour
             fullGrid[x, lineToClear].tileOnGridUnit = null;
             fullGrid[x, lineToClear].isOccupied = false;
         }
-
-        TotalClearedLines++;
-        Debug.Log(TotalClearedLines);
+        totalClearedLines++;
+        TotalLineClearedLinesChanged(totalClearedLines);
     }
 }

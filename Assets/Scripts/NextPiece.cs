@@ -1,17 +1,12 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
 public class NextPiece : MonoBehaviour
 {
     public Image nextPieceImage;
     public GameObject frontCanvas;
-    public GameObject[] pieceVisuals;
+    public GameObject[] pieceImages;
 
-    private GameObject currentObject;
-
+    private GameObject currentShownImage;
     private void OnEnable()
     {
         PieceSpawner.NextPieceChanged += ShowNextPiece;
@@ -22,12 +17,12 @@ public class NextPiece : MonoBehaviour
     }
     private void ShowNextPiece()
     {
-        if(currentObject)
-            Destroy(currentObject);
-        foreach (var piece in pieceVisuals)
+        if(currentShownImage)
+            Destroy(currentShownImage);
+        foreach (var pieceImage in pieceImages)
         {
-            if (piece.gameObject.name == PieceSpawner.NextPieceType.ToString())
-                currentObject = Instantiate(piece,nextPieceImage.transform.position,Quaternion.identity,frontCanvas.transform);
+            if (pieceImage.gameObject.name == PieceSpawner.NextPieceType.ToString())
+                currentShownImage = Instantiate(pieceImage,nextPieceImage.transform.position,Quaternion.identity,frontCanvas.transform);
         }
     }
 }

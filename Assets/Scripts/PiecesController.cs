@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 public partial class PiecesController : MonoBehaviour 
