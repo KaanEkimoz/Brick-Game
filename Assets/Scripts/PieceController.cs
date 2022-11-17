@@ -137,7 +137,6 @@ public class PieceController : MonoBehaviour {
         {
             RotatePiece(!clockwise, false);
         }
-        
         UpdateGhostTiles();
     }
     /// <summary>

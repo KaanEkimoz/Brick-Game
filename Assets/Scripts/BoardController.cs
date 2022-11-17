@@ -107,7 +107,6 @@ public class BoardController : MonoBehaviour
                 ClearLine(y);
             }
         }
-        Debug.Log(consecutiveLineClears);
         LinesCleared?.Invoke(consecutiveLineClears);
         //Once the lines have been cleared, the lines above those will drop to fill in the empty space
         if (linesToClear.Count > 0)

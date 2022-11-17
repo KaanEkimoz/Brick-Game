@@ -2,7 +2,6 @@ using System.Collections;
 using UnityEngine;
 public partial class PiecesController : MonoBehaviour 
 {
-
     public static PiecesController Instance;
     
     public float dropTimeInSeconds;
@@ -16,13 +15,13 @@ public partial class PiecesController : MonoBehaviour
     private void OnEnable()
     {
         PieceSpawner.PieceSpawned += StartDropCurPiece;
+        LevelController.OnLevelIncreased += UpdateDropTime;
     }
-
     private void OnDisable()
     {
         PieceSpawner.PieceSpawned -= StartDropCurPiece;
+        LevelController.OnLevelIncreased -= UpdateDropTime;
     }
-
     /// <summary>
     /// Called as soon as the instance is enabled. Sets the singleton and offset data arrays.
     /// </summary>
@@ -140,5 +139,9 @@ public partial class PiecesController : MonoBehaviour
         
         PieceSpawner pieceSpawner = FindObjectOfType<PieceSpawner>();
         pieceSpawner.SpawnPiece();
+    }
+    private void UpdateDropTime()
+    {
+        dropTimeInSeconds -= (float)(LevelController.CurrentLevel -1) / 20;
     }
 }
