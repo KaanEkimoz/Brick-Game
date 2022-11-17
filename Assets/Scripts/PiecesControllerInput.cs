@@ -23,15 +23,15 @@ public partial class PiecesController
     }
     public void RotateClockwise()
     {
-        CurPieceController.RotatePiece(true, true);
+        CurPieceRotation.RotatePiece(true, true);
     }
     public void RotateCounterClockwise()
     {
-        CurPieceController.RotatePiece(false, true);
+        CurPieceRotation.RotatePiece(false, true);
     }
     public void SendPieceToFloor()
     {
-        CurPieceController.SendPieceToFloor();
+        CurPieceMovement.SendPieceToFloor();
     }
     public void MoveDown()
     {

@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using Random = UnityEngine.Random;
+public enum PieceType { O, I, S, Z, L, J, T }
 
 public class PieceSpawner : MonoBehaviour
 {
@@ -27,7 +28,7 @@ public class PieceSpawner : MonoBehaviour
     private void UpdateTiles(PieceType newType, PieceController pieceController)
     {
         PieceType curType = newType;
-        tiles = pieceController.tiles;
+        tiles = PieceController.Tiles;
         tiles[0].UpdatePosition(spawnPosition);
 
         switch (curType)
@@ -81,7 +82,6 @@ public class PieceSpawner : MonoBehaviour
                 SetTileSprites(tileSprites[6]);
                 break;
         }
-
         int index = 0;
         foreach(TileController tile in tiles)
         {
@@ -111,12 +111,11 @@ public class PieceSpawner : MonoBehaviour
         curPieceType = NextPieceType;
         NextPieceType = (PieceType) Random.Range(0, 7);
         NextPieceChanged?.Invoke();
-        UpdateTiles(curPieceType,PiecesController.CurPieceController);
+        UpdateTiles(curPieceType,PiecesController.CurPiece.GetComponent<PieceController>());
         PieceSpawned?.Invoke();
     }
     private void InitializeCurPiece(GameObject curPiece)
     {
         PiecesController.CurPiece = curPiece;
-        PiecesController.CurPieceController = curPiece.GetComponent<PieceController>();
     }
 }

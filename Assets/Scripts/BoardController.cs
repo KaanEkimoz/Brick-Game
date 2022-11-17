@@ -171,8 +171,8 @@ public class BoardController : MonoBehaviour
         }
         for(int x = 0; x < gridSizeX; x++)
         {
-            PieceController curPC = fullGrid[x, lineToClear].tileOnGridUnit.GetComponent<TileController>().pieceController;
-            curPC.tiles[fullGrid[x, lineToClear].tileOnGridUnit.GetComponent<TileController>().tileIndex] = null;
+            //PieceController curPC = fullGrid[x, lineToClear].tileOnGridUnit.GetComponent<TileController>().pieceController;
+            PieceController.Tiles[fullGrid[x, lineToClear].tileOnGridUnit.GetComponent<TileController>().tileIndex] = null;
             Destroy(fullGrid[x, lineToClear].tileOnGridUnit);
             fullGrid[x, lineToClear].tileOnGridUnit = null;
             fullGrid[x, lineToClear].isOccupied = false;

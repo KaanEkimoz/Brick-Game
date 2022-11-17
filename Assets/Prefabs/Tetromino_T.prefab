@@ -539,6 +539,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4026427490633741292}
   - component: {fileID: -6249801619534743663}
+  - component: {fileID: -6248805884025882631}
+  - component: {fileID: -2054852253719224302}
+  - component: {fileID: 9041646234498412338}
   m_Layer: 0
   m_Name: Tetromino_T
   m_TagString: Untagged
@@ -574,13 +577,44 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f56e9f7fee9dc5044b1bd6aaeb65a917, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-6248805884025882631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4026427490633741293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61abbc71da886a144941ceda71cca9a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-2054852253719224302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4026427490633741293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b77910a46158cb948a36c1feba113c66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   curType: 6
-  tiles: []
-  ghostTiles:
-  - {fileID: 6024099064445024472}
-  - {fileID: 2271372787751579637}
-  - {fileID: 4206315323644116715}
-  - {fileID: 318796958267464475}
+--- !u!114 &9041646234498412338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4026427490633741293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df4af150264440946ab3b7b142131215, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ghostTiles: []
 --- !u!1 &4026427490782733325
 GameObject:
   m_ObjectHideFlags: 0
