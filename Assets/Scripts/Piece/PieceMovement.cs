@@ -3,6 +3,7 @@ using UnityEngine;
 public class PieceMovement : MonoBehaviour
 {
     public static Action OnPieceMovement;
+    public static Action OnPieceSet;
     /// <summary>
     /// Drops piece down as far as it can go.
     /// </summary>
@@ -55,6 +56,7 @@ public class PieceMovement : MonoBehaviour
         BoardController.Instance.CheckLineClears();
         PiecesController.Instance.StopDropCurPiece();
         PieceSpawner pieceSpawner = FindObjectOfType<PieceSpawner>();
+        OnPieceSet?.Invoke();
         pieceSpawner.SpawnPiece();
     }
     /// <summary>

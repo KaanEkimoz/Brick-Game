@@ -15,7 +15,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3031049000790409510
 Transform:
   m_ObjectHideFlags: 0
@@ -43,8 +43,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5526322906189029026}
-  - component: {fileID: 2271372787751579637}
   - component: {fileID: 6055123721827355399}
+  - component: {fileID: 6547363998749442651}
   m_Layer: 0
   m_Name: GhostTile2
   m_TagString: Untagged
@@ -66,22 +66,6 @@ Transform:
   m_Father: {fileID: 3031049000790409510}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2271372787751579637
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1305323332709988460}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 529c122119c60ef40b9bf5e296659210, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isGhostTile: 1
-  coordinates: {x: 0, y: 0}
-  pieceController: {fileID: 0}
-  tileIndex: 0
 --- !u!212 &6055123721827355399
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -133,6 +117,22 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &6547363998749442651
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1305323332709988460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 529c122119c60ef40b9bf5e296659210, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isGhostTile: 1
+  coordinates: {x: 0, y: 0}
+  pieceController: {fileID: 0}
+  tileIndex: 0
 --- !u!1 &1787787412511960545
 GameObject:
   m_ObjectHideFlags: 0
@@ -142,8 +142,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2961211044603962350}
-  - component: {fileID: 4206315323644116715}
   - component: {fileID: 1811261456402158355}
+  - component: {fileID: 470918688779620684}
   m_Layer: 0
   m_Name: GhostTile3
   m_TagString: Untagged
@@ -165,22 +165,6 @@ Transform:
   m_Father: {fileID: 3031049000790409510}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4206315323644116715
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1787787412511960545}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 529c122119c60ef40b9bf5e296659210, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isGhostTile: 1
-  coordinates: {x: 0, y: 0}
-  pieceController: {fileID: 0}
-  tileIndex: 0
 --- !u!212 &1811261456402158355
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -232,6 +216,22 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &470918688779620684
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1787787412511960545}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 529c122119c60ef40b9bf5e296659210, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isGhostTile: 1
+  coordinates: {x: 0, y: 0}
+  pieceController: {fileID: 0}
+  tileIndex: 0
 --- !u!1 &3522176641429115326
 GameObject:
   m_ObjectHideFlags: 0
@@ -241,8 +241,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 428842988277075973}
-  - component: {fileID: 318796958267464475}
   - component: {fileID: 3233141920485809245}
+  - component: {fileID: 6335120827518740719}
   m_Layer: 0
   m_Name: GhostTile4
   m_TagString: Untagged
@@ -264,22 +264,6 @@ Transform:
   m_Father: {fileID: 3031049000790409510}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &318796958267464475
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3522176641429115326}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 529c122119c60ef40b9bf5e296659210, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isGhostTile: 1
-  coordinates: {x: 0, y: 0}
-  pieceController: {fileID: 0}
-  tileIndex: 0
 --- !u!212 &3233141920485809245
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -331,6 +315,22 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &6335120827518740719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3522176641429115326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 529c122119c60ef40b9bf5e296659210, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isGhostTile: 1
+  coordinates: {x: 0, y: 0}
+  pieceController: {fileID: 0}
+  tileIndex: 0
 --- !u!1 &4026427489629804569
 GameObject:
   m_ObjectHideFlags: 0
@@ -539,9 +539,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4026427490633741292}
   - component: {fileID: -6249801619534743663}
+  - component: {fileID: 9041646234498412338}
   - component: {fileID: -6248805884025882631}
   - component: {fileID: -2054852253719224302}
-  - component: {fileID: 9041646234498412338}
   m_Layer: 0
   m_Name: Tetromino_T
   m_TagString: Untagged
@@ -577,6 +577,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f56e9f7fee9dc5044b1bd6aaeb65a917, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tiles:
+  - {fileID: 1052146618359382976}
+  - {fileID: 95982443647088811}
+  - {fileID: 7193553640284541909}
+  - {fileID: 2264945163142584198}
+--- !u!114 &9041646234498412338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4026427490633741293}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df4af150264440946ab3b7b142131215, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &-6248805884025882631
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -602,19 +619,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curType: 6
---- !u!114 &9041646234498412338
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4026427490633741293}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df4af150264440946ab3b7b142131215, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ghostTiles: []
 --- !u!1 &4026427490782733325
 GameObject:
   m_ObjectHideFlags: 0
@@ -822,8 +826,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1206191809343542972}
-  - component: {fileID: 6024099064445024472}
   - component: {fileID: 7611018086793374295}
+  - component: {fileID: 2735490043198274419}
   m_Layer: 0
   m_Name: GhostTile1
   m_TagString: Untagged
@@ -845,22 +849,6 @@ Transform:
   m_Father: {fileID: 3031049000790409510}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6024099064445024472
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4982251827240191694}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 529c122119c60ef40b9bf5e296659210, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isGhostTile: 1
-  coordinates: {x: 0, y: 0}
-  pieceController: {fileID: 0}
-  tileIndex: 0
 --- !u!212 &7611018086793374295
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -912,6 +900,22 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &2735490043198274419
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4982251827240191694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 529c122119c60ef40b9bf5e296659210, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isGhostTile: 1
+  coordinates: {x: 0, y: 0}
+  pieceController: {fileID: 0}
+  tileIndex: 0
 --- !u!1 &8995706411876385117
 GameObject:
   m_ObjectHideFlags: 0

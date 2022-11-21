@@ -8,7 +8,7 @@ public class BoardController : MonoBehaviour
     public GameObject gridUnitPrefab;
     public int gridSizeX, gridSizeY;
     public GameObject tetrisText;
-    private GridUnit[,] fullGrid;
+    private GridUnit[,] _fullGrid;
 
     public static Action<int> LinesCleared;
     public static Action<int> TotalLineClearedLinesChanged;
@@ -23,13 +23,13 @@ public class BoardController : MonoBehaviour
     }
     private void CreateGrid()
     {
-        fullGrid = new GridUnit[gridSizeX, gridSizeY];
+        _fullGrid = new GridUnit[gridSizeX, gridSizeY];
         for(int y = 0; y < gridSizeY; y++)
         {
             for(int x = 0; x < gridSizeX; x++)
             {
                 GridUnit newGridUnit = new GridUnit(gridUnitPrefab, transform, x, y);
-                fullGrid[x, y] = newGridUnit;
+                _fullGrid[x, y] = newGridUnit;
             }
         }
     }
@@ -55,7 +55,7 @@ public class BoardController : MonoBehaviour
         {
             return true;
         }
-        return !fullGrid[coordToTest.x, coordToTest.y].isOccupied;
+        return !_fullGrid[coordToTest.x, coordToTest.y].isOccupied;
     }
     /// <summary>
     /// Called when a piece is set in place. Sets the grid location to an occupied state.
@@ -64,8 +64,8 @@ public class BoardController : MonoBehaviour
     /// <param name="tileGameObject">GameObject of the specific tile on this grid location.</param>
     public void OccupyPos(Vector2Int coords, GameObject tileGameObject)
     {
-        fullGrid[coords.x, coords.y].isOccupied = true;
-        fullGrid[coords.x, coords.y].tileOnGridUnit = tileGameObject;
+        _fullGrid[coords.x, coords.y].isOccupied = true;
+        _fullGrid[coords.x, coords.y].tileOnGridUnit = tileGameObject;
     }
     /// <summary>
     /// Checks line by line from bottom to top to see if that line is full and should be cleared.
@@ -84,7 +84,7 @@ public class BoardController : MonoBehaviour
             bool lineClear = true;
             for(int x = 0; x < gridSizeX; x++)
             {
-                if (!fullGrid[x, y].isOccupied){
+                if (!_fullGrid[x, y].isOccupied){
                     lineClear = false;
                     //consecutiveLineClears = 0;
                 }
@@ -121,7 +121,7 @@ public class BoardController : MonoBehaviour
                 {
                     for (int x = 0; x < gridSizeX; x++)
                     {
-                        GridUnit curGridUnit = fullGrid[x, lineToDrop];
+                        GridUnit curGridUnit = _fullGrid[x, lineToDrop];
                         if (curGridUnit.isOccupied)
                         {
                             MoveTileDown(curGridUnit);
@@ -172,10 +172,11 @@ public class BoardController : MonoBehaviour
         for(int x = 0; x < gridSizeX; x++)
         {
             //PieceController curPC = fullGrid[x, lineToClear].tileOnGridUnit.GetComponent<TileController>().pieceController;
-            PieceController.Tiles[fullGrid[x, lineToClear].tileOnGridUnit.GetComponent<TileController>().tileIndex] = null;
-            Destroy(fullGrid[x, lineToClear].tileOnGridUnit);
-            fullGrid[x, lineToClear].tileOnGridUnit = null;
-            fullGrid[x, lineToClear].isOccupied = false;
+            PieceController.Tiles[_fullGrid[x, lineToClear].tileOnGridUnit.GetComponent<TileController>().tileIndex] = null;
+            //GhostPieceController.ghostTiles[_fullGrid[x, lineToClear]
+            Destroy(_fullGrid[x, lineToClear].tileOnGridUnit);
+            _fullGrid[x, lineToClear].tileOnGridUnit = null;
+            _fullGrid[x, lineToClear].isOccupied = false;
         }
         totalClearedLines++;
         TotalLineClearedLinesChanged(totalClearedLines);

@@ -1,17 +1,19 @@
 using UnityEngine;
 public class GhostPieceController : MonoBehaviour
 {
-    [HideInInspector]public TileController[] ghostTiles;
+    [HideInInspector]public static TileController[] ghostTiles;
     private void OnEnable()
     {
         PieceSpawner.PieceSpawned += UpdateGhostTiles;
         PieceMovement.OnPieceMovement += UpdateGhostTiles;
+        PieceMovement.OnPieceSet += UpdateGhostTiles;
         PieceRotation.OnPieceRotation += UpdateGhostTiles;
     }
     private void OnDisable()
     {
         PieceSpawner.PieceSpawned -= UpdateGhostTiles;
         PieceMovement.OnPieceMovement -= UpdateGhostTiles;
+        PieceMovement.OnPieceSet -= UpdateGhostTiles;
         PieceRotation.OnPieceRotation += UpdateGhostTiles;
     }
     private void Awake()
@@ -35,6 +37,8 @@ public class GhostPieceController : MonoBehaviour
     {
         for (int i = 1; i <= ghostTiles.Length; i++)
         {
+            if(PieceController.Tiles[i-1] == null)
+                Destroy(ghostTiles[i-1]);
             Vector2Int newPos = new Vector2Int((int) PieceController.Tiles[i - 1].gameObject.transform.position.x,
                 (int) PieceController.Tiles[i - 1].gameObject.transform.position.y);
             ghostTiles[i - 1].UpdatePosition(newPos);

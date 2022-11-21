@@ -743,11 +743,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nextPieceImage: {fileID: 635059519}
   frontCanvas: {fileID: 342035181}
-  pieceVisuals:
+  pieceImages:
   - {fileID: 7016533105550584226, guid: 7b90ab8812390fb47be22ec32d2f0eaa, type: 3}
   - {fileID: 8532119253840814103, guid: 1f420c3384756694d82864026cec71c8, type: 3}
-  - {fileID: 3854700857611437603, guid: 94dc5e549cbba7449828385602cc231f, type: 3}
   - {fileID: 1376536611918811974, guid: 677ecfe1045385c4593a2bbd4e39f059, type: 3}
+  - {fileID: 3854700857611437603, guid: 94dc5e549cbba7449828385602cc231f, type: 3}
   - {fileID: 3192687328938194526, guid: f5af57800b666d44d95f066e443bc866, type: 3}
   - {fileID: 9211067951792740092, guid: 54d7473db67757d408fea24312f4e396, type: 3}
   - {fileID: 6148934371924804420, guid: 2c7d1e5461c3b124a9c093b3b3a5cdbe, type: 3}

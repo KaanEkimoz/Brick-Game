@@ -71,7 +71,7 @@ public class TileController : MonoBehaviour
     /// Rotates the tile by 90 degrees about the origin tile.
     /// </summary>
     /// <param name="originPos">Coordinates this tile will be rotating about.</param>
-    /// <param name="clockwise">True if rotating clockwise. False if rotatitng CCW</param>
+    /// <param name="clockwise">True if rotating clockwise. False if rotating CCW</param>
     public void RotateTile(Vector2Int originPos, bool clockwise)
     {
 

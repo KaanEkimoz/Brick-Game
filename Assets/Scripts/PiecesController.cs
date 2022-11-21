@@ -6,9 +6,9 @@ public partial class PiecesController : MonoBehaviour
     public float dropTimeInSeconds;
     
     public static GameObject CurPiece;
-    private PieceMovement CurPieceMovement;
-    private PieceRotation CurPieceRotation;
-    private Coroutine dropCurPiece;
+    private PieceMovement _curPieceMovement;
+    private PieceRotation _curPieceRotation;
+    private Coroutine _dropCurPiece;
     private void OnEnable()
     {
         PieceSpawner.PieceSpawned += InitializeMovement;
@@ -32,13 +32,13 @@ public partial class PiecesController : MonoBehaviour
     }
     private void StartDropCurPiece()
     {
-        dropCurPiece = StartCoroutine(DropCurPiece());
+        _dropCurPiece = StartCoroutine(DropCurPiece());
     }
     /// <summary>
     /// Drops the piece the current piece the player is controlling by one unit.
     /// </summary>
     /// <returns>Function is called on a loop based on the 'dropTimeInSeconds' variable.</returns>
-    IEnumerator DropCurPiece()
+    private IEnumerator DropCurPiece()
     {
         //TO DO: Add Pause Conditions
         while (true)
@@ -52,17 +52,17 @@ public partial class PiecesController : MonoBehaviour
     /// </summary>
     public void StopDropCurPiece()
     {
-        StopCoroutine(dropCurPiece);
+        StopCoroutine(_dropCurPiece);
     }
 
-    public void InitializeMovement()
+    private void InitializeMovement()
     {
-        CurPieceMovement = CurPiece.GetComponent<PieceMovement>();
+        _curPieceMovement = CurPiece.GetComponent<PieceMovement>();
     }
 
-    public void InitializeRotation()
+    private void InitializeRotation()
     {
-        CurPieceRotation = CurPiece.GetComponent<PieceRotation>();
+        _curPieceRotation = CurPiece.GetComponent<PieceRotation>();
     }
     /// <summary>
     /// Makes any necessary changes once the game has ended.
@@ -77,19 +77,18 @@ public partial class PiecesController : MonoBehaviour
     /// <param name="movement">X,Y amount the piece should be moved by</param>
     private void MoveCurPiece(Vector2Int movement)
     {
-        if(CurPiece == null)
+        /*if(CurPiece == null)
         {
             return;
-        }
-        CurPieceMovement.MovePiece(movement);
+        }*/
+        _curPieceMovement.MovePiece(movement);
     }
     private void StartGame()
     {
-        if(CurPieceMovement != null)
+        if(_curPieceMovement != null)
         {
             return;
         }
-        
         PieceSpawner pieceSpawner = FindObjectOfType<PieceSpawner>();
         pieceSpawner.SpawnPiece();
     }

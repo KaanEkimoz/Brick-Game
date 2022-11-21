@@ -1,12 +1,14 @@
 using UnityEngine;
+using UnityEngine.WSA;
+
 public class PieceController : MonoBehaviour 
 {
     public static TileController[] Tiles;
+    public TileController[] tiles;
     private void OnEnable()
     {
         PieceSpawner.PieceSpawned += InitializeTiles;
     }
-
     private void OnDisable()
     {
         PieceSpawner.PieceSpawned -= InitializeTiles;
@@ -17,12 +19,13 @@ public class PieceController : MonoBehaviour
     }
     private void InitializeTiles()
     {
-        Tiles = new TileController[4];
+        /*Tiles = new TileController[4];
         for(int i = 1; i <= Tiles.Length; i++)
         {
             string tileName = "Tile" + i;
             TileController newTile = transform.Find("Tiles").Find(tileName).GetComponent<TileController>();
             Tiles[i - 1] = newTile;
-        }
+        }*/
+        Tiles = tiles;
     }
 }

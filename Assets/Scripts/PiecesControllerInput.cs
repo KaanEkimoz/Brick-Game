@@ -1,9 +1,12 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.WSA;
+
 public partial class PiecesController
 {
     private void Update()
     {
+        
         if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
             SendPieceToFloor();
         if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S))
@@ -23,15 +26,15 @@ public partial class PiecesController
     }
     public void RotateClockwise()
     {
-        CurPieceRotation.RotatePiece(true, true);
+        _curPieceRotation.RotatePiece(true, true);
     }
     public void RotateCounterClockwise()
     {
-        CurPieceRotation.RotatePiece(false, true);
+        _curPieceRotation.RotatePiece(false, true);
     }
     public void SendPieceToFloor()
     {
-        CurPieceMovement.SendPieceToFloor();
+        _curPieceMovement.SendPieceToFloor();
     }
     public void MoveDown()
     {
