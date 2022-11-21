@@ -1,31 +1,18 @@
 using UnityEngine;
-using UnityEngine.WSA;
 
-public class PieceController : MonoBehaviour 
+namespace Piece
 {
-    public static TileController[] Tiles;
-    public TileController[] tiles;
-    private void OnEnable()
+    public class PieceController : MonoBehaviour 
     {
-        PieceSpawner.PieceSpawned += InitializeTiles;
-    }
-    private void OnDisable()
-    {
-        PieceSpawner.PieceSpawned -= InitializeTiles;
-    }
-    private void Awake()
-    {
-        InitializeTiles();
-    }
-    private void InitializeTiles()
-    {
-        /*Tiles = new TileController[4];
-        for(int i = 1; i <= Tiles.Length; i++)
+        public static TileController[] Tiles;
+        public TileController[] tiles;
+        private void Awake()
         {
-            string tileName = "Tile" + i;
-            TileController newTile = transform.Find("Tiles").Find(tileName).GetComponent<TileController>();
-            Tiles[i - 1] = newTile;
-        }*/
-        Tiles = tiles;
+            InitializeTiles();
+        }
+        private void InitializeTiles()
+        {
+            Tiles = tiles;
+        }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Piece;
 using UnityEngine;
 public class BoardController : MonoBehaviour
 {
@@ -84,10 +85,8 @@ public class BoardController : MonoBehaviour
             bool lineClear = true;
             for(int x = 0; x < gridSizeX; x++)
             {
-                if (!_fullGrid[x, y].isOccupied){
+                if (!_fullGrid[x, y].isOccupied)
                     lineClear = false;
-                    //consecutiveLineClears = 0;
-                }
             }
             if (lineClear)
             {
@@ -96,13 +95,7 @@ public class BoardController : MonoBehaviour
                 if (consecutiveLineClears == 4)
                 {
                     ShowTetrisText();
-                    Debug.Log("<color=red>T</color>" +
-                              "<color=orange>E</color>" +
-                              "<color=yellow>T</color>" +
-                              "<color=lime>R</color>" +
-                              "<color=aqua>I</color>" +
-                              "<color=purple>S</color>" +
-                              "<color=blue>!</color>");
+                    Debug.Log("TETRIS!");
                 }
                 ClearLine(y);
             }
@@ -113,9 +106,9 @@ public class BoardController : MonoBehaviour
         {
             for(int i = 0; i < linesToClear.Count; i++)
             {
-                /* The initial index of lineToDrop is calculated by taking the index of the first line
-                 * that was cleared then adding 1 to indicate the index of the line above the cleared line,
-                 * then the value i is subtracted to compensate for any lines already cleared.
+                 /* The initial index of lineToDrop is calculated by taking the index of the first line
+                 that was cleared then adding 1 to indicate the index of the line above the cleared line,
+                 then the value i is subtracted to compensate for any lines already cleared.
                  */
                 for (int lineToDrop = linesToClear[i] + 1 - i; lineToDrop < gridSizeY; lineToDrop++)
                 {

@@ -1,9 +1,7 @@
 using Piece;
 using UnityEngine;
-public class TileController : MonoBehaviour
+public class GhostTileController : MonoBehaviour
 {
-
-    public bool isGhostTile;
     [HideInInspector]public Vector2Int coordinates;
     [HideInInspector]public PieceController pieceController;
     [HideInInspector]public int tileIndex;
@@ -51,39 +49,5 @@ public class TileController : MonoBehaviour
         coordinates = newPos;
         Vector3 newV3Pos = new Vector3(newPos.x, newPos.y);
         gameObject.transform.position = newV3Pos;
-    }
-    /// <summary>
-    /// Sets the tile in it's current position
-    /// </summary>
-    /// <returns>True if the tile is on the board. False if tile is above playing field, GAME OVER.</returns>
-    public bool SetTile()
-    {
-        if (isGhostTile)
-            return false;
-        
-        if (coordinates.y >= BoardController.Instance.gridSizeY)
-        {
-            return false;
-        }
-        BoardController.Instance.OccupyPos(coordinates, gameObject);
-        return true;
-    }
-    /// <summary>
-    /// Rotates the tile by 90 degrees about the origin tile.
-    /// </summary>
-    /// <param name="originPos">Coordinates this tile will be rotating about.</param>
-    /// <param name="clockwise">True if rotating clockwise. False if rotating CCW</param>
-    public void RotateTile(Vector2Int originPos, bool clockwise)
-    {
-
-        Vector2Int relativePos = coordinates - originPos;
-        Vector2Int[] rotMatrix = clockwise ? new[] { new Vector2Int(0, -1), new Vector2Int(1, 0) }
-                                           : new[] { new Vector2Int(0, 1), new Vector2Int(-1, 0) };
-        int newXPos = (rotMatrix[0].x * relativePos.x) + (rotMatrix[1].x * relativePos.y);
-        int newYPos = (rotMatrix[0].y * relativePos.x) + (rotMatrix[1].y * relativePos.y);
-        Vector2Int newPos = new Vector2Int(newXPos, newYPos);
-
-        newPos += originPos;
-        UpdatePosition(newPos);
     }
 }

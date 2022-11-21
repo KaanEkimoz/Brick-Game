@@ -2033,6 +2033,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e86a88115e52324e8e437ab99e963c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ghostPiecePrefab: {fileID: 4784137699124842925, guid: 3bba2b63364d2c14eaddaf480b83e653,
+    type: 3}
   piecePrefab: {fileID: 4026427490633741293, guid: 925857a2d4ee66847b7633b087b94a93,
     type: 3}
   spawnPosition: {x: 5, y: 20}

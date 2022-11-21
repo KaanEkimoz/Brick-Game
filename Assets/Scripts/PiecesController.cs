@@ -1,4 +1,5 @@
 using System.Collections;
+using Piece;
 using UnityEngine;
 public partial class PiecesController : MonoBehaviour 
 {
@@ -11,16 +12,16 @@ public partial class PiecesController : MonoBehaviour
     private Coroutine _dropCurPiece;
     private void OnEnable()
     {
-        PieceSpawner.PieceSpawned += InitializeMovement;
-        PieceSpawner.PieceSpawned += InitializeRotation;
-        PieceSpawner.PieceSpawned += StartDropCurPiece;
+        PieceSpawner.OnPieceSpawned += InitializeMovement;
+        PieceSpawner.OnPieceSpawned += InitializeRotation;
+        PieceSpawner.OnPieceSpawned += StartDropCurPiece;
         LevelController.OnLevelIncreased += UpdateDropTime;
     }
     private void OnDisable()
     {
-        PieceSpawner.PieceSpawned -= InitializeMovement;
-        PieceSpawner.PieceSpawned -= InitializeRotation;
-        PieceSpawner.PieceSpawned -= StartDropCurPiece;
+        PieceSpawner.OnPieceSpawned -= InitializeMovement;
+        PieceSpawner.OnPieceSpawned -= InitializeRotation;
+        PieceSpawner.OnPieceSpawned -= StartDropCurPiece;
         LevelController.OnLevelIncreased -= UpdateDropTime;
     }
     /// <summary>
@@ -90,6 +91,7 @@ public partial class PiecesController : MonoBehaviour
             return;
         }
         PieceSpawner pieceSpawner = FindObjectOfType<PieceSpawner>();
+        pieceSpawner.SpawnGhostPiece();
         pieceSpawner.SpawnPiece();
     }
     private void UpdateDropTime()
