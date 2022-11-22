@@ -1,6 +1,7 @@
 using System;
+using Board;
+using InGame;
 using UnityEngine;
-
 namespace Piece
 {
     public class PieceMovement : MonoBehaviour

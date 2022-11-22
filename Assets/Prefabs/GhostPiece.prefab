@@ -105,9 +105,9 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: fd18e3ddc2bbcac4aafcbd452d6a8853, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_SortingOrder: 1
+  m_Sprite: {fileID: 21300000, guid: 90a99df781b6b654d9a265244c2c5f5c, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.43137255}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -130,8 +130,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   coordinates: {x: 0, y: 0}
-  pieceController: {fileID: 0}
-  tileIndex: 0
 --- !u!1 &4784137698249275993
 GameObject:
   m_ObjectHideFlags: 0
@@ -203,9 +201,9 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: fd18e3ddc2bbcac4aafcbd452d6a8853, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_SortingOrder: 1
+  m_Sprite: {fileID: 21300000, guid: 90a99df781b6b654d9a265244c2c5f5c, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.43137255}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -228,8 +226,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   coordinates: {x: 0, y: 0}
-  pieceController: {fileID: 0}
-  tileIndex: 0
 --- !u!1 &4784137698890755065
 GameObject:
   m_ObjectHideFlags: 0
@@ -301,9 +297,9 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: fd18e3ddc2bbcac4aafcbd452d6a8853, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_SortingOrder: 1
+  m_Sprite: {fileID: 21300000, guid: 90a99df781b6b654d9a265244c2c5f5c, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.43137255}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -326,8 +322,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   coordinates: {x: 0, y: 0}
-  pieceController: {fileID: 0}
-  tileIndex: 0
 --- !u!1 &4784137699124842925
 GameObject:
   m_ObjectHideFlags: 0
@@ -461,9 +455,9 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: fd18e3ddc2bbcac4aafcbd452d6a8853, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_SortingOrder: 1
+  m_Sprite: {fileID: 21300000, guid: 90a99df781b6b654d9a265244c2c5f5c, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.43137255}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -486,5 +480,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   coordinates: {x: 0, y: 0}
-  pieceController: {fileID: 0}
-  tileIndex: 0

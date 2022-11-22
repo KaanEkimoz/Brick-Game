@@ -72,7 +72,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: 130b679cf70b38448b9a4b3471553f59, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c6a666d82d9f759439fcd3a9c3c7d1c3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -95,7 +95,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 529c122119c60ef40b9bf5e296659210, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isGhostTile: 0
   coordinates: {x: 0, y: 0}
   pieceController: {fileID: 0}
   tileIndex: 0
@@ -171,7 +170,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: 130b679cf70b38448b9a4b3471553f59, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c6a666d82d9f759439fcd3a9c3c7d1c3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -194,7 +193,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 529c122119c60ef40b9bf5e296659210, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isGhostTile: 0
   coordinates: {x: 0, y: 0}
   pieceController: {fileID: 0}
   tileIndex: 0
@@ -346,7 +344,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: 130b679cf70b38448b9a4b3471553f59, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c6a666d82d9f759439fcd3a9c3c7d1c3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -369,7 +367,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 529c122119c60ef40b9bf5e296659210, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isGhostTile: 0
   coordinates: {x: 0, y: 0}
   pieceController: {fileID: 0}
   tileIndex: 0
@@ -445,7 +442,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: 130b679cf70b38448b9a4b3471553f59, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c6a666d82d9f759439fcd3a9c3c7d1c3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -468,7 +465,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 529c122119c60ef40b9bf5e296659210, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isGhostTile: 0
   coordinates: {x: 0, y: 0}
   pieceController: {fileID: 0}
   tileIndex: 0

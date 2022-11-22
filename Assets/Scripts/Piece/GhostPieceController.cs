@@ -1,9 +1,11 @@
+using InGame;
+using Tiles;
 using UnityEngine;
-
 namespace Piece
 {
     public class GhostPieceController : MonoBehaviour
     {
+        [Space]
         public GhostTileController[] ghostTiles;
         private void OnEnable()
         {
@@ -21,10 +23,9 @@ namespace Piece
         {
             for (int i = 1; i <= ghostTiles.Length; i++)
             {
-                if(PieceController.Tiles[i-1] == null)
-                    Destroy(ghostTiles[i-1]);
-                Vector2Int newPos = new Vector2Int((int) PieceController.Tiles[i - 1].gameObject.transform.position.x,
-                    (int) PieceController.Tiles[i - 1].gameObject.transform.position.y);
+                TileController tile = PieceController.Tiles[i - 1];
+                var tilePos = tile.transform.position;
+                Vector2Int newPos = new Vector2Int((int)tilePos.x, (int) tilePos.y);
                 ghostTiles[i - 1].UpdatePosition(newPos);
             }
             SendGhostPieceToFloor();
