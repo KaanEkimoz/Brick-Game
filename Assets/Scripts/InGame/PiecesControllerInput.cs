@@ -30,7 +30,6 @@ namespace InGame
         }
     
         #region Input Functions
-
         public void StartGame()
         {
             if(_curPieceMovement != null)

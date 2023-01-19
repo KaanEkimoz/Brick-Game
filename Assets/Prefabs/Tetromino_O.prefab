@@ -72,7 +72,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 080b94d7809dea7469e6bee687a29eb5, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 17923d0f02466fa47b12407a7815d644, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -96,9 +96,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   coordinates: {x: 0, y: 0}
-  originalSpr: {fileID: 0}
-  hoverSpr: {fileID: 0}
-  disableSpr: {fileID: 0}
   pieceController: {fileID: 0}
   tileIndex: 0
 --- !u!1 &8651457226731183966
@@ -145,10 +142,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f56e9f7fee9dc5044b1bd6aaeb65a917, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  curType: 0
-  tileSprites: []
-  setDelayTime: 0
-  isDisabledFromSacrifice: 0
   tiles: []
 --- !u!1 &8651457227339324035
 GameObject:
@@ -222,7 +215,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 080b94d7809dea7469e6bee687a29eb5, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 17923d0f02466fa47b12407a7815d644, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -246,9 +239,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   coordinates: {x: 0, y: 0}
-  originalSpr: {fileID: 0}
-  hoverSpr: {fileID: 0}
-  disableSpr: {fileID: 0}
   pieceController: {fileID: 0}
   tileIndex: 0
 --- !u!1 &8651457228026880813
@@ -323,7 +313,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 080b94d7809dea7469e6bee687a29eb5, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 17923d0f02466fa47b12407a7815d644, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -347,9 +337,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   coordinates: {x: 0, y: 0}
-  originalSpr: {fileID: 0}
-  hoverSpr: {fileID: 0}
-  disableSpr: {fileID: 0}
   pieceController: {fileID: 0}
   tileIndex: 0
 --- !u!1 &8651457228245639519
@@ -424,7 +411,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 080b94d7809dea7469e6bee687a29eb5, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 17923d0f02466fa47b12407a7815d644, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -448,9 +435,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   coordinates: {x: 0, y: 0}
-  originalSpr: {fileID: 0}
-  hoverSpr: {fileID: 0}
-  disableSpr: {fileID: 0}
   pieceController: {fileID: 0}
   tileIndex: 0
 --- !u!1 &8991344372073600412

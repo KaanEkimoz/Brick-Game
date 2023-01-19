@@ -15,7 +15,6 @@ namespace Board
         [Space]
         public GameObject tetrisText;
     
-    
         public static Action<int> OnLinesCleared;
         public static Action<int> OnTotalClearedLinesChanged;
         public static BoardController Instance;

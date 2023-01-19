@@ -105,7 +105,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 7913d285460eea240ae18cc5999b1d89, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 900a96a084fbc124ea72b8e126a96086, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -187,7 +187,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 7913d285460eea240ae18cc5999b1d89, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 900a96a084fbc124ea72b8e126a96086, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -269,7 +269,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 7913d285460eea240ae18cc5999b1d89, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 900a96a084fbc124ea72b8e126a96086, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -324,10 +324,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f56e9f7fee9dc5044b1bd6aaeb65a917, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  curType: 0
-  tileSprites: []
-  setDelayTime: 0
-  isDisabledFromSacrifice: 0
   tiles: []
 --- !u!1 &3043521900189352914
 GameObject:
@@ -400,7 +396,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 7913d285460eea240ae18cc5999b1d89, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 900a96a084fbc124ea72b8e126a96086, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

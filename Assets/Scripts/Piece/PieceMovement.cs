@@ -7,7 +7,6 @@ namespace Piece
     public class PieceMovement : MonoBehaviour
     {
         public static Action OnPieceMovement;
-    
         /// <summary>
         /// Drops piece down as far as it can go.
         /// </summary>

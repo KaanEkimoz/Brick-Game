@@ -34,7 +34,7 @@ namespace Extras
             foreach (var pieceImage in pieceImages)
             {
                 if (pieceImage.gameObject.name ==  nextPieceType.ToString())
-                    _currentShownImage = Instantiate(pieceImage,_nextPieceImage.transform.position,Quaternion.identity,frontCanvas.transform);
+                    _currentShownImage = Instantiate(pieceImage,_nextPieceImage.transform.position,Quaternion.identity,transform);
             }
         }
     }

@@ -38,7 +38,7 @@ namespace Extras
         }
         private void UpdateLevelText()
         {
-            levelText.text = "Level " + CurrentLevel;
+            levelText.text = "Level\n" + CurrentLevel;
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Extras;
 using Piece;
@@ -14,6 +15,8 @@ namespace InGame
         private PieceMovement _curPieceMovement;
         private PieceRotation _curPieceRotation;
         private Coroutine _dropCurPiece;
+
+        public static Action OnGameOver;
     
         /// <summary>
         /// Event subscription
@@ -100,6 +103,7 @@ namespace InGame
         public void GameOver()
         {
             StopDropCurPiece();
+            OnGameOver?.Invoke();
         }
         /// <summary>
         /// Moves the current piece controlled by the player.
