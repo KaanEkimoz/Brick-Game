@@ -113,15 +113,13 @@ namespace Board
                     if (consecutiveLineClears == 4)
                     {
                         ShowTetrisText();
-                        Debug.Log("TETRIS!");
                     }
                     ClearLine(y);
                 }
             }
-            
             OnLinesCleared?.Invoke(consecutiveLineClears);
         
-            //
+
             if (linesToClear.Count <= 0) 
                 return;
             
@@ -152,7 +150,7 @@ namespace Board
         void ShowTetrisText()
         {
             tetrisText.SetActive(true);
-            Invoke("HideTetrisText", 4f);
+            Invoke("HideTetrisText", 3f);
         }
         /// <summary>
         /// Hides the Tetris line clear text.
@@ -186,9 +184,7 @@ namespace Board
             }
             for(int x = 0; x < gridSizeX; x++)
             {
-                //PieceController curPC = fullGrid[x, lineToClear].tileOnGridUnit.GetComponent<TileController>().pieceController;
                 PieceController.Tiles[_fullGrid[x, lineToClear].tileOnGridUnit.GetComponent<TileController>().tileIndex] = null;
-                //GhostPieceController.ghostTiles[_fullGrid[x, lineToClear]
                 Destroy(_fullGrid[x, lineToClear].tileOnGridUnit);
                 _fullGrid[x, lineToClear].tileOnGridUnit = null;
                 _fullGrid[x, lineToClear].isOccupied = false;

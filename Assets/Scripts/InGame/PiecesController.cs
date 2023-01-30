@@ -117,7 +117,7 @@ namespace InGame
         }
         private void UpdateDropTimeAccordingTheLevel()
         {
-            _dropTimeInSeconds -= (float)(LevelController.CurrentLevel - 1) / 20;
+            _dropTimeInSeconds = 0.8f - (float)(LevelController.CurrentLevel - 1) / 40;
         }
     }
 }
