@@ -6,18 +6,52 @@ using UnityEngine;
 
 namespace InGame
 {
-    public partial class PiecesController : MonoBehaviour 
+    public partial class PiecesController : MonoBehaviour
     {
         public static PiecesController Instance;
         public static GameObject CurPiece;
-    
+
         private float _dropTimeInSeconds = 0.8f;
         private PieceMovement _curPieceMovement;
         private PieceRotation _curPieceRotation;
         private Coroutine _dropCurPiece;
 
         public static Action OnGameOver;
-    
+
+        //Soft Drop Button Hold
+        private float softDropButtonHoldTime = 0.5f;
+        private float softDropHoldDropIntervalTime = 0.04f;
+        private bool softDropIsHolding = false;
+
+        public void OnSoftDropButtonDown()
+        {
+            softDropIsHolding = true;
+            StartCoroutine(SoftDropHoldCoroutine());
+        }
+        public void OnSoftDropButtonUp()
+        {
+            softDropIsHolding = false;
+        }
+        private IEnumerator SoftDropHoldCoroutine()
+        {
+            float timer = 0f;
+            while (softDropIsHolding && timer < softDropButtonHoldTime)
+            {
+                yield return null;
+                timer += Time.deltaTime;
+            }
+
+            if (softDropIsHolding && timer >= softDropButtonHoldTime)
+            {
+                while (softDropIsHolding)
+                {
+                    MoveCurPiece(Vector2Int.down);
+                    yield return new WaitForSeconds(softDropHoldDropIntervalTime);
+                }
+            }
+        }
+
+
         /// <summary>
         /// Event subscription
         /// </summary>
@@ -45,13 +79,13 @@ namespace InGame
         {
             #region Singleton
 
-            if (Instance != null && Instance != this) 
-            { 
-                Destroy(this); 
-            } 
-            else 
-            { 
-                Instance = this; 
+            if (Instance != null && Instance != this)
+            {
+                Destroy(this);
+            }
+            else
+            {
+                Instance = this;
             }
 
             #endregion
@@ -74,7 +108,7 @@ namespace InGame
             {
                 MoveCurPiece(Vector2Int.down);
                 yield return new WaitForSeconds(_dropTimeInSeconds);
-            } 
+            }
         }
         /// <summary>
         /// Once the piece is set in it's final location, the coroutine called to repeatedly drop the piece is stopped.
