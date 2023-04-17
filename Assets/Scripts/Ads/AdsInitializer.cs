@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Advertisements;
+using InGame;
 
 public class AdsInitializer : MonoBehaviour, IUnityAdsInitializationListener
 {
@@ -9,10 +10,14 @@ public class AdsInitializer : MonoBehaviour, IUnityAdsInitializationListener
     private string _gameId;
 
     [SerializeField] InterstitialAds interstitialad;
-    //[SerializeField] BannerAds bannerad;
+    [SerializeField] BannerAds bannerad;
     void Awake()
     {
         InitializeAds();
+    }
+    void Start()
+    {
+
     }
 
     public void InitializeAds()
@@ -27,11 +32,20 @@ public class AdsInitializer : MonoBehaviour, IUnityAdsInitializationListener
     {
         Debug.Log("Unity Ads initialization complete.");
         interstitialad.LoadAd();
-       // bannerad.LoadBanner();
+        bannerad.LoadBanner();
     }
 
     public void OnInitializationFailed(UnityAdsInitializationError error, string message)
     {
         Debug.Log($"Unity Ads Initialization Failed: {error.ToString()} - {message}");
+    }
+
+    private void OnEnable()
+    {
+        PiecesController.OnGameOver += interstitialad.ShowAd;
+    }
+    private void OnDisable()
+    {
+        PiecesController.OnGameOver -= interstitialad.ShowAd;
     }
 }

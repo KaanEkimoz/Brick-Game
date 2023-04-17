@@ -21,8 +21,7 @@ namespace Extras
         }
         private void Start()
         {
-            CurrentLevel = 1;
-            UpdateLevelText();
+            ResetLevel();
         }
         private void CalculateLevel(int totalClearedLines)
         {
@@ -39,6 +38,11 @@ namespace Extras
         private void UpdateLevelText()
         {
             levelText.text = "Level\n" + CurrentLevel;
+        }
+        public void ResetLevel()
+        {
+            CurrentLevel = 1;
+            UpdateLevelText();
         }
     }
 }

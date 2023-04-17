@@ -37,5 +37,9 @@ namespace Extras
                     _currentShownImage = Instantiate(pieceImage,_nextPieceImage.transform.position,Quaternion.identity,transform);
             }
         }
+        private void DestroyCurrentShownImage()
+        {
+            Destroy(_currentShownImage);
+        }
     }
 }

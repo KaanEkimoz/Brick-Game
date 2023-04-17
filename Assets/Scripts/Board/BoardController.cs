@@ -192,5 +192,18 @@ namespace Board
             _totalClearedLines++;
             OnTotalClearedLinesChanged(_totalClearedLines);
         }
+        public void ClearBoard()
+        {
+            for (int y = 0; y < gridSizeY; y++)
+            {
+                for (int x = 0; x < gridSizeX; x++)
+                {
+                    Destroy(_fullGrid[x, y].tileOnGridUnit);
+                    _fullGrid[x, y].tileOnGridUnit = null;
+                    _fullGrid[x, y].isOccupied = false;
+                }
+            }
+            _totalClearedLines = 0;
+        }
     }
 }

@@ -69,5 +69,9 @@ namespace Extras
             highScore = PlayerPrefs.GetInt("highScore");
             UpdateHighScoreText();
         }
+        public void ResetScore()
+        {
+            AddScore(-score);
+        }
     }
 }

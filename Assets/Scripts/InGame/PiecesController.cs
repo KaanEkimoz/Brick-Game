@@ -151,7 +151,13 @@ namespace InGame
         }
         private void UpdateDropTimeAccordingTheLevel()
         {
-            _dropTimeInSeconds = 0.8f - (float)(LevelController.CurrentLevel - 1) / 40;
+            _dropTimeInSeconds = 0.75f - (float)(LevelController.CurrentLevel - 1) / 40;
+        }
+        public void DestroyCurPiece()
+        {
+            StopDropCurPiece();
+            if (PiecesController.CurPiece)
+                Destroy(PiecesController.CurPiece);
         }
     }
 }
