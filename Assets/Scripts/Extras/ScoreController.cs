@@ -6,10 +6,10 @@ namespace Extras
 {
     public class ScoreController : MonoBehaviour
     {
-        public TextMeshProUGUI scoreText;
-        public TextMeshProUGUI highScoreText;
+        [SerializeField] private TextMeshProUGUI scoreText;
+        [SerializeField] private TextMeshProUGUI highScoreText;
         public static int score;
-        private int highScore = 0;
+        public static int highScore = 0;
         private void OnEnable()
         {
             BoardController.OnLinesCleared += ClearedLineScore;
@@ -20,7 +20,8 @@ namespace Extras
         }
         private void Start()
         {
-            LoadHighScore();
+            highScore = 0;
+            UpdateHighScoreText();
             score = 0;
             UpdateScoreText();
         }
@@ -61,12 +62,6 @@ namespace Extras
         private void SaveHighScore()
         {
             highScore = score;
-            PlayerPrefs.SetInt("highScore", highScore);
-            UpdateHighScoreText();
-        }
-        private void LoadHighScore()
-        {
-            highScore = PlayerPrefs.GetInt("highScore");
             UpdateHighScoreText();
         }
         public void ResetScore()

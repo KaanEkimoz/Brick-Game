@@ -28,7 +28,7 @@ public class GameOver : MonoBehaviour
     private void UpdateScores()
     {
         endScore.text = "Score\n" + ScoreController.score;
-        highScore.text = "High Score\n" + PlayerPrefs.GetInt("highScore");
+        highScore.text = "High Score\n" + ScoreController.highScore;
     }
     private void StopMusic()
     {
