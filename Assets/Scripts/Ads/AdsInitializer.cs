@@ -15,11 +15,6 @@ public class AdsInitializer : MonoBehaviour, IUnityAdsInitializationListener
     {
         InitializeAds();
     }
-    void Start()
-    {
-
-    }
-
     public void InitializeAds()
     {
         _gameId = (Application.platform == RuntimePlatform.IPhonePlayer)
@@ -42,10 +37,12 @@ public class AdsInitializer : MonoBehaviour, IUnityAdsInitializationListener
 
     private void OnEnable()
     {
+        PiecesController.OnGameOver += interstitialad.LoadAd;
         PiecesController.OnGameOver += interstitialad.ShowAd;
     }
     private void OnDisable()
     {
+        PiecesController.OnGameOver -= interstitialad.LoadAd;
         PiecesController.OnGameOver -= interstitialad.ShowAd;
     }
 }
