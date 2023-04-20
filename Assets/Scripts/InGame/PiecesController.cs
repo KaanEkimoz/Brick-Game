@@ -18,39 +18,88 @@ namespace InGame
 
         public static Action OnGameOver;
 
-        //Soft Drop Button Hold
-        private float softDropButtonHoldTime = 0.5f;
-        private float softDropHoldDropIntervalTime = 0.04f;
-        private bool softDropIsHolding = false;
+        private bool IsRightButtonHolding = false;
+        private bool IsLeftButtonHolding = false;
+        private bool IsDownButtonHolding = false;
 
-        public void OnSoftDropButtonDown()
+        public void OnDownButtonDown()
         {
-            softDropIsHolding = true;
-            StartCoroutine(SoftDropHoldCoroutine());
+            IsDownButtonHolding = true;
+            StartCoroutine(DownButtonHoldCoroutine());
         }
-        public void OnSoftDropButtonUp()
+        public void OnDownButtonUp()
         {
-            softDropIsHolding = false;
+            IsDownButtonHolding = false;
         }
-        private IEnumerator SoftDropHoldCoroutine()
+        public void OnRightButtonDown()
+        {
+            IsRightButtonHolding = true;
+            StartCoroutine(RightButtonHoldCoroutine());
+        }
+        public void OnRightButtonUp()
+        {
+            IsRightButtonHolding = false;
+        }
+        public void OnLeftButtonDown()
+        {
+            IsLeftButtonHolding = true;
+            StartCoroutine(LeftButtonHoldCoroutine());
+        }
+        public void OnLeftButtonUp()
+        {
+            IsLeftButtonHolding = false;
+        }
+        private IEnumerator RightButtonHoldCoroutine()
         {
             float timer = 0f;
-            while (softDropIsHolding && timer < softDropButtonHoldTime)
+            while (IsRightButtonHolding && timer < 0.5f)
             {
                 yield return null;
                 timer += Time.deltaTime;
             }
-
-            if (softDropIsHolding && timer >= softDropButtonHoldTime)
+            if (IsRightButtonHolding && timer >= 0.5f)
             {
-                while (softDropIsHolding)
+                while (IsRightButtonHolding)
                 {
-                    MoveCurPiece(Vector2Int.down);
-                    yield return new WaitForSeconds(softDropHoldDropIntervalTime);
+                    MoveCurPiece(Vector2Int.right);
+                    yield return new WaitForSeconds(0.04f);
                 }
             }
         }
-
+        private IEnumerator LeftButtonHoldCoroutine()
+        {
+            float timer = 0f;
+            while (IsLeftButtonHolding && timer < 0.5f)
+            {
+                yield return null;
+                timer += Time.deltaTime;
+            }
+            if (IsLeftButtonHolding && timer >= 0.5f)
+            {
+                while (IsLeftButtonHolding)
+                {
+                    MoveCurPiece(Vector2Int.left);
+                    yield return new WaitForSeconds(0.04f);
+                }
+            }
+        }
+        private IEnumerator DownButtonHoldCoroutine()
+        {
+            float timer = 0f;
+            while (IsDownButtonHolding && timer < 0.5f)
+            {
+                yield return null;
+                timer += Time.deltaTime;
+            }
+            if (IsDownButtonHolding && timer >= 0.5f)
+            {
+                while (IsDownButtonHolding)
+                {
+                    MoveCurPiece(Vector2Int.down);
+                    yield return new WaitForSeconds(0.04f);
+                }
+            }
+        }
 
         /// <summary>
         /// Event subscription

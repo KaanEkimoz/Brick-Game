@@ -5,6 +5,9 @@ namespace InGame
 {
     public partial class PiecesController
     {
+        [SerializeField] private AudioSource audioSource;
+        [SerializeField] private AudioClip moveSound;
+        [SerializeField] private AudioClip hardDropSound;
         private void Update()
         {
             CheckKeyboardInputs();
@@ -12,20 +15,39 @@ namespace InGame
         private void CheckKeyboardInputs()
         {
             if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
+            {
                 SendPieceToFloor();
+                PlayHardDropSound();
+            }
+                
+
             if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S))
             {
                 MoveDown();
-                OnSoftDropButtonDown();
+                OnDownButtonDown();
+                PlayMoveSound();
             }
             if(Input.GetKeyUp(KeyCode.DownArrow) || Input.GetKeyUp(KeyCode.S))
-            {
-                OnSoftDropButtonUp();
-            }
+                OnDownButtonUp();
+
             if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
+            {
                 MoveRight();
+                OnRightButtonDown();
+                PlayMoveSound();
+            }
+            if (Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.D))
+                OnRightButtonUp();
+
             if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
+            {
                 MoveLeft();
+                OnLeftButtonDown();
+                PlayMoveSound();
+            }
+            if(Input.GetKeyUp(KeyCode.LeftArrow) || Input.GetKeyUp(KeyCode.A))
+                OnLeftButtonUp();
+
             if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
                 StartGame();
             if (Input.GetKeyDown(KeyCode.R))
@@ -68,6 +90,14 @@ namespace InGame
         public void MoveLeft()
         {
             MoveCurPiece(Vector2Int.left);
+        }
+        private void PlayMoveSound()
+        {
+            audioSource.PlayOneShot(moveSound);
+        }
+        private void PlayHardDropSound()
+        {
+            audioSource.PlayOneShot(hardDropSound);
         }
 
         #endregion
