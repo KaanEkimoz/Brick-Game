@@ -1,4 +1,4 @@
-# Color-Blocks-Mobile-Game
+# Brick Game - Mobile, Web-GL, Arcade, Casual, 
 A mobile game like old Tetris but with levels and new gamemodes!
 
 Brick game is an original Tetris clone with improved visuals and effects. 
