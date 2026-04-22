@@ -86,6 +86,33 @@ namespace Board
             _fullGrid[coords.x, coords.y].isOccupied = true;
             _fullGrid[coords.x, coords.y].tileOnGridUnit = tileGameObject;
         }
+
+        // === Persistence hooks ===
+
+        /// <summary>Total cleared-line counter; used by the save system to persist board progress.</summary>
+        public int TotalClearedLines => _totalClearedLines;
+
+        /// <summary>Sets the cleared-line counter when restoring from a save file.</summary>
+        public void SetTotalClearedLines(int value)
+        {
+            _totalClearedLines = value;
+        }
+
+        /// <summary>Enumerates every settled tile on the board — used by the save system to serialize grid state.</summary>
+        public IEnumerable<KeyValuePair<Vector2Int, GameObject>> GetOccupiedTiles()
+        {
+            for (int y = 0; y < gridSizeY; y++)
+            {
+                for (int x = 0; x < gridSizeX; x++)
+                {
+                    if (_fullGrid[x, y].isOccupied)
+                    {
+                        yield return new KeyValuePair<Vector2Int, GameObject>(
+                            new Vector2Int(x, y), _fullGrid[x, y].tileOnGridUnit);
+                    }
+                }
+            }
+        }
         /// <summary>
         /// Checks line by line from bottom to top to see if that line is full and should be cleared.
         /// </summary>
@@ -184,7 +211,10 @@ namespace Board
             }
             for(int x = 0; x < gridSizeX; x++)
             {
-                PieceController.Tiles[_fullGrid[x, lineToClear].tileOnGridUnit.GetComponent<TileController>().tileIndex] = null;
+                // Restored board tiles carry tileIndex = -1 and do not belong to PieceController.Tiles.
+                int ti = _fullGrid[x, lineToClear].tileOnGridUnit.GetComponent<TileController>().tileIndex;
+                if (ti >= 0 && ti < PieceController.Tiles.Length)
+                    PieceController.Tiles[ti] = null;
                 Destroy(_fullGrid[x, lineToClear].tileOnGridUnit);
                 _fullGrid[x, lineToClear].tileOnGridUnit = null;
                 _fullGrid[x, lineToClear].isOccupied = false;

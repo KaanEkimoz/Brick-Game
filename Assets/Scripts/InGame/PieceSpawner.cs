@@ -137,5 +137,30 @@ namespace InGame
         {
             Instantiate(ghostPiecePrefab, transform);
         }
+
+        // === Persistence hooks ===
+
+        /// <summary>Upcoming piece type. Used by the save system to persist the preview state.</summary>
+        public static PieceType NextPieceType => _nextPieceType;
+
+        /// <summary>Tile sprite palette, exposed for the save system to resolve sprite indices.</summary>
+        public Sprite[] TileSprites => tileSprites;
+
+        /// <summary>
+        /// Spawns a piece with explicit current/next types — used when restoring from a save file.
+        /// Mirrors <see cref="SpawnPiece"/> but bypasses the random next-piece roll.
+        /// </summary>
+        public void SpawnPieceFromSave(PieceType currentType, PieceType nextType)
+        {
+            GameObject curPiece = Instantiate(piecePrefab, transform);
+            InitializeCurPiece(curPiece);
+
+            _curPieceType = currentType;
+            _nextPieceType = nextType;
+
+            OnNextPieceChanged?.Invoke(_nextPieceType);
+            UpdateTiles(_curPieceType, PiecesController.CurPiece.GetComponent<PieceController>());
+            OnPieceSpawned?.Invoke();
+        }
     }
 }
