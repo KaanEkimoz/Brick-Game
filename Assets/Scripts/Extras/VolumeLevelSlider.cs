@@ -3,16 +3,20 @@ using UnityEngine.UI;
 
 public class VolumeLevelSlider : MonoBehaviour
 {
-    [SerializeField] private float defaultVolume = 0.75f;
+    [SerializeField] private float defaultVolume = 0.5f;
     [SerializeField] private Slider volumeLevelSlider;
-    
-    void Start()
+
+    void Awake()
     {
         if (!PlayerPrefs.HasKey("volumeLevel"))
             PlayerPrefs.SetFloat("volumeLevel", defaultVolume);
+    }
 
+    void OnEnable()
+    {
         LoadVolume();
     }
+
     public void ChangeVolume()
     {
         AudioListener.volume = volumeLevelSlider.value;
@@ -24,6 +28,9 @@ public class VolumeLevelSlider : MonoBehaviour
     }
     private void LoadVolume()
     {
-        AudioListener.volume = PlayerPrefs.GetFloat("volumeLevel");
+        float v = PlayerPrefs.GetFloat("volumeLevel");
+        AudioListener.volume = v;
+        if (volumeLevelSlider != null)
+            volumeLevelSlider.SetValueWithoutNotify(v);
     }
 }
