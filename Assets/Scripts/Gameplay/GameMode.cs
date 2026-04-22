@@ -1,3 +1,5 @@
+using System;
+
 namespace Gameplay
 {
     /// <summary>
@@ -6,6 +8,19 @@ namespace Gameplay
     /// </summary>
     public static class GameMode
     {
-        public static bool IsExtended;
+        public static event Action OnChanged;
+
+        private static bool _isExtended;
+
+        public static bool IsExtended
+        {
+            get => _isExtended;
+            set
+            {
+                if (_isExtended == value) return;
+                _isExtended = value;
+                OnChanged?.Invoke();
+            }
+        }
     }
 }

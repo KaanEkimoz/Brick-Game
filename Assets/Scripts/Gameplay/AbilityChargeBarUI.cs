@@ -20,6 +20,7 @@ namespace Gameplay
         {
             AbilityCharger.OnChargeChanged += HandleChargeChanged;
             AbilityCharger.OnAbilityArmed += HandleArmed;
+            GameMode.OnChanged += RefreshVisibility;
             RefreshVisibility();
         }
 
@@ -27,6 +28,7 @@ namespace Gameplay
         {
             AbilityCharger.OnChargeChanged -= HandleChargeChanged;
             AbilityCharger.OnAbilityArmed -= HandleArmed;
+            GameMode.OnChanged -= RefreshVisibility;
         }
 
         private void Start()
