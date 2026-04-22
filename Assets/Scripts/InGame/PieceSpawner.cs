@@ -120,61 +120,56 @@ namespace InGame
                 _tiles[i].gameObject.GetComponent<SpriteRenderer>().sprite = newSpr;
             }
         }
-        // Tracks whether the armed ability has already "skipped" one spawn slot — so the bar fills
-        // mid-piece, the current piece finishes its run, and only the NEXT spawn becomes the ability piece.
-        private bool _armedSeenLastSpawn;
+        // The ability that will spawn on the NEXT call to SpawnPiece. Set the moment the bar
+        // fills (which also resets the bar visually); cleared when the ability piece actually
+        // spawns. PieceSpawner owns this state so a double SpawnPiece cannot fire two abilities.
+        private AbilityType? _bufferedAbility;
 
         public void SpawnPiece()
         {
-            // Extended-mode hook: spawn the ability piece only on the second spawn after the bar fills.
-            if (GameMode.IsExtended && AbilityCharger.Instance != null && AbilityCharger.Instance.IsReady
-                && _abilityPiecePrefabs != null)
+            // 1) If an ability is buffered from a previous spawn, fire it now.
+            if (_bufferedAbility.HasValue && _abilityPiecePrefabs != null)
             {
-                if (_armedSeenLastSpawn)
+                AbilityType ability = _bufferedAbility.Value;
+                _bufferedAbility = null;
+                int idx = (int)ability;
+                if (idx >= 0 && idx < _abilityPiecePrefabs.Length && _abilityPiecePrefabs[idx] != null)
                 {
-                    AbilityType ability = AbilityCharger.Instance.ConsumePending();
-                    _armedSeenLastSpawn = false;
-                    int idx = (int)ability;
-                    if (idx >= 0 && idx < _abilityPiecePrefabs.Length && _abilityPiecePrefabs[idx] != null)
+                    GameObject abilityPiece = Instantiate(_abilityPiecePrefabs[idx], transform);
+                    InitializeCurPiece(abilityPiece);
+
+                    AbilityMarker marker = abilityPiece.GetComponent<AbilityMarker>();
+                    if (marker != null) marker.SetAbility(ability);
+
+                    PieceController pc = abilityPiece.GetComponent<PieceController>();
+                    if (PieceController.Tiles != null && PieceController.Tiles.Length > 0)
                     {
-                        GameObject abilityPiece = Instantiate(_abilityPiecePrefabs[idx], transform);
-                        InitializeCurPiece(abilityPiece);
-
-                        AbilityMarker marker = abilityPiece.GetComponent<AbilityMarker>();
-                        if (marker != null) marker.SetAbility(ability);
-
-                        PieceController pc = abilityPiece.GetComponent<PieceController>();
-                        if (PieceController.Tiles != null && PieceController.Tiles.Length > 0)
-                        {
-                            PieceController.Tiles[0].UpdatePosition(spawnPosition);
-                            PieceController.Tiles[0].InitializeTile(pc, 0);
-                        }
-
-                        OnPieceSpawned?.Invoke();
-                        return;
+                        PieceController.Tiles[0].UpdatePosition(spawnPosition);
+                        PieceController.Tiles[0].InitializeTile(pc, 0);
                     }
+
+                    OnPieceSpawned?.Invoke();
+                    return;
                 }
-                else
-                {
-                    // First spawn after the bar filled — note it and let the regular tetromino run.
-                    _armedSeenLastSpawn = true;
-                }
-            }
-            else
-            {
-                _armedSeenLastSpawn = false;
             }
 
+            // 2) Normal tetromino spawn.
             GameObject curPiece = Instantiate(piecePrefab, transform);
             InitializeCurPiece(curPiece);
 
             _curPieceType = _nextPieceType;
             _nextPieceType = (PieceType) Random.Range(0, 7);
 
-            // If an ability is queued for the very next spawn, show its icon in the preview slot.
-            if (_armedSeenLastSpawn && AbilityCharger.Instance != null && AbilityCharger.Instance.Pending.HasValue)
+            // 3) If the bar is full and we don't already have a buffered ability, take the
+            // pending ability now (which also empties the bar) and queue it for the next spawn.
+            // The preview slot is overridden so the player sees what's coming.
+            if (GameMode.IsExtended
+                && AbilityCharger.Instance != null
+                && AbilityCharger.Instance.IsReady
+                && !_bufferedAbility.HasValue)
             {
-                _nextPieceType = AbilityToPieceType(AbilityCharger.Instance.Pending.Value);
+                _bufferedAbility = AbilityCharger.Instance.ConsumePending();
+                _nextPieceType = AbilityToPieceType(_bufferedAbility.Value);
             }
 
             OnNextPieceChanged?.Invoke(_nextPieceType);
