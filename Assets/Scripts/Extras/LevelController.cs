@@ -44,5 +44,13 @@ namespace Extras
             CurrentLevel = 1;
             UpdateLevelText();
         }
+
+        /// <summary>Restores the level from a save file. Fires OnLevelIncreased so drop-time and UI recalc.</summary>
+        public void LoadLevel(int value)
+        {
+            CurrentLevel = Mathf.Clamp(value, 1, maxLevel);
+            UpdateLevelText();
+            OnLevelIncreased?.Invoke();
+        }
     }
 }

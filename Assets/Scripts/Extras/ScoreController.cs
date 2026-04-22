@@ -73,5 +73,14 @@ namespace Extras
         {
             AddScore(-score);
         }
+
+        /// <summary>Restores the score from a save file and refreshes the UI + high score.</summary>
+        public void LoadScore(int value)
+        {
+            score = value;
+            UpdateScoreText();
+            if (score > highScore)
+                SaveHighScore();
+        }
     }
 }
