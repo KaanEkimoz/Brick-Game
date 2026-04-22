@@ -73,5 +73,13 @@ public class BGMusicToggle : MonoBehaviour
         if (bgMusicEnabled)
             bgMusicSource.Play();
     }
+
+    public void SetEnabled(bool enabled)
+    {
+        if (enabled) EnableBackgroundMusicAndPlay();
+        else DisableBackgroundMusic();
+    }
+
+    public bool IsEnabled() => bgMusicEnabled;
 }
 
