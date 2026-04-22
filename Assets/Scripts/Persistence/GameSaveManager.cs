@@ -59,15 +59,24 @@ namespace Persistence
 
             if (_continuePromptPanel != null)
                 _continuePromptPanel.SetActive(false);
+        }
 
-            if (GameSaveStorage.HasSave())
+        /// <summary>Hook to the Play button's OnClick. Shows the continue prompt if a save exists, otherwise starts a new game.</summary>
+        public void OnPlayRequested()
+        {
+            bool hasSave = GameSaveStorage.HasSave();
+            Debug.Log($"[SaveManager] OnPlayRequested hasSave={hasSave} panelRef={(_continuePromptPanel != null)} panelActiveBefore={(_continuePromptPanel != null && _continuePromptPanel.activeSelf)}");
+
+            if (hasSave && _continuePromptPanel != null)
             {
-                if (_startMenuPanel != null)
-                    _startMenuPanel.SetActive(false);
-
-                if (_continuePromptPanel != null)
-                    _continuePromptPanel.SetActive(true);
+                _continuePromptPanel.SetActive(true);
+                Debug.Log($"[SaveManager] Activated continue prompt, panelActiveAfter={_continuePromptPanel.activeSelf}");
+                return;
             }
+
+            _saveHandled = true;
+            if (_piecesController != null)
+                _piecesController.StartGame();
         }
 
         // === UI Button Hooks (wire these up in the Inspector) ===
