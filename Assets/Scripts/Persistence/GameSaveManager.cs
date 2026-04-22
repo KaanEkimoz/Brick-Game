@@ -61,17 +61,23 @@ namespace Persistence
                 _continuePromptPanel.SetActive(false);
         }
 
-        /// <summary>Hook to the Play button's OnClick. Shows the continue prompt if a save exists, otherwise starts a new game.</summary>
+        /// <summary>
+        /// Hook to the Play button's OnClick. Shows the continue prompt only when the saved run has real
+        /// progress (score &gt; 0); otherwise deletes the stale save and starts a new game.
+        /// </summary>
         public void OnPlayRequested()
         {
-            bool hasSave = GameSaveStorage.HasSave();
-            Debug.Log($"[SaveManager] OnPlayRequested hasSave={hasSave} panelRef={(_continuePromptPanel != null)} panelActiveBefore={(_continuePromptPanel != null && _continuePromptPanel.activeSelf)}");
-
-            if (hasSave && _continuePromptPanel != null)
+            if (GameSaveStorage.HasSave())
             {
-                _continuePromptPanel.SetActive(true);
-                Debug.Log($"[SaveManager] Activated continue prompt, panelActiveAfter={_continuePromptPanel.activeSelf}");
-                return;
+                GameSaveData data = GameSaveStorage.Load();
+                if (data != null && data.score > 0 && _continuePromptPanel != null)
+                {
+                    _continuePromptPanel.SetActive(true);
+                    return;
+                }
+
+                // Save exists but has nothing worth resuming — drop it so the prompt never lies.
+                GameSaveStorage.Delete();
             }
 
             _saveHandled = true;
