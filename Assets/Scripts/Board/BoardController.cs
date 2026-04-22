@@ -107,13 +107,15 @@ namespace Board
             return count;
         }
 
-        /// <summary>Clears every occupied cell in the given row. Returns the number of cells destroyed.</summary>
+        /// <summary>Clears every occupied cell in the given row, then cascades the rows above downward. Returns the number of cells destroyed.</summary>
         public int ClearRowCells(int y)
         {
             if (y < 0 || y >= gridSizeY) return 0;
             int count = 0;
             for (int x = 0; x < gridSizeX; x++)
                 if (DestroyTileAt(x, y)) count++;
+            if (count > 0)
+                DropTheLine(y + 1);
             return count;
         }
 
