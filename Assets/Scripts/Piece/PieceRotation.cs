@@ -90,6 +90,10 @@ namespace Piece
         /// <param name="shouldOffset">Set to true if offset operations should be attempted.</param>
         public void RotatePiece(bool clockwise, bool shouldOffset)
         {
+            // Single-tile pieces (extended-mode abilities) have no meaningful rotation.
+            if (PieceController.Tiles == null || PieceController.Tiles.Length <= 1)
+                return;
+
             int oldRotationIndex = RotationIndex;
             RotationIndex += clockwise ? 1 : -1;
             RotationIndex = EkimozUtils.Mod(RotationIndex, 4);

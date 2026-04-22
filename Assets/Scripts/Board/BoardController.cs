@@ -87,6 +87,56 @@ namespace Board
             _fullGrid[coords.x, coords.y].tileOnGridUnit = tileGameObject;
         }
 
+        // === Extended-mode ability clears ===
+        // These partial clears do NOT cascade rows above (unlike full line clears), so they leave
+        // gaps the player can stack on. CheckLineClears is still called afterwards by the settle
+        // pipeline, so any full rows exposed by the ability will be counted normally.
+
+        /// <summary>Clears every occupied cell inside a box centred on (cx, cy) with the given radius. Returns the number of cells destroyed.</summary>
+        public int ClearBoxCells(int cx, int cy, int radius)
+        {
+            int count = 0;
+            for (int y = cy - radius; y <= cy + radius; y++)
+            {
+                for (int x = cx - radius; x <= cx + radius; x++)
+                {
+                    if (x < 0 || x >= gridSizeX || y < 0 || y >= gridSizeY) continue;
+                    if (DestroyTileAt(x, y)) count++;
+                }
+            }
+            return count;
+        }
+
+        /// <summary>Clears every occupied cell in the given row. Returns the number of cells destroyed.</summary>
+        public int ClearRowCells(int y)
+        {
+            if (y < 0 || y >= gridSizeY) return 0;
+            int count = 0;
+            for (int x = 0; x < gridSizeX; x++)
+                if (DestroyTileAt(x, y)) count++;
+            return count;
+        }
+
+        /// <summary>Clears every occupied cell in the given column. Returns the number of cells destroyed.</summary>
+        public int ClearColumnCells(int x)
+        {
+            if (x < 0 || x >= gridSizeX) return 0;
+            int count = 0;
+            for (int y = 0; y < gridSizeY; y++)
+                if (DestroyTileAt(x, y)) count++;
+            return count;
+        }
+
+        private bool DestroyTileAt(int x, int y)
+        {
+            GridUnit unit = _fullGrid[x, y];
+            if (!unit.isOccupied) return false;
+            if (unit.tileOnGridUnit != null) Destroy(unit.tileOnGridUnit);
+            unit.tileOnGridUnit = null;
+            unit.isOccupied = false;
+            return true;
+        }
+
         // === Persistence hooks ===
 
         /// <summary>Total cleared-line counter; used by the save system to persist board progress.</summary>

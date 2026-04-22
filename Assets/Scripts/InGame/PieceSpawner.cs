@@ -1,4 +1,5 @@
 using System;
+using Gameplay;
 using Piece;
 using Tiles;
 using UnityEngine;
@@ -6,7 +7,7 @@ using Random = UnityEngine.Random;
 
 namespace InGame
 {
-    public enum PieceType { O, I, S, Z, L, J, T }
+    public enum PieceType { O, I, S, Z, L, J, T, Bomb, HRow, VRow }
 
     public class PieceSpawner : MonoBehaviour
     {
@@ -14,10 +15,13 @@ namespace InGame
         [Header("Prefabs")]
         public GameObject ghostPiecePrefab;
         public GameObject piecePrefab;
-    
+
+        [Tooltip("Ability piece prefabs, ordered by AbilityType (0=Bomb, 1=HRow, 2=VRow).")]
+        [SerializeField] private GameObject[] _abilityPiecePrefabs;
+
         [Space]
         public Vector2Int spawnPosition;
-    
+
         [Space]
         public Sprite[] tileSprites;
 
@@ -118,12 +122,39 @@ namespace InGame
         }
         public void SpawnPiece()
         {
+            // Extended-mode hook: if an ability is armed, spawn a special piece instead of rolling a tetromino.
+            if (GameMode.IsExtended && AbilityCharger.Instance != null && AbilityCharger.Instance.IsReady
+                && _abilityPiecePrefabs != null)
+            {
+                AbilityType ability = AbilityCharger.Instance.ConsumePending();
+                int idx = (int)ability;
+                if (idx >= 0 && idx < _abilityPiecePrefabs.Length && _abilityPiecePrefabs[idx] != null)
+                {
+                    GameObject abilityPiece = Instantiate(_abilityPiecePrefabs[idx], transform);
+                    InitializeCurPiece(abilityPiece);
+
+                    AbilityMarker marker = abilityPiece.GetComponent<AbilityMarker>();
+                    if (marker != null) marker.SetAbility(ability);
+
+                    // Reposition & initialize the single tile at the standard spawn position.
+                    PieceController pc = abilityPiece.GetComponent<PieceController>();
+                    if (PieceController.Tiles != null && PieceController.Tiles.Length > 0)
+                    {
+                        PieceController.Tiles[0].UpdatePosition(spawnPosition);
+                        PieceController.Tiles[0].InitializeTile(pc, 0);
+                    }
+
+                    OnPieceSpawned?.Invoke();
+                    return;
+                }
+            }
+
             GameObject curPiece = Instantiate(piecePrefab, transform);
             InitializeCurPiece(curPiece);
-        
+
             _curPieceType = _nextPieceType;
             _nextPieceType = (PieceType) Random.Range(0, 7);
-        
+
             OnNextPieceChanged?.Invoke(_nextPieceType);
             UpdateTiles(_curPieceType, PiecesController.CurPiece.GetComponent<PieceController>());
             OnPieceSpawned?.Invoke();

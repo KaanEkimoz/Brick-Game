@@ -74,6 +74,12 @@ namespace Extras
             AddScore(-score);
         }
 
+        /// <summary>Awards score for extended-mode ability clears (scales with current level).</summary>
+        public void AddBonusScore(int points)
+        {
+            AddScore(points);
+        }
+
         /// <summary>Restores the score from a save file and refreshes the UI + high score.</summary>
         public void LoadScore(int value)
         {
