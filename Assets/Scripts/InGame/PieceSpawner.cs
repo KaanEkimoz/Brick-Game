@@ -148,6 +148,14 @@ namespace InGame
                         PieceController.Tiles[0].InitializeTile(pc, 0);
                     }
 
+                    // _nextPieceType was overridden to the ability type for the preview during the
+                    // arming spawn. Re-roll it so the spawn AFTER this one uses a normal tetromino;
+                    // otherwise UpdateTiles would be called with Bomb/HRow/VRow (no switch case) and
+                    // tiles 1..3 would stay at their default (0,0) coords, eventually triggering
+                    // game-over from the broken layout.
+                    _nextPieceType = (PieceType) Random.Range(0, 7);
+                    OnNextPieceChanged?.Invoke(_nextPieceType);
+
                     OnPieceSpawned?.Invoke();
                     return;
                 }
