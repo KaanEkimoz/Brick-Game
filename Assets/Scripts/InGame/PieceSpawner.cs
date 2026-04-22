@@ -120,33 +120,49 @@ namespace InGame
                 _tiles[i].gameObject.GetComponent<SpriteRenderer>().sprite = newSpr;
             }
         }
+        // Tracks whether the armed ability has already "skipped" one spawn slot — so the bar fills
+        // mid-piece, the current piece finishes its run, and only the NEXT spawn becomes the ability piece.
+        private bool _armedSeenLastSpawn;
+
         public void SpawnPiece()
         {
-            // Extended-mode hook: if an ability is armed, spawn a special piece instead of rolling a tetromino.
+            // Extended-mode hook: spawn the ability piece only on the second spawn after the bar fills.
             if (GameMode.IsExtended && AbilityCharger.Instance != null && AbilityCharger.Instance.IsReady
                 && _abilityPiecePrefabs != null)
             {
-                AbilityType ability = AbilityCharger.Instance.ConsumePending();
-                int idx = (int)ability;
-                if (idx >= 0 && idx < _abilityPiecePrefabs.Length && _abilityPiecePrefabs[idx] != null)
+                if (_armedSeenLastSpawn)
                 {
-                    GameObject abilityPiece = Instantiate(_abilityPiecePrefabs[idx], transform);
-                    InitializeCurPiece(abilityPiece);
-
-                    AbilityMarker marker = abilityPiece.GetComponent<AbilityMarker>();
-                    if (marker != null) marker.SetAbility(ability);
-
-                    // Reposition & initialize the single tile at the standard spawn position.
-                    PieceController pc = abilityPiece.GetComponent<PieceController>();
-                    if (PieceController.Tiles != null && PieceController.Tiles.Length > 0)
+                    AbilityType ability = AbilityCharger.Instance.ConsumePending();
+                    _armedSeenLastSpawn = false;
+                    int idx = (int)ability;
+                    if (idx >= 0 && idx < _abilityPiecePrefabs.Length && _abilityPiecePrefabs[idx] != null)
                     {
-                        PieceController.Tiles[0].UpdatePosition(spawnPosition);
-                        PieceController.Tiles[0].InitializeTile(pc, 0);
-                    }
+                        GameObject abilityPiece = Instantiate(_abilityPiecePrefabs[idx], transform);
+                        InitializeCurPiece(abilityPiece);
 
-                    OnPieceSpawned?.Invoke();
-                    return;
+                        AbilityMarker marker = abilityPiece.GetComponent<AbilityMarker>();
+                        if (marker != null) marker.SetAbility(ability);
+
+                        PieceController pc = abilityPiece.GetComponent<PieceController>();
+                        if (PieceController.Tiles != null && PieceController.Tiles.Length > 0)
+                        {
+                            PieceController.Tiles[0].UpdatePosition(spawnPosition);
+                            PieceController.Tiles[0].InitializeTile(pc, 0);
+                        }
+
+                        OnPieceSpawned?.Invoke();
+                        return;
+                    }
                 }
+                else
+                {
+                    // First spawn after the bar filled — note it and let the regular tetromino run.
+                    _armedSeenLastSpawn = true;
+                }
+            }
+            else
+            {
+                _armedSeenLastSpawn = false;
             }
 
             GameObject curPiece = Instantiate(piecePrefab, transform);
