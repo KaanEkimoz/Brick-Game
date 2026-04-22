@@ -171,9 +171,26 @@ namespace InGame
             _curPieceType = _nextPieceType;
             _nextPieceType = (PieceType) Random.Range(0, 7);
 
+            // If an ability is queued for the very next spawn, show its icon in the preview slot.
+            if (_armedSeenLastSpawn && AbilityCharger.Instance != null && AbilityCharger.Instance.Pending.HasValue)
+            {
+                _nextPieceType = AbilityToPieceType(AbilityCharger.Instance.Pending.Value);
+            }
+
             OnNextPieceChanged?.Invoke(_nextPieceType);
             UpdateTiles(_curPieceType, PiecesController.CurPiece.GetComponent<PieceController>());
             OnPieceSpawned?.Invoke();
+        }
+
+        private static PieceType AbilityToPieceType(AbilityType ability)
+        {
+            switch (ability)
+            {
+                case AbilityType.Bomb: return PieceType.Bomb;
+                case AbilityType.HorizontalRow: return PieceType.HRow;
+                case AbilityType.VerticalColumn: return PieceType.VRow;
+                default: return PieceType.O;
+            }
         }
         private void InitializeCurPiece(GameObject curPiece)
         {
