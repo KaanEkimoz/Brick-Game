@@ -92,7 +92,7 @@ namespace Board
         // gaps the player can stack on. CheckLineClears is still called afterwards by the settle
         // pipeline, so any full rows exposed by the ability will be counted normally.
 
-        /// <summary>Clears every occupied cell inside a box centred on (cx, cy) with the given radius. Returns the number of cells destroyed.</summary>
+        /// <summary>Clears every occupied cell inside a box centred on (cx, cy) with the given radius, then lets each affected column settle under gravity. Returns the number of cells destroyed.</summary>
         public int ClearBoxCells(int cx, int cy, int radius)
         {
             int count = 0;
@@ -102,6 +102,13 @@ namespace Board
                 {
                     if (x < 0 || x >= gridSizeX || y < 0 || y >= gridSizeY) continue;
                     if (DestroyTileAt(x, y)) count++;
+                }
+            }
+            if (count > 0)
+            {
+                for (int x = cx - radius; x <= cx + radius; x++)
+                {
+                    if (x >= 0 && x < gridSizeX) CompactColumn(x);
                 }
             }
             return count;
@@ -137,6 +144,30 @@ namespace Board
             unit.tileOnGridUnit = null;
             unit.isOccupied = false;
             return true;
+        }
+
+        /// <summary>
+        /// Pulls every occupied cell in column x down to fill any gaps, without touching other columns.
+        /// Used by the bomb ability so the tiles above a 3x3 hole fall into it.
+        /// </summary>
+        private void CompactColumn(int x)
+        {
+            int writeY = 0;
+            for (int y = 0; y < gridSizeY; y++)
+            {
+                if (!_fullGrid[x, y].isOccupied) continue;
+                if (y != writeY)
+                {
+                    GameObject tileGo = _fullGrid[x, y].tileOnGridUnit;
+                    TileController tc = tileGo != null ? tileGo.GetComponent<TileController>() : null;
+                    if (tc != null) tc.UpdatePosition(new Vector2Int(x, writeY));
+                    _fullGrid[x, writeY].isOccupied = true;
+                    _fullGrid[x, writeY].tileOnGridUnit = tileGo;
+                    _fullGrid[x, y].isOccupied = false;
+                    _fullGrid[x, y].tileOnGridUnit = null;
+                }
+                writeY++;
+            }
         }
 
         // === Persistence hooks ===
