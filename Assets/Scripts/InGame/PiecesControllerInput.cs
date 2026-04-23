@@ -32,6 +32,11 @@ namespace InGame
             if (Input.GetKeyDown(KeyCode.H)) DebugForceAbility(Gameplay.AbilityType.HorizontalRow);
             if (Input.GetKeyDown(KeyCode.V)) DebugForceAbility(Gameplay.AbilityType.VerticalColumn);
             if (Input.GetKeyDown(KeyCode.T)) Board.BoardController.OnTetrisCleared?.Invoke();
+            if (Input.GetKeyDown(KeyCode.L))
+            {
+                Extras.LevelController.CurrentLevel++;
+                Extras.LevelController.OnLevelIncreased?.Invoke();
+            }
 #endif
         }
 
