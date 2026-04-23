@@ -117,7 +117,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.5
+      scalar: 0.8
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -288,7 +288,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1
+      scalar: 3
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -988,7 +988,7 @@ ParticleSystem:
         m_Curve:
         - serializedVersion: 3
           time: 0
-          value: 0.8
+          value: 1
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -996,7 +996,7 @@ ParticleSystem:
           inWeight: 0
           outWeight: 0
         - serializedVersion: 3
-          time: 0.5
+          time: 0.85
           value: 1
           inSlope: 0
           outSlope: 0
@@ -1006,7 +1006,7 @@ ParticleSystem:
           outWeight: 0
         - serializedVersion: 3
           time: 1
-          value: 0.7
+          value: 0.85
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -4887,10 +4887,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff38bbca565074d1eab445e1aa8ffd0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Extras.BombExplosionEffect
-  _flashSize: 4
-  _flashLifetime: 0.4
+  _flashSize: 3
+  _flashLifetime: 0.8
   _flashColor: {r: 1, g: 0.95, b: 0.4, a: 1}
-  _sparkCount: 22
+  _sparkCount: 0
   _sparkMinSpeed: 2.5
   _sparkMaxSpeed: 6
   _sparkMinSize: 0.18
