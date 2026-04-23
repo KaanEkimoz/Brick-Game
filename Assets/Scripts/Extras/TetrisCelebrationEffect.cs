@@ -11,7 +11,6 @@ namespace Extras
     [RequireComponent(typeof(ParticleSystem))]
     public class TetrisCelebrationEffect : MonoBehaviour
     {
-        [SerializeField] private int _confettiCount = 1;
         [SerializeField] private ScreenShakeEffect _screenShake;
 
         private ParticleSystem _particles;
@@ -34,7 +33,10 @@ namespace Extras
         private void Play()
         {
             if (_particles != null)
-                _particles.Emit(_confettiCount);
+            {
+                _particles.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+                _particles.Play();
+            }
             if (_screenShake != null)
                 _screenShake.ShakeStrong();
         }
