@@ -62,5 +62,12 @@ namespace Extras
                 _particles.Emit(spark, 1);
             }
         }
+
+        [ContextMenu("Test Burst")]
+        private void TestBurst()
+        {
+            if (_particles == null) _particles = GetComponent<ParticleSystem>();
+            Play(Vector2Int.zero);
+        }
     }
 }

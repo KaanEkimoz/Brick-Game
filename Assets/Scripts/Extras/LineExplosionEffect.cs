@@ -121,5 +121,17 @@ namespace Extras
                 _particles.Emit(spark, 1);
             }
         }
+
+        [ContextMenu("Test Burst")]
+        private void TestBurst()
+        {
+            if (_particles == null) _particles = GetComponent<ParticleSystem>();
+            int mid = 5;
+            if (_boardController != null)
+                mid = (_axis == ExplosionAxis.Horizontal ? _boardController.gridSizeX : _boardController.gridSizeY) / 2;
+            Vector2Int anchor = _axis == ExplosionAxis.Horizontal ? new Vector2Int(mid, 5) : new Vector2Int(5, mid);
+            if (_axis == ExplosionAxis.Horizontal) PlayRow(anchor);
+            else PlayColumn(anchor);
+        }
     }
 }
