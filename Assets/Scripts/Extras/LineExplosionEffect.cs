@@ -29,8 +29,8 @@ namespace Extras
         [SerializeField] private float _sparkMaxLifetime = 0.5f;
         [SerializeField] private Color _sparkColor = new Color(1f, 0.65f, 0.2f, 1f);
 
-        [Header("Center core flash")]
-        [SerializeField] private float _coreSize = 3f;
+        [Header("Anchor core flash (where the ability piece landed)")]
+        [SerializeField] private float _coreSize = 1.4f;
         [SerializeField] private float _coreLifetime = 0.35f;
         [SerializeField] private Color _coreColor = new Color(1f, 1f, 0.9f, 1f);
 
@@ -57,26 +57,27 @@ namespace Extras
                 AbilityExecutor.OnColumnExploded -= PlayColumn;
         }
 
-        private void PlayRow(int rowY)
+        private void PlayRow(Vector2Int anchor)
         {
             if (_boardController == null || _particles == null) return;
             int len = _boardController.gridSizeX;
-            EmitCore((len - 1) * 0.5f, rowY);
+            EmitCore(anchor.x, anchor.y);
             for (int x = 0; x < len; x++)
-                EmitCell(x, rowY, perpendicular: true);
+                EmitCell(x, anchor.y, perpendicular: true);
         }
 
-        private void PlayColumn(int colX)
+        private void PlayColumn(Vector2Int anchor)
         {
             if (_boardController == null || _particles == null) return;
             int len = _boardController.gridSizeY;
-            EmitCore(colX, (len - 1) * 0.5f);
+            EmitCore(anchor.x, anchor.y);
             for (int y = 0; y < len; y++)
-                EmitCell(colX, y, perpendicular: false);
+                EmitCell(anchor.x, y, perpendicular: false);
         }
 
         private void EmitCore(float cx, float cy)
         {
+            if (_coreSize <= 0f) return;
             ParticleSystem.EmitParams core = new ParticleSystem.EmitParams();
             core.position = new Vector3(cx, cy, 0f);
             core.velocity = Vector3.zero;

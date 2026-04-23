@@ -20,8 +20,8 @@ namespace Gameplay
         private const int PointsPerTile = 5;
 
         public static Action<Vector2Int> OnBombExploded;
-        public static Action<int> OnRowExploded;       // y of the cleared row
-        public static Action<int> OnColumnExploded;    // x of the cleared column
+        public static Action<Vector2Int> OnRowExploded;       // anchor cell of the cleared row
+        public static Action<Vector2Int> OnColumnExploded;    // anchor cell of the cleared column
 
         private void OnEnable()
         {
@@ -54,11 +54,11 @@ namespace Gameplay
                     break;
                 case AbilityType.HorizontalRow:
                     cleared = _boardController.ClearRowCells(anchor.y);
-                    OnRowExploded?.Invoke(anchor.y);
+                    OnRowExploded?.Invoke(anchor);
                     break;
                 case AbilityType.VerticalColumn:
                     cleared = _boardController.ClearColumnCells(anchor.x);
-                    OnColumnExploded?.Invoke(anchor.x);
+                    OnColumnExploded?.Invoke(anchor);
                     break;
             }
 
