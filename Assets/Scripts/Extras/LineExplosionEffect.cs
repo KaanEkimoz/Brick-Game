@@ -1,3 +1,4 @@
+using System.Collections;
 using Board;
 using Gameplay;
 using UnityEngine;
@@ -30,6 +31,10 @@ namespace Extras
         [SerializeField] private float _cellLifetime = 0.7f;
         [SerializeField] private Color _cellColor = Color.white;
 
+        [Header("Ripple timing")]
+        [Tooltip("Delay between successive outward steps of the explosion ripple from the anchor cell.")]
+        [SerializeField] private float _cellRippleInterval = 0.04f;
+
         private void OnEnable()
         {
             if (_axis == ExplosionAxis.Horizontal)
@@ -50,12 +55,9 @@ namespace Extras
         {
             if (_boardController == null) return;
             int len = _boardController.gridSizeX;
-            // Beam origin = anchor cell; sizeOverLifetime X grows from 0 to max, so it appears
-            // to shoot outward from the anchor in both directions along the row.
             float maxSpan = 2f * Mathf.Max(anchor.x + 0.5f, len - 0.5f - anchor.x);
             EmitBeam(new Vector3(anchor.x, anchor.y, 0f), new Vector3(maxSpan, _beamThickness, 1f));
-            for (int x = 0; x < len; x++)
-                EmitCell(new Vector3(x, anchor.y, 0f));
+            StartCoroutine(RippleCells(anchor, len, horizontal: true));
         }
 
         private void PlayColumn(Vector2Int anchor)
@@ -64,8 +66,35 @@ namespace Extras
             int len = _boardController.gridSizeY;
             float maxSpan = 2f * Mathf.Max(anchor.y + 0.5f, len - 0.5f - anchor.y);
             EmitBeam(new Vector3(anchor.x, anchor.y, 0f), new Vector3(_beamThickness, maxSpan, 1f));
-            for (int y = 0; y < len; y++)
-                EmitCell(new Vector3(anchor.x, y, 0f));
+            StartCoroutine(RippleCells(anchor, len, horizontal: false));
+        }
+
+        // Emits one explosion at the anchor immediately, then steps outward one cell at a time
+        // in both directions, with _cellRippleInterval between steps.
+        private IEnumerator RippleCells(Vector2Int anchor, int len, bool horizontal)
+        {
+            int axis = horizontal ? anchor.x : anchor.y;
+            EmitAt(anchor, axis, horizontal);
+
+            int maxDist = Mathf.Max(axis, len - 1 - axis);
+            WaitForSeconds wait = new WaitForSeconds(_cellRippleInterval);
+
+            for (int d = 1; d <= maxDist; d++)
+            {
+                yield return wait;
+                int left = axis - d;
+                int right = axis + d;
+                if (left >= 0) EmitAt(anchor, left, horizontal);
+                if (right < len) EmitAt(anchor, right, horizontal);
+            }
+        }
+
+        private void EmitAt(Vector2Int anchor, int axisValue, bool horizontal)
+        {
+            Vector3 pos = horizontal
+                ? new Vector3(axisValue, anchor.y, 0f)
+                : new Vector3(anchor.x, axisValue, 0f);
+            EmitCell(pos);
         }
 
         private void EmitBeam(Vector3 position, Vector3 size3D)
