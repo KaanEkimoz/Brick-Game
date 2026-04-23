@@ -195,6 +195,17 @@ namespace InGame
                 default: return PieceType.O;
             }
         }
+
+#if UNITY_EDITOR
+        /// <summary>Editor-only test hook: kills the active piece and immediately spawns the requested ability piece.</summary>
+        public void DebugForceAbility(AbilityType ability)
+        {
+            if (PiecesController.CurPiece != null && PiecesController.Instance != null)
+                PiecesController.Instance.DestroyCurPiece();
+            _bufferedAbility = ability;
+            SpawnPiece();
+        }
+#endif
         private void InitializeCurPiece(GameObject curPiece)
         {
             PiecesController.CurPiece = curPiece;

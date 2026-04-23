@@ -27,7 +27,20 @@ namespace InGame
                 RotateClockwise();
             if (Input.GetKeyDown(KeyCode.Z))
                 RotateCounterClockwise();
+#if UNITY_EDITOR
+            if (Input.GetKeyDown(KeyCode.B)) DebugForceAbility(Gameplay.AbilityType.Bomb);
+            if (Input.GetKeyDown(KeyCode.H)) DebugForceAbility(Gameplay.AbilityType.HorizontalRow);
+            if (Input.GetKeyDown(KeyCode.V)) DebugForceAbility(Gameplay.AbilityType.VerticalColumn);
+#endif
         }
+
+#if UNITY_EDITOR
+        private void DebugForceAbility(Gameplay.AbilityType type)
+        {
+            PieceSpawner spawner = FindObjectOfType<PieceSpawner>();
+            if (spawner != null) spawner.DebugForceAbility(type);
+        }
+#endif
     
         #region Input Functions
         public void StartGame()
