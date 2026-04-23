@@ -50,8 +50,10 @@ namespace Extras
         {
             if (_boardController == null) return;
             int len = _boardController.gridSizeX;
-            float cx = (len - 1) * 0.5f;
-            EmitBeam(new Vector3(cx, anchor.y, 0f), new Vector3(len, _beamThickness, 1f));
+            // Beam origin = anchor cell; sizeOverLifetime X grows from 0 to max, so it appears
+            // to shoot outward from the anchor in both directions along the row.
+            float maxSpan = 2f * Mathf.Max(anchor.x + 0.5f, len - 0.5f - anchor.x);
+            EmitBeam(new Vector3(anchor.x, anchor.y, 0f), new Vector3(maxSpan, _beamThickness, 1f));
             for (int x = 0; x < len; x++)
                 EmitCell(new Vector3(x, anchor.y, 0f));
         }
@@ -60,8 +62,8 @@ namespace Extras
         {
             if (_boardController == null) return;
             int len = _boardController.gridSizeY;
-            float cy = (len - 1) * 0.5f;
-            EmitBeam(new Vector3(anchor.x, cy, 0f), new Vector3(_beamThickness, len, 1f));
+            float maxSpan = 2f * Mathf.Max(anchor.y + 0.5f, len - 0.5f - anchor.y);
+            EmitBeam(new Vector3(anchor.x, anchor.y, 0f), new Vector3(_beamThickness, maxSpan, 1f));
             for (int y = 0; y < len; y++)
                 EmitCell(new Vector3(anchor.x, y, 0f));
         }
