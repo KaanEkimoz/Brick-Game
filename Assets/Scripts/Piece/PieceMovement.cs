@@ -8,12 +8,19 @@ namespace Piece
     {
         public static Action OnPieceMovement;
         public static Action OnPieceSettled;
+        /// <summary>Fired once with every tile coordinate when a piece lands via hard drop.</summary>
+        public static Action<Vector2Int[]> OnHardDrop;
+
+        private bool _hardDropping;
+
         /// <summary>
         /// Drops piece down as far as it can go.
         /// </summary>
         public void SendPieceToFloor()
         {
+            _hardDropping = true;
             while (MovePiece(Vector2Int.down)) {}
+            _hardDropping = false;
         }
         /// <summary>
         /// Moves the piece by the specified amount.
@@ -58,6 +65,13 @@ namespace Piece
                 }
             }
             OnPieceSettled?.Invoke();
+            if (_hardDropping)
+            {
+                var coords = new Vector2Int[PieceController.Tiles.Length];
+                for (int i = 0; i < coords.Length; i++)
+                    coords[i] = PieceController.Tiles[i] != null ? PieceController.Tiles[i].coordinates : Vector2Int.zero;
+                OnHardDrop?.Invoke(coords);
+            }
             BoardController.Instance.CheckLineClears();
             PiecesController.Instance.StopDropCurPiece();
             PieceSpawner pieceSpawner = FindObjectOfType<PieceSpawner>();
