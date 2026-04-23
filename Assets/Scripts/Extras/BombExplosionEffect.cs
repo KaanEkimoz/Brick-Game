@@ -3,20 +3,13 @@ using UnityEngine;
 
 namespace Extras
 {
-    /// <summary>
-    /// Plays a two-layer explosion at the bomb anchor: one big short-lived flash that grows
-    /// then shrinks, plus a ring of small sparks shooting outward. Drives a single
-    /// ParticleSystem via Emit() with custom EmitParams so we don't need sub-emitters.
-    /// </summary>
     [RequireComponent(typeof(ParticleSystem))]
     public class BombExplosionEffect : MonoBehaviour
     {
-        [Header("Flash Core (single big particle)")]
         [SerializeField] private float _flashSize = 4f;
         [SerializeField] private float _flashLifetime = 0.4f;
         [SerializeField] private Color _flashColor = new Color(1f, 0.95f, 0.4f, 1f);
 
-        [Header("Sparks Ring")]
         [SerializeField] private int _sparkCount = 22;
         [SerializeField] private float _sparkMinSpeed = 2.5f;
         [SerializeField] private float _sparkMaxSpeed = 6f;
@@ -48,31 +41,24 @@ namespace Extras
             if (_particles == null) return;
             Vector3 worldPos = new Vector3(anchor.x, anchor.y, 0f);
 
-            // Big core flash
-            var flash = new ParticleSystem.EmitParams
-            {
-                position = worldPos,
-                velocity = Vector3.zero,
-                startSize = _flashSize,
-                startLifetime = _flashLifetime,
-                startColor = _flashColor,
-            };
+            ParticleSystem.EmitParams flash = new ParticleSystem.EmitParams();
+            flash.position = worldPos;
+            flash.velocity = Vector3.zero;
+            flash.startSize = _flashSize;
+            flash.startLifetime = _flashLifetime;
+            flash.startColor = _flashColor;
             _particles.Emit(flash, 1);
 
-            // Radial sparks
             for (int i = 0; i < _sparkCount; i++)
             {
-                float angle = (i / (float)_sparkCount) * Mathf.PI * 2f
-                              + Random.Range(-0.15f, 0.15f);
+                float angle = (i / (float)_sparkCount) * Mathf.PI * 2f + Random.Range(-0.15f, 0.15f);
                 float speed = Random.Range(_sparkMinSpeed, _sparkMaxSpeed);
-                var spark = new ParticleSystem.EmitParams
-                {
-                    position = worldPos,
-                    velocity = new Vector3(Mathf.Cos(angle) * speed, Mathf.Sin(angle) * speed, 0f),
-                    startSize = Random.Range(_sparkMinSize, _sparkMaxSize),
-                    startLifetime = Random.Range(_sparkMinLifetime, _sparkMaxLifetime),
-                    startColor = _sparkColor,
-                };
+                ParticleSystem.EmitParams spark = new ParticleSystem.EmitParams();
+                spark.position = worldPos;
+                spark.velocity = new Vector3(Mathf.Cos(angle) * speed, Mathf.Sin(angle) * speed, 0f);
+                spark.startSize = Random.Range(_sparkMinSize, _sparkMaxSize);
+                spark.startLifetime = Random.Range(_sparkMinLifetime, _sparkMaxLifetime);
+                spark.startColor = _sparkColor;
                 _particles.Emit(spark, 1);
             }
         }
