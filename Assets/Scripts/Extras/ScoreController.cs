@@ -1,4 +1,5 @@
 using Board;
+using Gameplay;
 using TMPro;
 using UnityEngine;
 
@@ -6,6 +7,12 @@ namespace Extras
 {
     public class ScoreController : MonoBehaviour
     {
+        // Classic high score keeps the original key for backwards compatibility with shipped builds.
+        private const string ClassicHighScoreKey = "highScore";
+        private const string ExtendedHighScoreKey = "highScore_Extended";
+
+        private static string HighScoreKey => GameMode.IsExtended ? ExtendedHighScoreKey : ClassicHighScoreKey;
+
         public TextMeshProUGUI scoreText;
         public TextMeshProUGUI highScoreText;
         public static int score;
@@ -13,10 +20,12 @@ namespace Extras
         private void OnEnable()
         {
             BoardController.OnLinesCleared += ClearedLineScore;
+            GameMode.OnChanged += LoadHighScore;
         }
         private void OnDisable()
         {
             BoardController.OnLinesCleared -= ClearedLineScore;
+            GameMode.OnChanged -= LoadHighScore;
         }
         private void Start()
         {
@@ -61,12 +70,12 @@ namespace Extras
         private void SaveHighScore()
         {
             highScore = score;
-            PlayerPrefs.SetInt("highScore", highScore);
+            PlayerPrefs.SetInt(HighScoreKey, highScore);
             UpdateHighScoreText();
         }
         private void LoadHighScore()
         {
-            highScore = PlayerPrefs.GetInt("highScore");
+            highScore = PlayerPrefs.GetInt(HighScoreKey);
             UpdateHighScoreText();
         }
         public void ResetScore()
