@@ -4,15 +4,17 @@ using UnityEngine;
 namespace Extras
 {
     /// <summary>
-    /// Plays a particle burst at the centre of every cleared row. Multi-line clears trigger
-    /// one burst per row in the same frame; the ParticleSystem must be configured with World
-    /// simulation space so each burst stays at its emit position.
+    /// Plays one animated explosion per cell along every cleared row. Mirrors the bomb
+    /// explosion pattern: a single particle emitted at each cell, each particle plays the
+    /// TextureSheetAnimation configured on this prefab's ParticleSystem over its lifetime.
     /// </summary>
     [RequireComponent(typeof(ParticleSystem))]
     public class LineClearEffect : MonoBehaviour
     {
         [SerializeField] private BoardController _boardController;
-        [SerializeField] private int _particlesPerRow = 35;
+        [SerializeField] private float _cellSize = 1f;
+        [SerializeField] private float _cellLifetime = 0.7f;
+        [SerializeField] private Color _cellColor = Color.white;
 
         private ParticleSystem _particles;
 
@@ -34,9 +36,24 @@ namespace Extras
         private void Play(int rowY)
         {
             if (_particles == null || _boardController == null) return;
-            float cx = (_boardController.gridSizeX - 1) * 0.5f;
-            transform.position = new Vector3(cx, rowY, 0f);
-            _particles.Emit(_particlesPerRow);
+            for (int x = 0; x < _boardController.gridSizeX; x++)
+            {
+                ParticleSystem.EmitParams p = new ParticleSystem.EmitParams();
+                p.position = new Vector3(x, rowY, 0f);
+                p.velocity = Vector3.zero;
+                p.startSize = _cellSize;
+                p.startLifetime = _cellLifetime;
+                p.startColor = _cellColor;
+                _particles.Emit(p, 1);
+            }
+        }
+
+        [ContextMenu("Test Burst")]
+        private void TestBurst()
+        {
+            if (_particles == null) _particles = GetComponent<ParticleSystem>();
+            int row = _boardController != null ? _boardController.gridSizeY / 2 : 5;
+            Play(row);
         }
     }
 }
