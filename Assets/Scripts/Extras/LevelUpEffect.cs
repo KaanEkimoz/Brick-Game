@@ -15,8 +15,14 @@ namespace Extras
         [SerializeField] private float _scalePeak = 1.4f;
         [SerializeField] private Color _flashColor = new Color(1f, 0.85f, 0.2f, 1f);
 
+        [Header("Big Level Up Banner")]
+        [SerializeField] private GameObject _levelUpBanner;
+        [SerializeField] private float _bannerDuration = 1.4f;
+        [SerializeField] private float _bannerScalePeak = 1.25f;
+
         private int _lastLevel = 1;
         private Coroutine _running;
+        private Coroutine _bannerRunning;
 
         private void OnEnable()
         {
@@ -39,9 +45,17 @@ namespace Extras
             // so gate here on an actual increase.
             if (LevelController.CurrentLevel <= _lastLevel) return;
             _lastLevel = LevelController.CurrentLevel;
-            if (_levelText == null) return;
-            if (_running != null) StopCoroutine(_running);
-            _running = StartCoroutine(Pulse());
+
+            if (_levelText != null)
+            {
+                if (_running != null) StopCoroutine(_running);
+                _running = StartCoroutine(Pulse());
+            }
+            if (_levelUpBanner != null)
+            {
+                if (_bannerRunning != null) StopCoroutine(_bannerRunning);
+                _bannerRunning = StartCoroutine(ShowBanner());
+            }
         }
 
         private IEnumerator Pulse()
@@ -65,12 +79,38 @@ namespace Extras
             _running = null;
         }
 
+        private IEnumerator ShowBanner()
+        {
+            _levelUpBanner.SetActive(true);
+            Vector3 baseScale = _levelUpBanner.transform.localScale;
+            float t = 0f;
+            while (t < _bannerDuration)
+            {
+                t += Time.deltaTime;
+                float n = Mathf.Clamp01(t / _bannerDuration);
+                // Scale: pop in, hold, ease down at the tail
+                float pulse = 1f + (_bannerScalePeak - 1f) * Mathf.Sin(n * Mathf.PI);
+                _levelUpBanner.transform.localScale = baseScale * pulse;
+                yield return null;
+            }
+            _levelUpBanner.transform.localScale = baseScale;
+            _levelUpBanner.SetActive(false);
+            _bannerRunning = null;
+        }
+
         [ContextMenu("Test Pulse")]
         private void TestPulse()
         {
-            if (_levelText == null) return;
-            if (_running != null) StopCoroutine(_running);
-            _running = StartCoroutine(Pulse());
+            if (_levelText != null)
+            {
+                if (_running != null) StopCoroutine(_running);
+                _running = StartCoroutine(Pulse());
+            }
+            if (_levelUpBanner != null)
+            {
+                if (_bannerRunning != null) StopCoroutine(_bannerRunning);
+                _bannerRunning = StartCoroutine(ShowBanner());
+            }
         }
     }
 }
