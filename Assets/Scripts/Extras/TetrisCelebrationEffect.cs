@@ -67,7 +67,8 @@ namespace Extras
         {
             if (_particles != null)
             {
-                _particles.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+                // Clear any live particles and restart so back-to-back tetrises don't overlap.
+                _particles.Clear(true);
                 _particles.Play();
             }
             if (_screenShake != null)
