@@ -1,3 +1,4 @@
+using System;
 using Board;
 using Extras;
 using InGame;
@@ -17,6 +18,8 @@ namespace Gameplay
 
         // Per-tile base points; multiplied by (level + 1) like the line-clear formula.
         private const int PointsPerTile = 5;
+
+        public static Action<Vector2Int> OnBombExploded;
 
         private void OnEnable()
         {
@@ -45,6 +48,7 @@ namespace Gameplay
             {
                 case AbilityType.Bomb:
                     cleared = _boardController.ClearBoxCells(anchor.x, anchor.y, 1);
+                    OnBombExploded?.Invoke(anchor);
                     break;
                 case AbilityType.HorizontalRow:
                     cleared = _boardController.ClearRowCells(anchor.y);
