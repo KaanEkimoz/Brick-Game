@@ -10,18 +10,25 @@ public class ScreenShakeEffect : MonoBehaviour
 
     public void Shake()
     {
-        StartCoroutine(Shaking());
+        StartCoroutine(Shaking(1f, shakeDuration));
     }
-    IEnumerator Shaking()
+
+    /// <summary>Longer, stronger shake for big events like Tetris line clears.</summary>
+    public void ShakeStrong()
+    {
+        StartCoroutine(Shaking(2.2f, shakeDuration * 1.4f));
+    }
+
+    IEnumerator Shaking(float magnitude, float duration)
     {
         Vector3 startPos = transform.position;
         float elapsedTime = 0f;
-        
-        while(elapsedTime < shakeDuration)
+
+        while (elapsedTime < duration)
         {
             elapsedTime += Time.deltaTime;
-            float strength = shakeStrength.Evaluate(elapsedTime / shakeDuration) * 0.5f;
-            transform.position = startPos + Random.insideUnitSphere;
+            float strength = shakeStrength.Evaluate(elapsedTime / duration) * 0.5f * magnitude;
+            transform.position = startPos + Random.insideUnitSphere * strength;
             yield return null;
         }
         transform.position = startPos;

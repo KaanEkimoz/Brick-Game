@@ -19,6 +19,8 @@ namespace Board
         public static Action<int> OnTotalClearedLinesChanged;
         /// <summary>Fires once per individual cleared row (y coordinate). Used by VFX.</summary>
         public static Action<int> OnLineCleared;
+        /// <summary>Fires when a 4-line Tetris clear happens. Used by celebration VFX.</summary>
+        public static Action OnTetrisCleared;
         public static BoardController Instance;
    
         private int _totalClearedLines;
@@ -225,6 +227,7 @@ namespace Board
                     if (consecutiveLineClears == 4)
                     {
                         ShowTetrisText();
+                        OnTetrisCleared?.Invoke();
                     }
                     ClearLine(y);
                 }
