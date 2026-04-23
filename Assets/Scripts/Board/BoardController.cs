@@ -17,6 +17,8 @@ namespace Board
     
         public static Action<int> OnLinesCleared;
         public static Action<int> OnTotalClearedLinesChanged;
+        /// <summary>Fires once per individual cleared row (y coordinate). Used by VFX.</summary>
+        public static Action<int> OnLineCleared;
         public static BoardController Instance;
    
         private int _totalClearedLines;
@@ -302,6 +304,7 @@ namespace Board
                 _fullGrid[x, lineToClear].tileOnGridUnit = null;
                 _fullGrid[x, lineToClear].isOccupied = false;
             }
+            OnLineCleared?.Invoke(lineToClear);
             _totalClearedLines++;
             OnTotalClearedLinesChanged(_totalClearedLines);
         }
