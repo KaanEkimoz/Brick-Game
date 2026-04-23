@@ -56,6 +56,17 @@ namespace Gameplay
             }
         }
 
+#if UNITY_EDITOR
+        /// <summary>Editor-only: force the bar to full and arm the given ability. Used by the F debug hotkey to test the bar flash without farming line clears.</summary>
+        public void DebugForceFill(AbilityType type)
+        {
+            _charge = MaxCharge;
+            OnChargeChanged?.Invoke(_charge, MaxCharge);
+            _pending = type;
+            OnAbilityArmed?.Invoke(type);
+        }
+#endif
+
         /// <summary>Consume the armed ability (called by the spawner when an ability piece is emitted).</summary>
         public AbilityType ConsumePending()
         {
