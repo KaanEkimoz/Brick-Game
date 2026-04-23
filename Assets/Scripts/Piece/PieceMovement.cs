@@ -1,6 +1,7 @@
 using System;
 using Board;
 using InGame;
+using Tiles;
 using UnityEngine;
 namespace Piece
 {
@@ -8,8 +9,8 @@ namespace Piece
     {
         public static Action OnPieceMovement;
         public static Action OnPieceSettled;
-        /// <summary>Fired once with every tile coordinate when a piece lands via hard drop.</summary>
-        public static Action<Vector2Int[]> OnHardDrop;
+        /// <summary>Fired with the just-landed tile components when a piece settles via hard drop.</summary>
+        public static Action<TileController[]> OnHardDrop;
 
         private bool _hardDropping;
 
@@ -67,10 +68,10 @@ namespace Piece
             OnPieceSettled?.Invoke();
             if (_hardDropping)
             {
-                var coords = new Vector2Int[PieceController.Tiles.Length];
-                for (int i = 0; i < coords.Length; i++)
-                    coords[i] = PieceController.Tiles[i] != null ? PieceController.Tiles[i].coordinates : Vector2Int.zero;
-                OnHardDrop?.Invoke(coords);
+                var landed = new TileController[PieceController.Tiles.Length];
+                for (int i = 0; i < landed.Length; i++)
+                    landed[i] = PieceController.Tiles[i];
+                OnHardDrop?.Invoke(landed);
             }
             BoardController.Instance.CheckLineClears();
             PiecesController.Instance.StopDropCurPiece();
