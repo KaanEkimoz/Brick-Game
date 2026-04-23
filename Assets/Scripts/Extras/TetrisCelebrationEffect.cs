@@ -11,7 +11,7 @@ namespace Extras
     [RequireComponent(typeof(ParticleSystem))]
     public class TetrisCelebrationEffect : MonoBehaviour
     {
-        [SerializeField] private int _confettiCount = 80;
+        [SerializeField] private int _confettiCount = 1;
         [SerializeField] private ScreenShakeEffect _screenShake;
 
         private ParticleSystem _particles;
