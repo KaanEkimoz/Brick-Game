@@ -1,0 +1,101 @@
+using System.Collections;
+using InGame;
+using Piece;
+using Tiles;
+using UnityEngine;
+
+namespace Extras
+{
+    /// <summary>
+    /// Each time the player drives the piece down (keyboard MoveDown or held soft-drop), spawn
+    /// a short vertical streak above each active tile — same visual language as
+    /// HardDropStreakEffect, just a single tile tall. The automatic gravity tick does NOT
+    /// fire OnSoftDrop, so passive falling leaves no trail.
+    /// </summary>
+    public class SoftDropTrailEffect : MonoBehaviour
+    {
+        [SerializeField] private float _streakWidth = 1f;
+        [SerializeField] private float _streakLength = 1f;
+        [SerializeField] private float _fadeDuration = 0.18f;
+        [SerializeField] [Range(0f, 1f)] private float _startAlpha = 0.6f;
+        [SerializeField] private bool _useTileColor = true;
+        [SerializeField] private Color _fallbackColor = Color.white;
+        [SerializeField] private string _sortingLayerName = "Default";
+        [SerializeField] private int _sortingOrder = -1;
+        [SerializeField] private Material _streakMaterial;
+
+        private Material _runtimeMat;
+
+        private void OnEnable()
+        {
+            PiecesController.OnSoftDrop += HandleSoftDrop;
+        }
+
+        private void OnDisable()
+        {
+            PiecesController.OnSoftDrop -= HandleSoftDrop;
+        }
+
+        private Material GetMaterial()
+        {
+            if (_streakMaterial != null) return _streakMaterial;
+            if (_runtimeMat == null)
+                _runtimeMat = new Material(Shader.Find("Sprites/Default"));
+            return _runtimeMat;
+        }
+
+        private void HandleSoftDrop()
+        {
+            TileController[] tiles = PieceController.Tiles;
+            if (tiles == null) return;
+            foreach (var tile in tiles)
+            {
+                if (tile == null) continue;
+                Color streakColor = _fallbackColor;
+                if (_useTileColor)
+                {
+                    SpriteRenderer sr = tile.GetComponentInChildren<SpriteRenderer>();
+                    if (sr != null) streakColor = sr.color;
+                }
+                StartCoroutine(SpawnStreak(tile.transform.position, streakColor));
+            }
+        }
+
+        private IEnumerator SpawnStreak(Vector3 tilePos, Color tint)
+        {
+            GameObject go = new GameObject("SoftDropStreak");
+            go.transform.position = tilePos;
+
+            LineRenderer lr = go.AddComponent<LineRenderer>();
+            lr.material = GetMaterial();
+            lr.useWorldSpace = true;
+            lr.positionCount = 2;
+            lr.SetPosition(0, tilePos);
+            lr.SetPosition(1, tilePos + Vector3.up * _streakLength);
+            lr.startWidth = _streakWidth;
+            lr.endWidth = _streakWidth;
+            lr.numCapVertices = 2;
+            lr.sortingLayerName = _sortingLayerName;
+            lr.sortingOrder = _sortingOrder;
+
+            Color startCol = tint; startCol.a = _startAlpha;
+            Color endCol = tint; endCol.a = 0f;
+            lr.startColor = startCol;
+            lr.endColor = endCol;
+
+            float t = 0f;
+            while (t < _fadeDuration)
+            {
+                t += Time.deltaTime;
+                float n = Mathf.Clamp01(t / _fadeDuration);
+                Color s = tint; s.a = _startAlpha * (1f - n);
+                Color e = tint; e.a = 0f;
+                lr.startColor = s;
+                lr.endColor = e;
+                yield return null;
+            }
+
+            Destroy(go);
+        }
+    }
+}

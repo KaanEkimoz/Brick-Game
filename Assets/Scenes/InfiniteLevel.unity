@@ -9976,6 +9976,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1879092206}
   - component: {fileID: 1879092207}
+  - component: {fileID: 1879092208}
   m_Layer: 0
   m_Name: HardDropTileFlash
   m_TagString: Untagged
@@ -10013,6 +10014,27 @@ MonoBehaviour:
   _blinkCount: 2
   _flashDuration: 0.06
   _gapDuration: 0.05
+--- !u!114 &1879092208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1879092205}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cc1383dbfccd45d6834f4c1ddf79af6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Extras.HardDropStreakEffect
+  _streakWidth: 1
+  _lengthMultiplier: 0.55
+  _fadeDuration: 0.3
+  _startAlpha: 0.85
+  _streakColor: {r: 1, g: 1, b: 1, a: 1}
+  _maxFallDistance: 25
+  _sortingLayerName: Default
+  _sortingOrder: -1
+  _streakMaterial: {fileID: 0}
 --- !u!1 &1879803423
 GameObject:
   m_ObjectHideFlags: 0
@@ -10904,6 +10926,7 @@ GameObject:
   - component: {fileID: 2012844363}
   - component: {fileID: 2012844362}
   - component: {fileID: 2012844364}
+  - component: {fileID: 2012844365}
   m_Layer: 0
   m_Name: PiecesController
   m_TagString: Untagged
@@ -10967,6 +10990,27 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 900a96a084fbc124ea72b8e126a96086, type: 3}
   - {fileID: 21300000, guid: 1aa35d3622ed06a4486fa783748d414a, type: 3}
   - {fileID: 21300000, guid: 8a16751e63004cc4a9d8c1d948a45431, type: 3}
+--- !u!114 &2012844365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2012844361}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2b67be13ec9e40b3a584d8e4f0d4891, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Extras.SoftDropTrailEffect
+  _streakWidth: 1
+  _streakLength: 1
+  _fadeDuration: 0.18
+  _startAlpha: 0.8
+  _useTileColor: 1
+  _fallbackColor: {r: 1, g: 1, b: 1, a: 1}
+  _sortingLayerName: Default
+  _sortingOrder: -1
+  _streakMaterial: {fileID: 0}
 --- !u!1 &2014108567
 GameObject:
   m_ObjectHideFlags: 0

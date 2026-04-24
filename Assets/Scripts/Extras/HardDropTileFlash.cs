@@ -42,7 +42,7 @@ namespace Extras
             PieceMovement.OnHardDrop -= HandleHardDrop;
         }
 
-        private void HandleHardDrop(TileController[] tiles)
+        private void HandleHardDrop(TileController[] tiles, int fallDistance)
         {
             if (tiles == null) return;
             foreach (var t in tiles)

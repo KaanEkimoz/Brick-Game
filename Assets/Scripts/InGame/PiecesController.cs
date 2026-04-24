@@ -17,6 +17,8 @@ namespace InGame
         private Coroutine _dropCurPiece;
 
         public static Action OnGameOver;
+        /// <summary>Fired each time the player drives the piece down (keyboard MoveDown or held soft-drop). Not fired for the automatic gravity tick.</summary>
+        public static Action OnSoftDrop;
 
         //Soft Drop Button Hold
         private float softDropButtonHoldTime = 0.5f;
@@ -46,6 +48,7 @@ namespace InGame
                 while (softDropIsHolding)
                 {
                     MoveCurPiece(Vector2Int.down);
+                    OnSoftDrop?.Invoke();
                     yield return new WaitForSeconds(softDropHoldDropIntervalTime);
                 }
             }

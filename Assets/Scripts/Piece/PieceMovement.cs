@@ -9,10 +9,11 @@ namespace Piece
     {
         public static Action OnPieceMovement;
         public static Action OnPieceSettled;
-        /// <summary>Fired with the just-landed tile components when a piece settles via hard drop.</summary>
-        public static Action<TileController[]> OnHardDrop;
+        /// <summary>Fired with the just-landed tile components and the number of cells fallen during this hard drop.</summary>
+        public static Action<TileController[], int> OnHardDrop;
 
         private bool _hardDropping;
+        private int _hardDropFallDistance;
 
         /// <summary>
         /// Drops piece down as far as it can go.
@@ -20,7 +21,8 @@ namespace Piece
         public void SendPieceToFloor()
         {
             _hardDropping = true;
-            while (MovePiece(Vector2Int.down)) {}
+            _hardDropFallDistance = 0;
+            while (MovePiece(Vector2Int.down)) { _hardDropFallDistance++; }
             _hardDropping = false;
         }
         /// <summary>
@@ -71,7 +73,7 @@ namespace Piece
                 var landed = new TileController[PieceController.Tiles.Length];
                 for (int i = 0; i < landed.Length; i++)
                     landed[i] = PieceController.Tiles[i];
-                OnHardDrop?.Invoke(landed);
+                OnHardDrop?.Invoke(landed, _hardDropFallDistance);
             }
             BoardController.Instance.CheckLineClears();
             PiecesController.Instance.StopDropCurPiece();

@@ -74,6 +74,7 @@ namespace InGame
         public void MoveDown()
         {
             MoveCurPiece(Vector2Int.down);
+            OnSoftDrop?.Invoke();
         }
         public void MoveRight()
         {
