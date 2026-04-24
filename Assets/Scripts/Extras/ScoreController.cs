@@ -1,3 +1,4 @@
+using System;
 using Board;
 using Gameplay;
 using TMPro;
@@ -12,6 +13,9 @@ namespace Extras
         private const string ExtendedHighScoreKey = "highScore_Extended";
 
         private static string HighScoreKey => GameMode.IsExtended ? ExtendedHighScoreKey : ClassicHighScoreKey;
+
+        /// <summary>Fires after a positive score gain lands (delta, new total). Popup effect hooks here.</summary>
+        public static Action<int, int> OnScoreAdded;
 
         public TextMeshProUGUI scoreText;
         public TextMeshProUGUI highScoreText;
@@ -57,7 +61,8 @@ namespace Extras
             UpdateScoreText();
             if (score > highScore)
                 SaveHighScore();
-           
+            if (point > 0)
+                OnScoreAdded?.Invoke(point, score);
         }
         private void UpdateScoreText()
         {
