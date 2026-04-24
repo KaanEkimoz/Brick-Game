@@ -1,3 +1,4 @@
+using System;
 using InGame;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,6 +9,9 @@ namespace Extras
     {
         public GameObject frontCanvas;
         public GameObject[] pieceImages;
+
+        /// <summary>Fired right after a new next-piece image is instantiated. Effects hook here to animate it.</summary>
+        public event Action<GameObject> OnImageInstantiated;
 
         private Image _nextPieceImage;
         private GameObject _currentShownImage;
@@ -34,7 +38,10 @@ namespace Extras
             foreach (var pieceImage in pieceImages)
             {
                 if (pieceImage.gameObject.name ==  nextPieceType.ToString())
+                {
                     _currentShownImage = Instantiate(pieceImage,_nextPieceImage.transform.position,Quaternion.identity,transform);
+                    OnImageInstantiated?.Invoke(_currentShownImage);
+                }
             }
         }
         private void DestroyCurrentShownImage()
