@@ -21,7 +21,7 @@ namespace InGame
         public static Action OnSoftDrop;
 
         //Soft Drop Button Hold
-        private float softDropButtonHoldTime = 0.5f;
+        private float softDropButtonHoldTime = 0.38f;
         private float softDropHoldDropIntervalTime = 0.04f;
         private bool softDropIsHolding = false;
 

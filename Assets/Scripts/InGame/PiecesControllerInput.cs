@@ -14,7 +14,16 @@ namespace InGame
             if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
                 SendPieceToFloor();
             if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S))
+            {
                 MoveDown();
+                if (PiecesController.Instance != null)
+                    PiecesController.Instance.OnSoftDropButtonDown();
+            }
+            if (Input.GetKeyUp(KeyCode.DownArrow) || Input.GetKeyUp(KeyCode.S))
+            {
+                if (PiecesController.Instance != null)
+                    PiecesController.Instance.OnSoftDropButtonUp();
+            }
             if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
                 MoveRight();
             if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
