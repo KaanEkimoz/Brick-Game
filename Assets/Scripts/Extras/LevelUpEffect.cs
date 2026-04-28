@@ -41,6 +41,14 @@ namespace Extras
 
         private void Handle()
         {
+            // LoadLevel (Continue with save) fires this event so drop-time recalculates,
+            // but it is not a real level-up — sync the gate and skip the banner.
+            if (LevelController.IsRestoring)
+            {
+                _lastLevel = LevelController.CurrentLevel;
+                return;
+            }
+
             // LevelController fires on every line clear regardless of whether the level actually changed,
             // so gate here on an actual increase.
             if (LevelController.CurrentLevel <= _lastLevel) return;

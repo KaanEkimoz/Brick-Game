@@ -11,6 +11,10 @@ namespace Extras
         public static int CurrentLevel = 1;
 
         public static Action OnLevelIncreased;
+
+        /// <summary>True only while LoadLevel is broadcasting OnLevelIncreased. Lets listeners
+        /// distinguish a real level-up (banner-worthy) from a save restore (no banner).</summary>
+        public static bool IsRestoring { get; private set; }
         private void OnEnable()
         {
             BoardController.OnTotalClearedLinesChanged += CalculateLevel;
@@ -50,7 +54,9 @@ namespace Extras
         {
             CurrentLevel = Mathf.Clamp(value, 1, maxLevel);
             UpdateLevelText();
-            OnLevelIncreased?.Invoke();
+            IsRestoring = true;
+            try { OnLevelIncreased?.Invoke(); }
+            finally { IsRestoring = false; }
         }
     }
 }

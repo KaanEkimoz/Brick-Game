@@ -1,7 +1,6 @@
 {
   "dependencies": {
     "com.coplaydev.unity-mcp": "https://github.com/CoplayDev/unity-mcp.git?path=/MCPForUnity#73eb27aeccfa8e0676eaf3304136e9b85953d913",
-    "com.unity.nuget.newtonsoft-json": "3.2.1",
     "com.unity.2d.animation": "13.0.4",
     "com.unity.2d.pixel-perfect": "5.1.1",
     "com.unity.2d.psdimporter": "12.0.1",
@@ -15,7 +14,8 @@
     "com.unity.ide.visualstudio": "2.0.26",
     "com.unity.ide.vscode": "1.2.5",
     "com.unity.multiplayer.center": "1.0.1",
-    "com.unity.recorder": "5.1.5",
+    "com.unity.nuget.newtonsoft-json": "3.2.1",
+    "com.unity.recorder": "5.1.6",
     "com.unity.render-pipelines.universal": "17.3.0",
     "com.unity.test-framework": "1.6.0",
     "com.unity.timeline": "1.8.11",
