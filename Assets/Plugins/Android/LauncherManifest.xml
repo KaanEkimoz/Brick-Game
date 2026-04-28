@@ -15,7 +15,15 @@
     <application>
         <activity
             android:name="com.unity3d.player.UnityPlayerActivity"
-            tools:node="merge" />
+            android:exported="true"
+            android:theme="@style/UnityThemeSelector">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+            </intent-filter>
+            <meta-data android:name="unityplayer.UnityActivity" android:value="true" />
+        </activity>
     </application>
 
 </manifest>
