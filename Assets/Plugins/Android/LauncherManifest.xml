@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools">
+
+    <!--
+        Unity's unityLibrary auto-injects <supports-gl-texture android:name="GL_IMG_texture_compression_pvrtc" />
+        which makes Google Play exclude every Mali / Adreno / Mediatek device (e.g. Samsung Galaxy A34 5G,
+        which uses Mediatek Dimensity 1080). Removing it from the *library* manifest doesn't override the
+        same-level entry, so we strip it at the *launcher* level — launcher manifest beats library manifest.
+    -->
+    <supports-gl-texture
+        android:name="GL_IMG_texture_compression_pvrtc"
+        tools:node="remove" />
+
+    <application>
+        <activity
+            android:name="com.unity3d.player.UnityPlayerActivity"
+            tools:node="merge" />
+    </application>
+
+</manifest>

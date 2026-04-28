@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools">
     <!-- Required by Google Play for apps targeting Android 13+ that read the advertising ID via AdMob / Mobile Ads SDK. -->
     <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
+
+    <!-- Strip the PVRTC texture compression requirement that Unity / a plugin auto-injects.
+         PVRTC is PowerVR-only; declaring it as required excludes every Mali/Adreno/Mediatek
+         device on the Play Store (e.g. Samsung Galaxy A34 5G). -->
+    <supports-gl-texture
+        android:name="GL_IMG_texture_compression_pvrtc"
+        tools:node="remove" />
 </manifest>

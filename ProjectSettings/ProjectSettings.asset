@@ -144,7 +144,7 @@ PlayerSettings:
   loadStoreDebugModeEnabled: 0
   visionOSBundleVersion: 1.0
   tvOSBundleVersion: 1.0
-  bundleVersion: 1.2
+  bundleVersion: 1.2.1
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -174,7 +174,7 @@ PlayerSettings:
     iPhone: 0
     tvOS: 0
   overrideDefaultApplicationIdentifier: 1
-  AndroidBundleVersionCode: 10
+  AndroidBundleVersionCode: 13
   AndroidMinSdkVersion: 25
   AndroidTargetSdkVersion: 35
   AndroidPreferredInstallLocation: 1
@@ -272,7 +272,7 @@ PlayerSettings:
   androidSplashScreen: {fileID: 2800000, guid: b2b8c7c5131269d42a359347e17a4c5f, type: 3}
   AndroidKeystoreName: /Users/kaanusta/Downloads/user.keystore
   AndroidKeyaliasName: ekimozgames
-  AndroidEnableArmv9SecurityFeatures: 0
+  AndroidEnableArmv9SecurityFeatures: 1
   AndroidEnableArm64MTE: 0
   AndroidBuildApkPerCpuArchitecture: 0
   AndroidTVCompatibility: 0
@@ -456,7 +456,7 @@ PlayerSettings:
   m_BuildTargetDefaultTextureCompressionFormat:
   - serializedVersion: 3
     m_BuildTarget: Android
-    m_Formats: 01000000
+    m_Formats: 02000000
   playModeTestRunnerEnabled: 0
   runPlayModeTestAsEditModeTest: 0
   actionOnDotNetUnhandledException: 1
