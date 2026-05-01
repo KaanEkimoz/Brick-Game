@@ -12,7 +12,19 @@
         android:name="GL_IMG_texture_compression_pvrtc"
         tools:node="remove" />
 
-    <application>
+    <!--
+        Re-declaring <application> at the launcher level overrides Unity's default
+        label/icon attributes (manifest merger picks the launcher entry on a tie),
+        so we must restate them explicitly. Without these, Android falls back to
+        the package id (com.ekimozgames.brickgame) as the launcher label.
+        tools:replace forces the merger to keep these values even if a lower
+        priority manifest defines different ones.
+    -->
+    <application
+        android:label="@string/app_name"
+        android:icon="@mipmap/app_icon"
+        android:roundIcon="@mipmap/app_icon_round"
+        tools:replace="android:label,android:icon,android:roundIcon">
         <activity
             android:name="com.unity3d.player.UnityPlayerActivity"
             android:exported="true"
