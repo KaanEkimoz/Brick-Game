@@ -28,7 +28,9 @@ public class GameOver : MonoBehaviour
     private void UpdateScores()
     {
         endScore.text = "Score\n" + ScoreController.score;
-        highScore.text = "High Score\n" + PlayerPrefs.GetInt("highScore");
+        // Read the mode-aware high score (Classic / Extended) instead of the legacy key,
+        // otherwise the Extended Game Over panel shows the Classic record.
+        highScore.text = "High Score\n" + ScoreController.GetCurrentHighScore();
     }
     private void StopMusic()
     {
