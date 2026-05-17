@@ -39,7 +39,9 @@ namespace Tiles
         public void UpdatePosition(Vector2Int newPos)
         {
             coordinates = newPos;
-            Vector3 newV3Pos = new Vector3(newPos.x, newPos.y);
+            // Match the live tile's world offset so ghost preview stays under the falling piece
+            // when BoardController is moved in the scene.
+            Vector3 newV3Pos = BoardController.WorldOrigin + new Vector3(newPos.x, newPos.y);
             gameObject.transform.position = newV3Pos;
         }
     }

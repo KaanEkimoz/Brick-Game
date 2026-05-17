@@ -14,7 +14,12 @@ namespace Board
             location = new Vector2Int(x, y);
             isOccupied = false;
 
-            gridUnit.transform.position = new Vector3(location.x, location.y);
+            // Anchor each grid cell to BoardController's own world position so the playfield
+            // can be moved as a single unit in the scene without rewriting every cell. Falls back
+            // to boardParent.position if used directly during board construction (Instance is
+            // already assigned in Awake, well before CreateGrid runs in Start).
+            Vector3 origin = boardParent != null ? boardParent.position : Vector3.zero;
+            gridUnit.transform.position = origin + new Vector3(location.x, location.y);
         }
     }
 }

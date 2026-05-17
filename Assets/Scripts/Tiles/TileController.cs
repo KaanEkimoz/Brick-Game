@@ -51,7 +51,9 @@ namespace Tiles
         public void UpdatePosition(Vector2Int newPos)
         {
             coordinates = newPos;
-            Vector3 newV3Pos = new Vector3(newPos.x, newPos.y);
+            // Apply the board's world origin so falling/landed tiles ride with BoardController
+            // when the playfield is offset in the scene.
+            Vector3 newV3Pos = BoardController.WorldOrigin + new Vector3(newPos.x, newPos.y);
             gameObject.transform.position = newV3Pos;
         }
         /// <summary>

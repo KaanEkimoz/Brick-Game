@@ -22,7 +22,14 @@ namespace Board
         /// <summary>Fires when a 4-line Tetris clear happens. Used by celebration VFX.</summary>
         public static Action OnTetrisCleared;
         public static BoardController Instance;
-   
+
+        /// <summary>World-space origin used when placing grid units, tiles and ghost tiles.
+        /// Each cell's world position is WorldOrigin + (cellX, cellY). Moving the BoardController
+        /// GameObject in the scene shifts the whole playfield as one — used to align the visible
+        /// board with the UI grid frame in the redesigned mobile layout. Returns Vector3.zero if
+        /// the singleton isn't ready yet (e.g. very early scene boot).</summary>
+        public static Vector3 WorldOrigin => Instance != null ? Instance.transform.position : Vector3.zero;
+
         private int _totalClearedLines;
         private GridUnit[,] _fullGrid;
         private void Awake()
