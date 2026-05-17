@@ -30,6 +30,13 @@ namespace Board
         /// the singleton isn't ready yet (e.g. very early scene boot).</summary>
         public static Vector3 WorldOrigin => Instance != null ? Instance.transform.position : Vector3.zero;
 
+        /// <summary>Convert a cell coordinate to its world-space position, taking WorldOrigin
+        /// into account. Use this everywhere you'd otherwise write <c>new Vector3(cell.x, cell.y)</c>
+        /// — VFX particle emissions, save restore, ability anchors, etc. — so the visual stays
+        /// glued to the board when the playfield is moved as a unit.</summary>
+        public static Vector3 CellToWorld(Vector2Int cell) => WorldOrigin + new Vector3(cell.x, cell.y);
+        public static Vector3 CellToWorld(float x, float y) => WorldOrigin + new Vector3(x, y);
+
         private int _totalClearedLines;
         private GridUnit[,] _fullGrid;
         private void Awake()

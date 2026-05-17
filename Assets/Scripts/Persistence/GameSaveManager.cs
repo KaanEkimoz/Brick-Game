@@ -225,7 +225,8 @@ namespace Persistence
                 go.AddComponent<TileController>();
             }
 
-            go.transform.position = new Vector3(tileData.x, tileData.y, 0f);
+            // Apply the board's WorldOrigin so restored tiles land where the live grid renders.
+            go.transform.position = Board.BoardController.CellToWorld(tileData.x, tileData.y);
 
             SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
             if (sr != null && _pieceSpawner != null)

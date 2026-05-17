@@ -39,7 +39,10 @@ namespace Extras
             for (int x = 0; x < _boardController.gridSizeX; x++)
             {
                 ParticleSystem.EmitParams p = new ParticleSystem.EmitParams();
-                p.position = new Vector3(x, rowY, 0f);
+                // Route through BoardController.CellToWorld so the cells line up with the
+                // (potentially offset) playfield. Raw new Vector3(x, rowY) would always emit
+                // at world origin, which after WorldOrigin moved leaves the VFX adrift.
+                p.position = BoardController.CellToWorld(x, rowY);
                 p.velocity = Vector3.zero;
                 p.startSize = _cellSize;
                 p.startLifetime = _cellLifetime;

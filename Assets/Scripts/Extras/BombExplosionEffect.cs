@@ -37,7 +37,8 @@ namespace Extras
                 for (int dx = -1; dx <= 1; dx++)
                 {
                     ParticleSystem.EmitParams p = new ParticleSystem.EmitParams();
-                    p.position = new Vector3(anchor.x + dx, anchor.y + dy, 0f);
+                    // Bomb explosion cells follow the playfield's WorldOrigin offset.
+                    p.position = Board.BoardController.CellToWorld(anchor.x + dx, anchor.y + dy);
                     p.velocity = Vector3.zero;
                     p.startSize = _cellSize;
                     p.startLifetime = _cellLifetime;

@@ -56,7 +56,8 @@ namespace Extras
             if (_boardController == null) return;
             int len = _boardController.gridSizeX;
             float maxSpan = 2f * Mathf.Max(anchor.x + 0.5f, len - 0.5f - anchor.x);
-            EmitBeam(new Vector3(anchor.x, anchor.y, 0f), new Vector3(maxSpan, _beamThickness, 1f));
+            // Route the beam anchor through CellToWorld so it follows BoardController offset.
+            EmitBeam(BoardController.CellToWorld(anchor), new Vector3(maxSpan, _beamThickness, 1f));
             StartCoroutine(RippleCells(anchor, len, horizontal: true));
         }
 
@@ -65,7 +66,7 @@ namespace Extras
             if (_boardController == null) return;
             int len = _boardController.gridSizeY;
             float maxSpan = 2f * Mathf.Max(anchor.y + 0.5f, len - 0.5f - anchor.y);
-            EmitBeam(new Vector3(anchor.x, anchor.y, 0f), new Vector3(_beamThickness, maxSpan, 1f));
+            EmitBeam(BoardController.CellToWorld(anchor), new Vector3(_beamThickness, maxSpan, 1f));
             StartCoroutine(RippleCells(anchor, len, horizontal: false));
         }
 
@@ -91,9 +92,10 @@ namespace Extras
 
         private void EmitAt(Vector2Int anchor, int axisValue, bool horizontal)
         {
+            // Cell ripple positions also need WorldOrigin so the explosions sit on top of the tiles.
             Vector3 pos = horizontal
-                ? new Vector3(axisValue, anchor.y, 0f)
-                : new Vector3(anchor.x, axisValue, 0f);
+                ? BoardController.CellToWorld(axisValue, anchor.y)
+                : BoardController.CellToWorld(anchor.x, axisValue);
             EmitCell(pos);
         }
 
