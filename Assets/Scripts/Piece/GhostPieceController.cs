@@ -33,9 +33,13 @@ namespace Piece
             for (int i = 1; i <= ghostTiles.Length; i++)
             {
                 TileController tile = PieceController.Tiles[i - 1];
-                var tilePos = tile.transform.position;
-                Vector2Int newPos = new Vector2Int((int)tilePos.x, (int) tilePos.y);
-                ghostTiles[i - 1].UpdatePosition(newPos);
+                // Read the tile's cell coordinate directly instead of casting its world
+                // transform.position to int. Now that BoardController.WorldOrigin is a
+                // non-zero (and non-integer) offset, the old int-cast turned the world
+                // position into the wrong grid cell — making the ghost lag the live piece
+                // by WorldOrigin.x / WorldOrigin.y on each axis (e.g. couldn't reach the
+                // left columns, overshot the right).
+                ghostTiles[i - 1].UpdatePosition(tile.coordinates);
             }
             SendGhostPieceToFloor();
         }
