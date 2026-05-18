@@ -124,6 +124,14 @@ namespace Persistence
             if (_restoring) return; // the spawn that restores from save must not overwrite itself
             if (_pieceSpawner == null || _boardController == null) return;
 
+            // Skip the autosave while the run still has zero meaningful progress.
+            // Without this guard a first-time player who taps Play, sees a piece spawn,
+            // then closes the app would leave a score=0 save behind; the next launch
+            // would still pop the Continue prompt (HasSave() true, even if the score
+            // gate later filters it). Wait for the first cleared line before writing.
+            if (ScoreController.score <= 0 && _boardController.TotalClearedLines <= 0)
+                return;
+
             GameSaveData data = new GameSaveData
             {
                 score = ScoreController.score,
