@@ -193,10 +193,14 @@ namespace Board
         /// <summary>Total cleared-line counter; used by the save system to persist board progress.</summary>
         public int TotalClearedLines => _totalClearedLines;
 
-        /// <summary>Sets the cleared-line counter when restoring from a save file.</summary>
+        /// <summary>Sets the cleared-line counter when restoring from a save file.
+        /// Also fires OnTotalClearedLinesChanged so listeners (Lines counter HUD,
+        /// LevelController's drop-speed table) re-sync to the restored value
+        /// instead of staying at zero until the next live line clear.</summary>
         public void SetTotalClearedLines(int value)
         {
             _totalClearedLines = value;
+            OnTotalClearedLinesChanged?.Invoke(_totalClearedLines);
         }
 
         /// <summary>Enumerates every settled tile on the board — used by the save system to serialize grid state.</summary>
