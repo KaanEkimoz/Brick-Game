@@ -1,17 +1,58 @@
 using System.IO;
+using Gameplay;
 using UnityEngine;
 
 namespace Persistence
 {
     /// <summary>
     /// JSON file I/O for <see cref="GameSaveData"/>.
-    /// One slot stored at <c>Application.persistentDataPath/brickgame_save.json</c>.
+    /// One slot PER GAME MODE — Classic and Extended each get their own file at
+    /// <c>Application.persistentDataPath/brickgame_save_(classic|extended).json</c>.
+    /// A run paused in Classic no longer shows the Continue prompt when the player
+    /// taps Extended (and vice versa); each mode is genuinely fresh until its own
+    /// file lands on disk.
+    ///
+    /// The legacy single-slot file <c>brickgame_save.json</c> is deleted on the
+    /// first call after upgrade so users who shipped on earlier versions don't
+    /// see a stale Continue prompt on a mode they never touched.
     /// </summary>
     public static class GameSaveStorage
     {
-        private const string FileName = "brickgame_save.json";
+        private const string LegacyFileName = "brickgame_save.json";
+        private const string ClassicFileName = "brickgame_save_classic.json";
+        private const string ExtendedFileName = "brickgame_save_extended.json";
 
-        private static string FilePath => Path.Combine(Application.persistentDataPath, FileName);
+        private static bool _legacyChecked;
+
+        private static string FileName => GameMode.IsExtended ? ExtendedFileName : ClassicFileName;
+
+        private static string FilePath
+        {
+            get
+            {
+                DropLegacyFileOnce();
+                return Path.Combine(Application.persistentDataPath, FileName);
+            }
+        }
+
+        /// <summary>
+        /// One-time cleanup of the pre-v1.2.8 monolithic save. The old single
+        /// slot could not tell Classic and Extended apart, so we drop it outright
+        /// the first time any storage call runs. The user only loses an unfinished
+        /// run from before the upgrade — Game Over had already cleared it anyway,
+        /// so in practice almost no one will lose anything.
+        /// </summary>
+        private static void DropLegacyFileOnce()
+        {
+            if (_legacyChecked) return;
+            _legacyChecked = true;
+
+            string legacy = Path.Combine(Application.persistentDataPath, LegacyFileName);
+            if (!File.Exists(legacy)) return;
+
+            try { File.Delete(legacy); }
+            catch (IOException e) { Debug.LogWarning($"GameSaveStorage: legacy save delete failed. {e.Message}"); }
+        }
 
         public static bool HasSave() => File.Exists(FilePath);
 
