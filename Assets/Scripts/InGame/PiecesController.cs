@@ -134,6 +134,13 @@ namespace InGame
         private void InitializeMovement()
         {
             _curPieceMovement = CurPiece.GetComponent<PieceMovement>();
+
+            // A new piece has spawned, so the game-over re-entry guard must clear.
+            // Restart paths sometimes reuse the existing PiecesController instance
+            // (UI-button handlers that reset state in place rather than reloading
+            // the scene) — without this clear, MoveCurPiece's early return on
+            // _gameOver would silently swallow gravity and input on the new piece.
+            _gameOver = false;
         }
         /// <summary>
         /// Initializes the rotation component of the current piece
