@@ -10287,7 +10287,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceLandingSFX
   _landingClip: {fileID: 8300000, guid: df52dbc0607724331906cbefa1281a7f, type: 3}
-  _volume: 0.15
+  _volume: 1
 --- !u!114 &1838226907
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10347,7 +10347,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Extras.SoftDropSFX
   _softDropClip: {fileID: 8300000, guid: df52dbc0607724331906cbefa1281a7f, type: 3}
   _pitch: 1
-  _volume: 1
+  _volume: 0.06
   _muteReference: {fileID: 1838226903}
 --- !u!1 &1866127476
 GameObject:
