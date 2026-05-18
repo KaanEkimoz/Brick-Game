@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using InGame;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace InputSystem
 {
@@ -30,6 +32,12 @@ namespace InputSystem
                  "cell. Auto-calibrated from Screen.width on Awake so DPI / aspect doesn't break it.")]
         [SerializeField] private float _horizontalStepPixels = 40f;
 
+        [Tooltip("Per-frame vertical lock — when the frame's |dy| exceeds |dx| × this factor, " +
+                 "the horizontal accumulator is ignored AND drained, so a thumb sliding mostly " +
+                 "downward (e.g. a hard-drop swipe) can't sneak in a sideways step. Higher = " +
+                 "stricter (rarer accidental side-step on vertical gestures). 0 disables the lock.")]
+        [SerializeField] private float _horizontalLockRatio = 2.0f;
+
         [Header("Tap (rotate)")]
         [SerializeField] private float _tapMaxDuration = 0.25f;
         [SerializeField] private float _tapMaxRadius = 24f;
@@ -47,7 +55,13 @@ namespace InputSystem
 
         [Header("Soft drop")]
         [Tooltip("How far the finger must drag below its peak Y before soft drop starts firing.")]
-        [SerializeField] private float _softDropActivatePixels = 30f;
+        [SerializeField] private float _softDropActivatePixels = 80f;
+
+        [Tooltip("Soft drop fires only when the touch is clearly more vertical than horizontal. "
+               + "Multiplier applied to the horizontal travel — drop-below-peak must exceed "
+               + "horizontalTravel × this factor. Higher = stricter (left/right drags less likely "
+               + "to accidentally fire soft drop). 1.0 = equal vertical/horizontal threshold.")]
+        [SerializeField] private float _softDropVerticalDominance = 1.4f;
 
         [Tooltip("Slowest soft-drop tick interval (seconds). Held just past activation drops " +
                  "this often.")]
@@ -104,7 +118,7 @@ namespace InputSystem
 
                 if (!_touching && ti.phase == TouchPhase.Began)
                 {
-                    if (IsOverUI(ti.fingerId)) continue;
+                    if (IsOverInteractiveUI(ti.position)) continue;
                     BeginTouch(ti);
                     t = ti; found = true;
                     break;
@@ -126,10 +140,27 @@ namespace InputSystem
             }
         }
 
-        private static bool IsOverUI(int fingerId)
+        // Reused list so we don't allocate per finger per frame.
+        private static readonly List<RaycastResult> _raycastBuffer = new List<RaycastResult>(16);
+
+        // Returns true ONLY when the touch lands on an actually interactive UI element
+        // (Selectable = Button / Toggle / Slider / Dropdown / InputField), not on plain Image
+        // backgrounds or TMP text. Without this filter, the board's grid frame, HUD bar and
+        // side-panel images would swallow every touch and gameplay input would never fire.
+        private static bool IsOverInteractiveUI(Vector2 screenPos)
         {
-            // EventSystem may be missing during scene teardown / tests — treat that as "not on UI".
-            return EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(fingerId);
+            if (EventSystem.current == null) return false;
+
+            var ped = new PointerEventData(EventSystem.current) { position = screenPos };
+            _raycastBuffer.Clear();
+            EventSystem.current.RaycastAll(ped, _raycastBuffer);
+            for (int i = 0; i < _raycastBuffer.Count; i++)
+            {
+                var go = _raycastBuffer[i].gameObject;
+                if (go == null) continue;
+                if (go.GetComponentInParent<Selectable>() != null) return true;
+            }
+            return false;
         }
 
         private void BeginTouch(Touch t)
@@ -159,24 +190,42 @@ namespace InputSystem
             if (!_movedBeyondTapRadius && Vector2.Distance(t.position, _touchStart) > _tapMaxRadius)
                 _movedBeyondTapRadius = true;
 
-            // Quantise horizontal motion into one-cell steps. Works for both quick swipes and
-            // slow continuous drags since we accumulate raw delta either way.
-            _accumulatedHorizontalDelta += delta.x;
-            while (_accumulatedHorizontalDelta >= _horizontalStepPixels)
+            // Vertical-lock: if THIS frame is sharply vertical (|dy| dominates |dx| by the
+            // configured ratio), do NOT integrate dx into the horizontal step accumulator. Also
+            // drain the accumulator slightly so a few prior near-step deltas don't carry over and
+            // fire a phantom side-step during a hard-drop swipe.
+            float absDX = Mathf.Abs(delta.x);
+            float absDY = Mathf.Abs(delta.y);
+            bool verticalLocked = _horizontalLockRatio > 0f && absDY > absDX * _horizontalLockRatio;
+
+            if (verticalLocked)
             {
-                MoveRight();
-                _accumulatedHorizontalDelta -= _horizontalStepPixels;
+                _accumulatedHorizontalDelta *= 0.5f; // soft drain
             }
-            while (_accumulatedHorizontalDelta <= -_horizontalStepPixels)
+            else
             {
-                MoveLeft();
-                _accumulatedHorizontalDelta += _horizontalStepPixels;
+                // Quantise horizontal motion into one-cell steps. Works for both quick swipes and
+                // slow continuous drags since we accumulate raw delta either way.
+                _accumulatedHorizontalDelta += delta.x;
+                while (_accumulatedHorizontalDelta >= _horizontalStepPixels)
+                {
+                    MoveRight();
+                    _accumulatedHorizontalDelta -= _horizontalStepPixels;
+                }
+                while (_accumulatedHorizontalDelta <= -_horizontalStepPixels)
+                {
+                    MoveLeft();
+                    _accumulatedHorizontalDelta += _horizontalStepPixels;
+                }
             }
 
-            // Soft drop while the finger is below its peak Y by at least the activation amount.
-            // The deeper below peak, the shorter the interval between MoveDown ticks.
+            // Soft drop while the finger is below its peak Y by at least the activation amount
+            // AND the gesture is more vertical than horizontal — otherwise a left/right drag that
+            // bobs the thumb down a little would falsely trigger drops.
             float belowPeak = _peakY - t.position.y;
-            if (!_hardDropFired && belowPeak >= _softDropActivatePixels)
+            float horizontalTravel = Mathf.Abs(t.position.x - _touchStart.x);
+            bool verticalDominant = belowPeak > horizontalTravel * _softDropVerticalDominance;
+            if (!_hardDropFired && verticalDominant && belowPeak >= _softDropActivatePixels)
             {
                 if (Time.unscaledTime >= _softDropNextTickTime)
                 {

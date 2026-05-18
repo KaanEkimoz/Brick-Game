@@ -12,7 +12,7 @@ namespace Extras
     {
         [SerializeField] private AudioClip _softDropClip;
         [SerializeField] [Range(0.5f, 2.5f)] private float _pitch = 1.55f;
-        [SerializeField] [Range(0f, 1f)] private float _volume = 0.35f;
+        [SerializeField] [Range(0f, 1f)] private float _volume = 0.06f;
         [SerializeField] private AudioSource _muteReference;
 
         private void OnEnable()

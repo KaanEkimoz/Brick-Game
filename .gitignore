@@ -74,3 +74,10 @@ crashlytics-build.properties
 # macOS Finder metadata
 .DS_Store
 Profiles/
+Assets/_Recovery/
+Assets/_Recovery.meta
+Assets/Plugins/Roslyn/
+Assets/Plugins/Roslyn.meta
+Assets/Screenshots/
+Assets/Screenshots.meta
+ProjectSettings/Packages/

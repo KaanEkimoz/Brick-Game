@@ -22,8 +22,14 @@ namespace InGame
 
         //Soft Drop Button Hold
         private float softDropButtonHoldTime = 0.38f;
-        private float softDropHoldDropIntervalTime = 0.04f;
+        private float softDropHoldDropIntervalTime = 0.08f;
         private bool softDropIsHolding = false;
+
+        // True once GameOver() has fired. Acts as a re-entry guard so a soft-drop
+        // hold coroutine that still has the dead piece in hand cannot keep calling
+        // MovePiece → SetPiece → GameOver in a tight loop, which on a full board
+        // spammed thousands of log lines per second and crashed the Editor.
+        private bool _gameOver = false;
 
         public void OnSoftDropButtonDown()
         {
@@ -118,7 +124,9 @@ namespace InGame
         /// </summary>
         public void StopDropCurPiece()
         {
+            if (_dropCurPiece == null) return;
             StopCoroutine(_dropCurPiece);
+            _dropCurPiece = null;
         }
         /// <summary>
         /// Initializes the movement component of the current piece
@@ -139,7 +147,20 @@ namespace InGame
         /// </summary>
         public void GameOver()
         {
+            // Re-entry guard — board-full scenarios used to fire GameOver dozens
+            // of times in a single frame, each call re-broadcasting OnGameOver
+            // (ad reloads, scoreboard refresh, etc.).
+            if (_gameOver) return;
+            _gameOver = true;
+
+            // Stop both the gravity coroutine AND the soft-drop hold coroutine.
+            // Do NOT Destroy(CurPiece) here — PieceController.Tiles is a static
+            // reference into the live piece, and tearing it down mid-frame leaves
+            // dangling Unity-null components that the next coroutine tick or
+            // input handler would call .CanTileMove on, NRE-spamming the editor.
+            softDropIsHolding = false;
             StopDropCurPiece();
+
             OnGameOver?.Invoke();
         }
         /// <summary>
@@ -148,6 +169,10 @@ namespace InGame
         /// <param name="movement">X,Y amount the piece should be moved by</param>
         private void MoveCurPiece(Vector2Int movement)
         {
+            // Hard stop on every input path once game-over has fired so the
+            // soft-drop coroutine (or any stale tap from a touch buffer) can't
+            // replay MovePiece → CanTileMove false → SetPiece → GameOver.
+            if (_gameOver) return;
             if (CurPiece == null)
                 return;
             _curPieceMovement.MovePiece(movement);
