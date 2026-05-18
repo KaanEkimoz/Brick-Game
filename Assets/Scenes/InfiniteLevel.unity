@@ -11564,7 +11564,7 @@ MonoBehaviour:
   - {fileID: 4026427490633741293, guid: 77ac9b7613fae4607a93d143e417f4b1, type: 3}
   - {fileID: 4026427490633741293, guid: edb5b3e1e13f348939299c841d50e8c9, type: 3}
   - {fileID: 4026427490633741293, guid: d0b9b736c51934a81a3e565ae243b75f, type: 3}
-  spawnPosition: {x: 5, y: 21}
+  spawnPosition: {x: 5, y: 22}
   tileSprites:
   - {fileID: 21300000, guid: 63dddab12ffe6ab4fb79f1e8d41ddd4d, type: 3}
   - {fileID: 21300000, guid: cb8297c49b6390b40b1ec3a43ab92e6c, type: 3}
