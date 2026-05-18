@@ -20,11 +20,13 @@ public class ScreenShakeEffect : MonoBehaviour
     }
 
     /// <summary>Very soft, short shake for routine impacts (e.g. hard-drop landing).
-    /// Roughly 40% of normal magnitude over half the default duration — meant to feel
-    /// like weight, not to disorient the player.</summary>
+    /// Uses a fixed magnitude/duration on purpose — the scene's shakeDuration was
+    /// tuned to 0.075 for the celebration shake, which would render this call
+    /// invisible if it scaled off the inspector value. 0.18s @ 0.6 magnitude reads
+    /// as "weight" without being distracting.</summary>
     public void ShakeLight()
     {
-        StartCoroutine(Shaking(0.4f, shakeDuration * 0.5f));
+        StartCoroutine(Shaking(0.6f, 0.18f));
     }
 
     IEnumerator Shaking(float magnitude, float duration)
