@@ -19,6 +19,14 @@ public class ScreenShakeEffect : MonoBehaviour
         StartCoroutine(Shaking(2.2f, shakeDuration * 1.4f));
     }
 
+    /// <summary>Very soft, short shake for routine impacts (e.g. hard-drop landing).
+    /// Roughly 40% of normal magnitude over half the default duration — meant to feel
+    /// like weight, not to disorient the player.</summary>
+    public void ShakeLight()
+    {
+        StartCoroutine(Shaking(0.4f, shakeDuration * 0.5f));
+    }
+
     IEnumerator Shaking(float magnitude, float duration)
     {
         Vector3 startPos = transform.position;
