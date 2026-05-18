@@ -7495,7 +7495,6 @@ GameObject:
   - component: {fileID: 1309867646}
   - component: {fileID: 1309867650}
   - component: {fileID: 1309867649}
-  - component: {fileID: 1309867648}
   - component: {fileID: 1309867647}
   - component: {fileID: 1309867651}
   m_Layer: 5
@@ -7538,20 +7537,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Extras.LinesController
   _linesText: {fileID: 1309867649}
---- !u!114 &1309867648
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1309867645}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c228622fac6b3634d8ab5a8ae88636fc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  scoreText: {fileID: 1309867649}
-  highScoreText: {fileID: 702104155}
 --- !u!114 &1309867649
 MonoBehaviour:
   m_ObjectHideFlags: 0
