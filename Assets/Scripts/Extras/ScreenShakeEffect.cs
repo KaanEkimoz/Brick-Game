@@ -21,11 +21,11 @@ public class ScreenShakeEffect : MonoBehaviour
 
     /// <summary>Very soft, short shake for routine impacts (e.g. hard-drop landing).
     /// Runs its own coroutine that does NOT consult the inspector shakeStrength
-    /// curve — the celebration-tuned scene curve was flatlining to 0 and silently
-    /// nuking the impact. Independent fixed decay, 0.18s, magnitude 0.6.</summary>
+    /// curve. Tuned for "weight" — the player should feel the thump without it
+    /// being distracting on a long play session.</summary>
     public void ShakeLight()
     {
-        StartCoroutine(LightShaking(0.6f, 0.18f));
+        StartCoroutine(LightShaking(0.3f, 0.14f));
     }
 
     private IEnumerator LightShaking(float magnitude, float duration)

@@ -41,10 +41,6 @@ namespace Extras
 
         private void HandleHardDrop(TileController[] landed, int fallDistance)
         {
-            // Diagnostic log so we can see in the editor console whether the event
-            // is reaching us at all — separates "event never fires" from "event fires
-            // but the shake call did nothing".
-            Debug.Log($"[HardDropScreenShake] HandleHardDrop fallDistance={fallDistance} ss={(_screenShake != null ? _screenShake.name : "<null>")}");
             if (_screenShake == null) return;
             if (fallDistance < _minimumFallCells) return;
             _screenShake.ShakeLight();
