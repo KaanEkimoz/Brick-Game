@@ -20,13 +20,28 @@ public class ScreenShakeEffect : MonoBehaviour
     }
 
     /// <summary>Very soft, short shake for routine impacts (e.g. hard-drop landing).
-    /// Uses a fixed magnitude/duration on purpose — the scene's shakeDuration was
-    /// tuned to 0.075 for the celebration shake, which would render this call
-    /// invisible if it scaled off the inspector value. 0.18s @ 0.6 magnitude reads
-    /// as "weight" without being distracting.</summary>
+    /// Runs its own coroutine that does NOT consult the inspector shakeStrength
+    /// curve — the celebration-tuned scene curve was flatlining to 0 and silently
+    /// nuking the impact. Independent fixed decay, 0.18s, magnitude 0.6.</summary>
     public void ShakeLight()
     {
-        StartCoroutine(Shaking(0.6f, 0.18f));
+        StartCoroutine(LightShaking(0.6f, 0.18f));
+    }
+
+    private IEnumerator LightShaking(float magnitude, float duration)
+    {
+        Vector3 startPos = transform.position;
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            // Linear decay (1 → 0) so the bump is most noticeable at the start.
+            float n = Mathf.Clamp01(elapsed / duration);
+            float strength = (1f - n) * 0.5f * magnitude;
+            transform.position = startPos + (Vector3)(Random.insideUnitCircle * strength);
+            yield return null;
+        }
+        transform.position = startPos;
     }
 
     IEnumerator Shaking(float magnitude, float duration)

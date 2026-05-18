@@ -15,9 +15,9 @@ namespace Extras
     {
         [SerializeField] private ScreenShakeEffect _screenShake;
 
-        [Tooltip("Skip the shake if the piece didn't actually move (a no-op hard drop on a piece " +
-                 "that was already touching the floor would otherwise still shake).")]
-        [SerializeField] private int _minimumFallCells = 1;
+        [Tooltip("Skip the shake if the piece fell fewer cells than this. 0 = shake on every hard " +
+                 "drop trigger, even a no-op drop on a piece that was already on the floor.")]
+        [SerializeField] private int _minimumFallCells = 0;
 
         private void Reset()
         {
@@ -41,6 +41,10 @@ namespace Extras
 
         private void HandleHardDrop(TileController[] landed, int fallDistance)
         {
+            // Diagnostic log so we can see in the editor console whether the event
+            // is reaching us at all — separates "event never fires" from "event fires
+            // but the shake call did nothing".
+            Debug.Log($"[HardDropScreenShake] HandleHardDrop fallDistance={fallDistance} ss={(_screenShake != null ? _screenShake.name : "<null>")}");
             if (_screenShake == null) return;
             if (fallDistance < _minimumFallCells) return;
             _screenShake.ShakeLight();
