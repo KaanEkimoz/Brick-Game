@@ -82,7 +82,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 7
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: 10f13568cd4654fd491116198cf2a38b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0920c061ceba44e9c9ac1ffbb3493055, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -119,9 +119,10 @@ GameObject:
   - component: {fileID: -6249801619534743663}
   - component: {fileID: -6248805884025882631}
   - component: {fileID: -2054852253719224302}
-  - component: {fileID: 4815129424896665998}
+  - component: {fileID: 5347153358447647481}
+  - component: {fileID: 3739000869894821017}
   m_Layer: 0
-  m_Name: AbilityPiece_VRow
+  m_Name: AbilityPiece_Laser
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -182,7 +183,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curType: 6
---- !u!114 &4815129424896665998
+--- !u!114 &5347153358447647481
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -194,7 +195,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e119c5c2f9632429abe417b1e7fd32ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Gameplay.AbilityMarker
-  _ability: 2
+  _ability: 1
+--- !u!114 &3739000869894821017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4026427490633741293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d6278f7ecae5453b81d66a097bb9208, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Gameplay.LaserOrientation
+  _axis: 0
 --- !u!1 &8995706411876385117
 GameObject:
   m_ObjectHideFlags: 0

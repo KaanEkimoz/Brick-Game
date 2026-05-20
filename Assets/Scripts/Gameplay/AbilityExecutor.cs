@@ -52,14 +52,22 @@ namespace Gameplay
                     cleared = _boardController.ClearBoxCells(anchor.x, anchor.y, 1);
                     OnBombExploded?.Invoke(anchor);
                     break;
-                case AbilityType.HorizontalRow:
-                    cleared = _boardController.ClearRowCells(anchor.y);
-                    OnRowExploded?.Invoke(anchor);
+                case AbilityType.Laser:
+                {
+                    LaserOrientation orientation = piece.GetComponent<LaserOrientation>();
+                    bool horizontal = orientation == null || orientation.IsHorizontal;
+                    if (horizontal)
+                    {
+                        cleared = _boardController.ClearRowCells(anchor.y);
+                        OnRowExploded?.Invoke(anchor);
+                    }
+                    else
+                    {
+                        cleared = _boardController.ClearColumnCells(anchor.x);
+                        OnColumnExploded?.Invoke(anchor);
+                    }
                     break;
-                case AbilityType.VerticalColumn:
-                    cleared = _boardController.ClearColumnCells(anchor.x);
-                    OnColumnExploded?.Invoke(anchor);
-                    break;
+                }
             }
 
             if (cleared > 0 && _scoreController != null)

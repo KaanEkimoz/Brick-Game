@@ -51,7 +51,7 @@ namespace Gameplay
 
             if (_charge >= MaxCharge)
             {
-                _pending = (AbilityType)UnityEngine.Random.Range(0, 3);
+                _pending = (AbilityType)UnityEngine.Random.Range(0, 2);
                 OnAbilityArmed?.Invoke(_pending.Value);
             }
         }
