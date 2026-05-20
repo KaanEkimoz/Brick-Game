@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 
 namespace InGame
 {
-    public enum PieceType { O, I, S, Z, L, J, T, Bomb, HRow, VRow }
+    public enum PieceType { O, I, S, Z, L, J, T, Bomb, Laser }
 
     public class PieceSpawner : MonoBehaviour
     {
@@ -16,7 +16,7 @@ namespace InGame
         public GameObject ghostPiecePrefab;
         public GameObject piecePrefab;
 
-        [Tooltip("Ability piece prefabs, ordered by AbilityType (0=Bomb, 1=HRow, 2=VRow).")]
+        [Tooltip("Ability piece prefabs, ordered by AbilityType (0=Bomb, 1=Laser).")]
         [SerializeField] private GameObject[] _abilityPiecePrefabs;
 
         [Space]
@@ -150,7 +150,7 @@ namespace InGame
 
                     // _nextPieceType was overridden to the ability type for the preview during the
                     // arming spawn. Re-roll it so the spawn AFTER this one uses a normal tetromino;
-                    // otherwise UpdateTiles would be called with Bomb/HRow/VRow (no switch case) and
+                    // otherwise UpdateTiles would be called with Bomb/Laser (no switch case) and
                     // tiles 1..3 would stay at their default (0,0) coords, eventually triggering
                     // game-over from the broken layout.
                     _nextPieceType = (PieceType) Random.Range(0, 7);
@@ -190,8 +190,7 @@ namespace InGame
             switch (ability)
             {
                 case AbilityType.Bomb: return PieceType.Bomb;
-                case AbilityType.HorizontalRow: return PieceType.HRow;
-                case AbilityType.VerticalColumn: return PieceType.VRow;
+                case AbilityType.Laser: return PieceType.Laser;
                 default: return PieceType.O;
             }
         }

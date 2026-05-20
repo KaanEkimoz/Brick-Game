@@ -13,8 +13,7 @@ namespace Gameplay
         [SerializeField] private Slider _chargeSlider;
         [SerializeField] private Image _armedIcon;
         [SerializeField] private Sprite _bombSprite;
-        [SerializeField] private Sprite _hRowSprite;
-        [SerializeField] private Sprite _vRowSprite;
+        [SerializeField] private Sprite _laserSprite;
 
         private void OnEnable()
         {
@@ -62,8 +61,7 @@ namespace Gameplay
             _armedIcon.sprite = ability switch
             {
                 AbilityType.Bomb => _bombSprite,
-                AbilityType.HorizontalRow => _hRowSprite,
-                AbilityType.VerticalColumn => _vRowSprite,
+                AbilityType.Laser => _laserSprite,
                 _ => _armedIcon.sprite,
             };
         }
