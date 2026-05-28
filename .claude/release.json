@@ -1,0 +1,14 @@
+{
+  "productName": "Brick Game",
+  "gameSlug": "BrickGame",
+  "package": "com.ekimozgames.brickgame",
+  "playDeveloperId": "4832328434117186606",
+  "playAppId": "4973112124639228626",
+  "buildOutputPath": "Builds/BrickGame_release.aab",
+  "gitBranch": "claude-dev",
+  "gitMirrorBranches": ["mobile"],
+  "memoryFolder": "~/.claude/projects/-Users-kaanusta-Unity-Projects-Brick-Game/memory",
+  "releaseNotesLocales": ["en-US", "tr-TR"],
+  "managedPublishing": false,
+  "unityInstance": "Brick-Game@71b6f67c"
+}
