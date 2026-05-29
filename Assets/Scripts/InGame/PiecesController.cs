@@ -20,6 +20,12 @@ namespace InGame
         /// <summary>Fired each time the player drives the piece down (keyboard MoveDown or held soft-drop). Not fired for the automatic gravity tick.</summary>
         public static Action OnSoftDrop;
 
+        // Player input action signals — fired by PiecesControllerInput on each gesture.
+        // Used by the tutorial to detect "the player did the thing" without polling Input.
+        public static Action OnHorizontalMove;   // MoveLeft OR MoveRight
+        public static Action OnRotate;           // RotateClockwise (tap / Z / X / Space)
+        public static Action OnHardDrop;         // SendPieceToFloor (fast swipe down / Up / W)
+
         //Soft Drop Button Hold
         private float softDropButtonHoldTime = 0.38f;
         private float softDropHoldDropIntervalTime = 0.08f;
