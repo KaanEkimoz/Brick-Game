@@ -29,9 +29,15 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 // Android Resolver Dependencies Start
     implementation 'com.google.android.gms:play-services-ads-identifier:18.1.0' // Assets/LevelPlay/Editor/IronSourceSDKDependencies.xml:12
-    implementation 'com.unity3d.ads:unity-ads:4.18.0' // Assets/LevelPlay/Editor/ISUnityAdsAdapterDependencies.xml:9
-    implementation 'com.unity3d.ads-mediation:mediation-sdk:9.4.3' // Assets/LevelPlay/Editor/IronSourceSDKDependencies.xml:5
-    implementation 'com.unity3d.ads-mediation:unityads-adapter:5.8.0' // Assets/LevelPlay/Editor/ISUnityAdsAdapterDependencies.xml:5
+    implementation('com.unity3d.ads:unity-ads:4.18.0') { // Assets/LevelPlay/Editor/ISUnityAdsAdapterDependencies.xml:9
+        exclude group: 'com.unity3d.ads-mediation', module: 'adquality-sdk'
+    }
+    implementation('com.unity3d.ads-mediation:mediation-sdk:9.4.3') { // Assets/LevelPlay/Editor/IronSourceSDKDependencies.xml:5
+        exclude group: 'com.unity3d.ads-mediation', module: 'adquality-sdk'
+    }
+    implementation('com.unity3d.ads-mediation:unityads-adapter:5.8.0') { // Assets/LevelPlay/Editor/ISUnityAdsAdapterDependencies.xml:5
+        exclude group: 'com.unity3d.ads-mediation', module: 'adquality-sdk'
+    }
 // Android Resolver Dependencies End
 **DEPS**}
 
