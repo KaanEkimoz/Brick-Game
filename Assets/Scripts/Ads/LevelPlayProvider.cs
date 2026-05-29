@@ -14,6 +14,9 @@ namespace Ekimoz.Ads
         private AdConfig _config;
         private LevelPlayInterstitialAd _interstitial;
         private LevelPlayRewardedAd _rewarded;
+        private LevelPlayBannerAd _banner;
+        private bool _bannerLoaded;
+        private bool _bannerVisible;
         private bool _rewardEarnedThisShow;
 
         public bool IsInitialized { get; private set; }
@@ -47,6 +50,7 @@ namespace Ekimoz.Ads
             if (_config.VerboseLogging) Debug.Log("[Ads] LevelPlay init success.");
             SetupInterstitial();
             SetupRewarded();
+            SetupBanner();
             OnInitialized?.Invoke();
         }
 
@@ -123,16 +127,45 @@ namespace Ekimoz.Ads
             }
         }
 
-        // ---------------- Banner (added in a later pass) ----------------
+        // ---------------- Banner ----------------
+
+        private void SetupBanner()
+        {
+            if (string.IsNullOrWhiteSpace(_config.BannerAdUnitId)) return;
+            _banner = new LevelPlayBannerAd(_config.BannerAdUnitId);
+            _banner.OnAdLoaded += info =>
+            {
+                _bannerLoaded = true;
+                if (_config.VerboseLogging) Debug.Log("[Ads] Banner loaded.");
+                // Show right away if the game asked for it before the load finished.
+                if (_bannerVisible) _banner.ShowAd();
+            };
+            _banner.OnAdLoadFailed += err =>
+            {
+                _bannerLoaded = false;
+                if (_config.VerboseLogging) Debug.LogWarning($"[Ads] Banner load failed: {err}");
+            };
+            _banner.OnAdClicked += _ => { if (_config.VerboseLogging) Debug.Log("[Ads] Banner clicked."); };
+            _banner.LoadAd();
+            // Auto-show as soon as it loads — banners stay visible during gameplay by default.
+            _bannerVisible = true;
+        }
 
         public void ShowBanner()
         {
-            // TODO: LevelPlayBannerAd — wired once interstitial/rewarded are verified live.
+            _bannerVisible = true;
+            if (_banner == null)
+            {
+                // SDK may not have initialized yet; SetupBanner on init will read _bannerVisible.
+                return;
+            }
+            if (_bannerLoaded) _banner.ShowAd();
         }
 
         public void HideBanner()
         {
-            // TODO: LevelPlayBannerAd
+            _bannerVisible = false;
+            if (_banner != null) _banner.HideAd();
         }
     }
 }

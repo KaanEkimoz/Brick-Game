@@ -70,14 +70,17 @@ namespace InGame
         public void RotateClockwise()
         {
             _curPieceRotation.RotatePiece(true, true);
+            OnRotate?.Invoke();
         }
         public void RotateCounterClockwise()
         {
             _curPieceRotation.RotatePiece(false, true);
+            OnRotate?.Invoke();
         }
         public void SendPieceToFloor()
         {
             _curPieceMovement.SendPieceToFloor();
+            OnHardDrop?.Invoke();
         }
         public void MoveDown()
         {
@@ -87,10 +90,12 @@ namespace InGame
         public void MoveRight()
         {
             MoveCurPiece(Vector2Int.right);
+            OnHorizontalMove?.Invoke();
         }
         public void MoveLeft()
         {
             MoveCurPiece(Vector2Int.left);
+            OnHorizontalMove?.Invoke();
         }
 
         #endregion
