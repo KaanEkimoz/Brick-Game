@@ -56,6 +56,11 @@ namespace Extras
 
         private IEnumerator Flicker(SpriteRenderer sr)
         {
+            // Defer one frame so other OnHardDrop subscribers (streak/spark) read the
+            // still-colored sprite before we swap it to white — otherwise their
+            // PieceColorUtil.DominantColor calls silently get a white tint.
+            yield return null;
+            if (sr == null) yield break;
             Sprite original = sr.sprite;
             Sprite white = GetWhiteSprite();
             for (int i = 0; i < _blinkCount; i++)
