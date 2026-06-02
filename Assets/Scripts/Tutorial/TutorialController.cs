@@ -10,7 +10,7 @@ namespace Tutorial
     /// Interactive overlay tutorial. Each step shows a panel and waits for a specific
     /// player gesture (move / rotate / hard drop / soft drop) before advancing. Info-only
     /// steps use <see cref="TutorialGesture.Tap"/> and advance on any tap. Seen-state is
-    /// persisted in PlayerPrefs per mode; the <see cref="_alwaysShow"/> flag bypasses
+    /// persisted in PlayerPrefs per mode; the <see cref="AlwaysShow"/> flag bypasses
     /// that for testing.
     ///
     /// Wiring: attach to a Canvas; populate the core and (optionally) extended step lists
@@ -51,12 +51,33 @@ namespace Tutorial
         [Tooltip("Optional: 'Tap anywhere to continue' / 'Try the gesture' hint shown beside the panel.")]
         [SerializeField] private GameObject _tapToContinueHint;
 
-        [Tooltip("Optional Skip button — click skips the whole tutorial (still marks it as seen so it won't reappear next run when _alwaysShow is off).")]
+        [Tooltip("Optional Skip button — click skips the whole tutorial (still marks it as seen so it won't reappear next run when AlwaysShow is off).")]
         [SerializeField] private GameObject _skipButton;
 
-        [Header("Test")]
-        [Tooltip("If true the tutorial shows EVERY time a Play button is pressed (PlayerPrefs flag ignored). Turn off before shipping.")]
-        [SerializeField] private bool _alwaysShow = false;
+        [Header("Test (Editor only)")]
+#if UNITY_EDITOR
+        [Tooltip("EDITOR ONLY — when on, the tutorial shows on EVERY Play (PlayerPrefs seen-flag ignored) so you can test it. " +
+                 "This field is compiled OUT of device builds, so it can never accidentally ship as 'always on'. " +
+                 "Device builds always behave as if this were false.")]
+        [SerializeField] private bool _editorAlwaysShow = true;
+#endif
+
+        /// <summary>
+        /// True only in the Unity Editor when the test toggle is on. ALWAYS false in device
+        /// builds (the toggle field doesn't even exist there), so production always honors the
+        /// PlayerPrefs seen-flag + returning-user detection.
+        /// </summary>
+        private bool AlwaysShow
+        {
+            get
+            {
+#if UNITY_EDITOR
+                return _editorAlwaysShow;
+#else
+                return false;
+#endif
+            }
+        }
 
         [Tooltip("StartCanvas Play button names. The controller adds an OnClick listener at runtime so the tutorial fires after the existing listeners (GameMode set + StartGame).")]
         [SerializeField] private string _classicPlayButtonName = "B_Play";
@@ -80,8 +101,8 @@ namespace Tutorial
             // Returning-user check: if this device has any sign of prior Brick Game play,
             // mark both tutorial seen-flags so the update from a pre-tutorial build doesn't
             // suddenly bombard veterans with a tutorial they don't need. Only effective when
-            // _alwaysShow is OFF (production).
-            if (!_alwaysShow) MarkSeenIfReturningUser();
+            // AlwaysShow is OFF (production).
+            if (!AlwaysShow) MarkSeenIfReturningUser();
         }
 
         private static void MarkSeenIfReturningUser()
@@ -177,13 +198,13 @@ namespace Tutorial
         {
             bool extended = GameMode.IsExtended;
             string key = extended ? ExtendedSeenKey : ClassicSeenKey;
-            if (!_alwaysShow && PlayerPrefs.GetInt(key, 0) == 1)
+            if (!AlwaysShow && PlayerPrefs.GetInt(key, 0) == 1)
                 return;
 
             BuildSequence(extended);
             if (_activeSequence.Count == 0) return;
 
-            if (!_alwaysShow)
+            if (!AlwaysShow)
             {
                 PlayerPrefs.SetInt(key, 1);
                 PlayerPrefs.Save();
