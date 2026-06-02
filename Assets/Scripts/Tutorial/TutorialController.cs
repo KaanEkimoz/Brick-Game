@@ -91,11 +91,18 @@ namespace Tutorial
 
             bool returning = false;
 
-            // Signal 1: the user touched the volume slider at some point.
-            if (PlayerPrefs.HasKey("volumeLevel")) returning = true;
+            // Signal 1 (strongest): a high score exists. ScoreController writes "highScore" /
+            // "highScore_Extended" the moment the player beats 0 in either mode. This survives
+            // game-over (unlike the save file, which is DELETED on game over), so it's the most
+            // reliable "this person has played before" marker.
+            if (PlayerPrefs.HasKey("highScore")) returning = true;
+            else if (PlayerPrefs.HasKey("highScore_Extended")) returning = true;
 
-            // Signal 2: an active or legacy save file exists (means at least one run was played).
-            if (!returning)
+            // Signal 2: the user touched the volume slider at some point.
+            else if (PlayerPrefs.HasKey("volumeLevel")) returning = true;
+
+            // Signal 3: an in-progress (or legacy) save file exists — a run was started.
+            else
             {
                 string dir = Application.persistentDataPath;
                 if (System.IO.File.Exists(System.IO.Path.Combine(dir, "brickgame_save_classic.json"))) returning = true;
