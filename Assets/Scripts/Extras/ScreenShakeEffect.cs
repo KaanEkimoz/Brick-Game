@@ -34,7 +34,7 @@ public class ScreenShakeEffect : MonoBehaviour
         float elapsed = 0f;
         while (elapsed < duration)
         {
-            elapsed += Time.deltaTime;
+            elapsed += Time.unscaledDeltaTime; // unscaled so the shake still finishes (and recenters) at timeScale=0
             // Linear decay (1 → 0) so the bump is most noticeable at the start.
             float n = Mathf.Clamp01(elapsed / duration);
             float strength = (1f - n) * 0.5f * magnitude;
@@ -51,7 +51,7 @@ public class ScreenShakeEffect : MonoBehaviour
 
         while (elapsedTime < duration)
         {
-            elapsedTime += Time.deltaTime;
+            elapsedTime += Time.unscaledDeltaTime; // unscaled so the shake still finishes at timeScale=0
             float strength = shakeStrength.Evaluate(elapsedTime / duration) * 0.5f * magnitude;
             transform.position = startPos + Random.insideUnitSphere * strength;
             yield return null;
