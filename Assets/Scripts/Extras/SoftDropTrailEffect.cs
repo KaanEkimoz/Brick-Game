@@ -86,7 +86,10 @@ namespace Extras
             float t = 0f;
             while (t < _fadeDuration)
             {
-                t += Time.deltaTime;
+                // Unscaled so the streak still fades out (and self-destructs) when the game is
+                // paused with Time.timeScale = 0 — e.g. while the tutorial overlay is up.
+                // Otherwise deltaTime is 0 and the trail hangs in mid-air forever.
+                t += Time.unscaledDeltaTime;
                 float n = Mathf.Clamp01(t / _fadeDuration);
                 Color s = tint; s.a = _startAlpha * (1f - n);
                 Color e = tint; e.a = 0f;
