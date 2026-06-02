@@ -55,7 +55,9 @@ namespace Extras
                 if (_useTileColor)
                 {
                     SpriteRenderer sr = tile.GetComponentInChildren<SpriteRenderer>();
-                    if (sr != null) streakColor = sr.color;
+                    // sr.color is just a white tint — the actual hue lives in the sprite texture,
+                    // so pull the sprite's dominant colour (cyan I, red Z, ...).
+                    if (sr != null) streakColor = PieceColorUtil.DominantColor(sr.sprite, _fallbackColor);
                 }
                 StartCoroutine(SpawnStreak(tile.transform.position, streakColor));
             }

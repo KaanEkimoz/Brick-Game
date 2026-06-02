@@ -48,14 +48,22 @@ namespace Extras
             int clamped = Mathf.Min(fallDistance, _maxFallDistance);
             float visualLength = clamped * _lengthMultiplier;
             if (visualLength <= 0.05f) return;
+            // Tint the streak with the dropped piece's dominant colour (cyan I, red Z, ...).
+            Color tint = _streakColor;
+            foreach (var t in tiles)
+            {
+                if (t == null) continue;
+                var sr = t.GetComponentInChildren<SpriteRenderer>();
+                if (sr != null && sr.sprite != null) { tint = PieceColorUtil.DominantColor(sr.sprite, _streakColor); break; }
+            }
             foreach (var tile in tiles)
             {
                 if (tile == null) continue;
-                StartCoroutine(SpawnStreak(tile.transform.position, visualLength));
+                StartCoroutine(SpawnStreak(tile.transform.position, visualLength, tint));
             }
         }
 
-        private IEnumerator SpawnStreak(Vector3 tilePos, float length)
+        private IEnumerator SpawnStreak(Vector3 tilePos, float length, Color streakColor)
         {
             GameObject go = new GameObject("HardDropStreak");
             go.transform.position = tilePos;
@@ -72,18 +80,18 @@ namespace Extras
             lr.sortingLayerName = _sortingLayerName;
             lr.sortingOrder = _sortingOrder;
 
-            Color startCol = _streakColor; startCol.a = _startAlpha;
-            Color endCol = _streakColor; endCol.a = 0f;
+            Color startCol = streakColor; startCol.a = _startAlpha;
+            Color endCol = streakColor; endCol.a = 0f;
             lr.startColor = startCol;
             lr.endColor = endCol;
 
             float t = 0f;
             while (t < _fadeDuration)
             {
-                t += Time.deltaTime;
+                t += Time.unscaledDeltaTime; // fade even when paused (timeScale=0)
                 float n = Mathf.Clamp01(t / _fadeDuration);
-                Color s = _streakColor; s.a = _startAlpha * (1f - n);
-                Color e = _streakColor; e.a = 0f;
+                Color s = streakColor; s.a = _startAlpha * (1f - n);
+                Color e = streakColor; e.a = 0f;
                 lr.startColor = s;
                 lr.endColor = e;
                 yield return null;

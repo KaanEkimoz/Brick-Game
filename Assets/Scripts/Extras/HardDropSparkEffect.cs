@@ -64,6 +64,15 @@ namespace Extras
             float length = fallDistance * _lengthMultiplier;
             if (length <= 0.05f) return;
 
+            // Tint sparks with the dropped piece's dominant colour (cyan I, red Z, ...).
+            Color tint = _sparkColor;
+            foreach (var t in tiles)
+            {
+                if (t == null) continue;
+                var sr = t.GetComponentInChildren<SpriteRenderer>();
+                if (sr != null && sr.sprite != null) { tint = PieceColorUtil.DominantColor(sr.sprite, _sparkColor); break; }
+            }
+
             foreach (var tile in tiles)
             {
                 if (tile == null) continue;
@@ -74,34 +83,34 @@ namespace Extras
                     float xOffset = Random.Range(-_horizontalJitter, _horizontalJitter);
                     Vector3 pos = basePos + new Vector3(xOffset, yOffset, 0f);
                     float delay = Random.Range(0f, _spawnSpread);
-                    StartCoroutine(DelayedSpawn(pos, delay));
+                    StartCoroutine(DelayedSpawn(pos, delay, tint));
                 }
             }
         }
 
-        private IEnumerator DelayedSpawn(Vector3 pos, float delay)
+        private IEnumerator DelayedSpawn(Vector3 pos, float delay, Color tint)
         {
-            if (delay > 0f) yield return new WaitForSeconds(delay);
-            yield return SpawnSpark(pos);
+            if (delay > 0f) yield return new WaitForSecondsRealtime(delay);
+            yield return SpawnSpark(pos, tint);
         }
 
-        private IEnumerator SpawnSpark(Vector3 origin)
+        private IEnumerator SpawnSpark(Vector3 origin, Color tint)
         {
             GameObject spark = new GameObject("HardDropSpark");
             spark.transform.position = origin;
             spark.transform.rotation = Quaternion.Euler(0f, 0f, Random.Range(0f, 360f));
 
-            LineRenderer h = BuildArm(spark.transform, Vector3.right);
-            LineRenderer v = BuildArm(spark.transform, Vector3.up);
+            LineRenderer h = BuildArm(spark.transform, Vector3.right, tint);
+            LineRenderer v = BuildArm(spark.transform, Vector3.up, tint);
 
             float t = 0f;
             while (t < _fadeDuration)
             {
-                t += Time.deltaTime;
+                t += Time.unscaledDeltaTime; // fade even when paused (timeScale=0)
                 float n = Mathf.Clamp01(t / _fadeDuration);
                 // Quick in, slow out — sparkle reads brighter at the start
                 float alpha = _startAlpha * Mathf.Pow(1f - n, 2f);
-                Color c = _sparkColor; c.a = alpha;
+                Color c = tint; c.a = alpha;
                 if (h != null) { h.startColor = c; h.endColor = c; }
                 if (v != null) { v.startColor = c; v.endColor = c; }
                 yield return null;
@@ -110,7 +119,7 @@ namespace Extras
             if (spark != null) Destroy(spark);
         }
 
-        private LineRenderer BuildArm(Transform parent, Vector3 direction)
+        private LineRenderer BuildArm(Transform parent, Vector3 direction, Color tint)
         {
             GameObject arm = new GameObject("Arm");
             arm.transform.SetParent(parent, false);
@@ -128,7 +137,7 @@ namespace Extras
             lr.sortingLayerName = _sortingLayerName;
             lr.sortingOrder = _sortingOrder;
 
-            Color c = _sparkColor; c.a = _startAlpha;
+            Color c = tint; c.a = _startAlpha;
             lr.startColor = c;
             lr.endColor = c;
             return lr;
