@@ -3207,7 +3207,7 @@ MonoBehaviour:
   _mode: 2
   _hand: {fileID: 2131298315}
   _handGroup: {fileID: 2131298312}
-  _cycle: 0.5
+  _cycle: 0.625
   _travel: 160
 --- !u!114 &469559481
 MonoBehaviour:
