@@ -274,9 +274,10 @@ namespace Tutorial
             if (_tapToContinueHint != null) _tapToContinueHint.SetActive(false);
             if (_skipButton != null) _skipButton.SetActive(false);
             if (_overlayRoot != null) _overlayRoot.SetActive(false);
-            // Hide whatever step was visible so it doesn't linger after a Skip.
-            if (_index >= 0 && _index < _activeSequence.Count && _activeSequence[_index].panel != null)
-                _activeSequence[_index].panel.SetActive(false);
+            // Defensively hide EVERY step panel (not just the current one) so nothing can
+            // linger on screen after a Skip or after the last step completes.
+            foreach (var s in _coreSteps) if (s != null && s.panel != null) s.panel.SetActive(false);
+            foreach (var s in _extendedSteps) if (s != null && s.panel != null) s.panel.SetActive(false);
             Time.timeScale = _savedTimeScale;
         }
 
