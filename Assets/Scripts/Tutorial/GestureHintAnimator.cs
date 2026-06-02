@@ -65,11 +65,12 @@ namespace Tutorial
                 }
                 case Mode.SwipeHorizontal:
                 {
-                    // Glide left→right over 80% of the cycle, then fade out and snap back.
-                    float e = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(phase / 0.8f));
-                    _hand.anchoredPosition = _home + new Vector2(Mathf.Lerp(-_travel, _travel, e), 0f);
+                    // Start centered, then swing right and left continuously (sine ping-pong):
+                    // 0 → +travel → 0 → -travel → 0. Reads as "move either way".
+                    float x = Mathf.Sin(phase * Mathf.PI * 2f) * _travel;
+                    _hand.anchoredPosition = _home + new Vector2(x, 0f);
                     _hand.localScale = Vector3.one;
-                    if (_handGroup != null) _handGroup.alpha = phase > 0.8f ? Mathf.InverseLerp(1f, 0.8f, phase) : 1f;
+                    if (_handGroup != null) _handGroup.alpha = 1f;
                     break;
                 }
                 case Mode.HoldDown:
