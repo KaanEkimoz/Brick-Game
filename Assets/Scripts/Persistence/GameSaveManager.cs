@@ -30,6 +30,14 @@ namespace Persistence
         [Tooltip("Panel shown on scene start when a save exists. Contains Continue + New Game buttons hooked to OnContinueClicked / OnNewGameClicked.")]
         [SerializeField] private GameObject _continuePromptPanel;
 
+#if UNITY_EDITOR
+        [Header("Test (Editor only)")]
+        [Tooltip("EDITOR ONLY — skip the Continue/New-Game prompt and always start a fresh game " +
+                 "(handy while testing the tutorial). Compiled out of device builds, so players " +
+                 "still get the normal Continue prompt.")]
+        [SerializeField] private bool _editorAlwaysNewGame = true;
+#endif
+
         [Tooltip("Start menu root hidden while the continue prompt is visible so the player cannot bypass the prompt by tapping Play.")]
         [SerializeField] private GameObject _startMenuPanel;
 
@@ -67,6 +75,16 @@ namespace Persistence
         /// </summary>
         public void OnPlayRequested()
         {
+#if UNITY_EDITOR
+            if (_editorAlwaysNewGame)
+            {
+                // Testing convenience: never prompt, always start fresh in the Editor.
+                if (GameSaveStorage.HasSave()) GameSaveStorage.Delete();
+                _saveHandled = true;
+                if (_piecesController != null) _piecesController.StartGame();
+                return;
+            }
+#endif
             if (GameSaveStorage.HasSave())
             {
                 GameSaveData data = GameSaveStorage.Load();
