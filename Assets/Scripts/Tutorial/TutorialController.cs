@@ -87,6 +87,7 @@ namespace Tutorial
         private int _index = -1;
         private bool _running;
         private float _savedTimeScale = 1f;
+        private ParticleSystem[] _pausedParticles;
 
         private void Awake()
         {
@@ -227,6 +228,9 @@ namespace Tutorial
             _running = true;
             _savedTimeScale = Time.timeScale;
             Time.timeScale = 0f;
+            // timeScale 0 freezes particles mid-air, which looks broken. Clear + stop them
+            // for the duration of the tutorial; resume looping/ambient ones on Finish.
+            FreezeParticles();
             if (_overlayRoot != null) _overlayRoot.SetActive(true);
             if (_tapToContinueHint != null) _tapToContinueHint.SetActive(true);
             if (_skipButton != null) _skipButton.SetActive(true);
@@ -307,6 +311,22 @@ namespace Tutorial
             foreach (var s in _coreSteps) if (s != null && s.panel != null) s.panel.SetActive(false);
             foreach (var s in _extendedSteps) if (s != null && s.panel != null) s.panel.SetActive(false);
             Time.timeScale = _savedTimeScale;
+            ResumeParticles();
+        }
+
+        private void FreezeParticles()
+        {
+            _pausedParticles = UnityEngine.Object.FindObjectsByType<ParticleSystem>(FindObjectsSortMode.None);
+            foreach (var ps in _pausedParticles)
+                if (ps != null) ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        }
+
+        private void ResumeParticles()
+        {
+            if (_pausedParticles == null) return;
+            foreach (var ps in _pausedParticles)
+                if (ps != null && ps.main.playOnAwake) ps.Play(); // restart looping / ambient systems
+            _pausedParticles = null;
         }
 
 #if UNITY_EDITOR
