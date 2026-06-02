@@ -54,6 +54,11 @@ namespace Tutorial
         [Tooltip("Optional Skip button — click skips the whole tutorial (still marks it as seen so it won't reappear next run when AlwaysShow is off).")]
         [SerializeField] private GameObject _skipButton;
 
+        [Tooltip("Optional 'Tutorial Completed' label (needs a CanvasGroup). Shown briefly and faded out when the player finishes ALL steps — not when they Skip.")]
+        [SerializeField] private GameObject _completedLabel;
+        [SerializeField] private float _completedHold = 0.7f;
+        [SerializeField] private float _completedFade = 1.0f;
+
         [Header("Test (Editor only)")]
 #if UNITY_EDITOR
         [Tooltip("EDITOR ONLY — when on, the tutorial shows on EVERY Play (PlayerPrefs seen-flag ignored) so you can test it. " +
@@ -173,7 +178,7 @@ namespace Tutorial
         public void SkipTutorial()
         {
             if (!_running) return;
-            Finish();
+            Finish(false); // skipped — no "completed" banner
         }
 
         private void HookPlayButtons()
@@ -273,7 +278,7 @@ namespace Tutorial
             _index++;
             if (_index >= _activeSequence.Count)
             {
-                Finish();
+                Finish(true); // reached the end — show the "completed" banner
                 return;
             }
             _activeSequence[_index].panel.SetActive(true);
@@ -300,7 +305,7 @@ namespace Tutorial
             }
         }
 
-        private void Finish()
+        private void Finish(bool completed)
         {
             _running = false;
             if (_tapToContinueHint != null) _tapToContinueHint.SetActive(false);
@@ -312,6 +317,29 @@ namespace Tutorial
             foreach (var s in _extendedSteps) if (s != null && s.panel != null) s.panel.SetActive(false);
             Time.timeScale = _savedTimeScale;
             ResumeParticles();
+
+            if (completed && _completedLabel != null)
+                StartCoroutine(ShowCompletedBanner());
+        }
+
+        private System.Collections.IEnumerator ShowCompletedBanner()
+        {
+            var cg = _completedLabel.GetComponent<CanvasGroup>();
+            _completedLabel.SetActive(true);
+            if (cg != null) cg.alpha = 1f;
+
+            // Hold fully visible, then fade out. Unscaled so it works whatever the timescale is.
+            yield return new WaitForSecondsRealtime(_completedHold);
+            float t = 0f;
+            float dur = Mathf.Max(0.01f, _completedFade);
+            while (t < dur)
+            {
+                t += Time.unscaledDeltaTime;
+                if (cg != null) cg.alpha = 1f - (t / dur);
+                yield return null;
+            }
+            if (cg != null) cg.alpha = 0f;
+            _completedLabel.SetActive(false);
         }
 
         private void FreezeParticles()
