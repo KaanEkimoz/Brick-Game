@@ -65,11 +65,11 @@ namespace InputSystem
 
         [Tooltip("Slowest soft-drop tick interval (seconds). Held just past activation drops " +
                  "this often.")]
-        [SerializeField] private float _softDropSlowInterval = 0.18f;
+        [SerializeField] private float _softDropSlowInterval = 0.234f;
 
         [Tooltip("Fastest soft-drop tick interval (seconds). Held far below activation drops " +
                  "this often.")]
-        [SerializeField] private float _softDropFastInterval = 0.03f;
+        [SerializeField] private float _softDropFastInterval = 0.039f;
 
         [Tooltip("Drag distance below activation (pixels) that maps to the fastest tick.")]
         [SerializeField] private float _softDropFullSpeedPixels = 300f;
