@@ -1,3 +1,4 @@
+using Tutorial;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -5,6 +6,10 @@ namespace InGame
 {
     public partial class PiecesController
     {
+        // Convenience alias so the tutorial-gate calls below read naturally.
+        private static bool Allow(TutorialController.TutorialGesture g) => TutorialController.IsGestureAllowed(g);
+
+
         private void Update()
         {
             CheckKeyboardInputs();
@@ -69,31 +74,37 @@ namespace InGame
         }
         public void RotateClockwise()
         {
+            if (!Allow(TutorialController.TutorialGesture.Rotate)) return;
             _curPieceRotation.RotatePiece(true, true);
             OnRotate?.Invoke();
         }
         public void RotateCounterClockwise()
         {
+            if (!Allow(TutorialController.TutorialGesture.Rotate)) return;
             _curPieceRotation.RotatePiece(false, true);
             OnRotate?.Invoke();
         }
         public void SendPieceToFloor()
         {
+            if (!Allow(TutorialController.TutorialGesture.HardDrop)) return;
             _curPieceMovement.SendPieceToFloor();
             OnHardDrop?.Invoke();
         }
         public void MoveDown()
         {
+            if (!Allow(TutorialController.TutorialGesture.SoftDrop)) return;
             MoveCurPiece(Vector2Int.down);
             OnSoftDrop?.Invoke();
         }
         public void MoveRight()
         {
+            if (!Allow(TutorialController.TutorialGesture.MoveLR)) return;
             MoveCurPiece(Vector2Int.right);
             OnHorizontalMove?.Invoke();
         }
         public void MoveLeft()
         {
+            if (!Allow(TutorialController.TutorialGesture.MoveLR)) return;
             MoveCurPiece(Vector2Int.left);
             OnHorizontalMove?.Invoke();
         }

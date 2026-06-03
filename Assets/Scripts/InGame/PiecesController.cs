@@ -28,7 +28,7 @@ namespace InGame
 
         //Soft Drop Button Hold
         private float softDropButtonHoldTime = 0.38f;
-        private float softDropHoldDropIntervalTime = 0.08f;
+        private float softDropHoldDropIntervalTime = 0.104f;
         private bool softDropIsHolding = false;
 
         // True once GameOver() has fired. Acts as a re-entry guard so a soft-drop
@@ -39,6 +39,7 @@ namespace InGame
 
         public void OnSoftDropButtonDown()
         {
+            if (!Allow(Tutorial.TutorialController.TutorialGesture.SoftDrop)) return;
             softDropIsHolding = true;
             StartCoroutine(SoftDropHoldCoroutine());
         }
@@ -59,8 +60,13 @@ namespace InGame
             {
                 while (softDropIsHolding)
                 {
-                    MoveCurPiece(Vector2Int.down);
-                    OnSoftDrop?.Invoke();
+                    // Re-check gate every tick — tutorial may advance to a different step
+                    // mid-hold, in which case ticks should silently stop.
+                    if (Allow(Tutorial.TutorialController.TutorialGesture.SoftDrop))
+                    {
+                        MoveCurPiece(Vector2Int.down);
+                        OnSoftDrop?.Invoke();
+                    }
                     yield return new WaitForSeconds(softDropHoldDropIntervalTime);
                 }
             }
