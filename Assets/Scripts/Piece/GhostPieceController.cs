@@ -17,7 +17,7 @@ namespace Piece
         {
             PieceSpawner.OnPieceSpawned -= UpdateGhostTiles;
             PieceMovement.OnPieceMovement -= UpdateGhostTiles;
-            PieceRotation.OnPieceRotation += UpdateGhostTiles;
+            PieceRotation.OnPieceRotation -= UpdateGhostTiles;
         }
         private void UpdateGhostTiles()
         {
