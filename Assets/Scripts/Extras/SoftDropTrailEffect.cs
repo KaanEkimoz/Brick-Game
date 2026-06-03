@@ -1,6 +1,7 @@
 using System.Collections;
 using InGame;
 using Piece;
+using Pooling;
 using Tiles;
 using UnityEngine;
 
@@ -65,10 +66,10 @@ namespace Extras
 
         private IEnumerator SpawnStreak(Vector3 tilePos, Color tint)
         {
-            GameObject go = new GameObject("SoftDropStreak");
-            go.transform.position = tilePos;
-
-            LineRenderer lr = go.AddComponent<LineRenderer>();
+            // Soft-drop fires many times per second when the player holds the gesture; pooling
+            // the LineRenderer GameObjects eliminates the per-tick alloc + GC sawtooth.
+            LineRenderer lr = StreakPool.Acquire();
+            lr.transform.position = tilePos;
             lr.material = GetMaterial();
             lr.useWorldSpace = true;
             lr.positionCount = 2;
@@ -100,7 +101,7 @@ namespace Extras
                 yield return null;
             }
 
-            Destroy(go);
+            StreakPool.Release(lr);
         }
     }
 }

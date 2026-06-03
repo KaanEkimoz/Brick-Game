@@ -1,5 +1,6 @@
 using System.Collections;
 using Piece;
+using Pooling;
 using Tiles;
 using UnityEngine;
 
@@ -65,10 +66,10 @@ namespace Extras
 
         private IEnumerator SpawnStreak(Vector3 tilePos, float length, Color streakColor)
         {
-            GameObject go = new GameObject("HardDropStreak");
-            go.transform.position = tilePos;
-
-            LineRenderer lr = go.AddComponent<LineRenderer>();
+            // Borrow a streak from the pool; the same LineRenderer GameObject is reused
+            // across many hard-drops instead of allocating + destroying every event.
+            LineRenderer lr = StreakPool.Acquire();
+            lr.transform.position = tilePos;
             lr.material = GetMaterial();
             lr.useWorldSpace = true;
             lr.positionCount = 2;
@@ -97,7 +98,7 @@ namespace Extras
                 yield return null;
             }
 
-            Destroy(go);
+            StreakPool.Release(lr);
         }
     }
 }
