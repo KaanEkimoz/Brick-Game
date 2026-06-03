@@ -157,10 +157,13 @@ namespace Tutorial
             if (PlayerPrefs.HasKey("highScore")) returning = true;
             else if (PlayerPrefs.HasKey("highScore_Extended")) returning = true;
 
-            // Signal 2: the user touched the volume slider at some point.
-            else if (PlayerPrefs.HasKey("volumeLevel")) returning = true;
+            // (Removed: volumeLevel signal. VolumeBootstrap.Apply runs
+            // [RuntimeInitializeOnLoadMethod(BeforeSceneLoad)] on EVERY launch and seeds
+            // volumeLevel = 0.5 on first install, so the key exists before this method runs.
+            // That turned first-time players into "returning" users and silently suppressed
+            // the tutorial for everyone. Save-file existence + highScore are sufficient.)
 
-            // Signal 3: an in-progress (or legacy) save file exists — a run was started.
+            // Signal 2: an in-progress (or legacy) save file exists — a run was started.
             else
             {
                 string dir = Application.persistentDataPath;
