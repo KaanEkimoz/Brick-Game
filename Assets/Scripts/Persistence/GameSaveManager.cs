@@ -157,6 +157,8 @@ namespace Persistence
                 currentLevel = LevelController.CurrentLevel,
                 currentPieceType = GetCurrentPieceType(),
                 nextPieceType = PieceSpawner.NextPieceType,
+                // Capture the 7-bag's remaining draws so a resumed run picks up exactly where it left off.
+                bagState = PieceBag.Snapshot(),
             };
 
             foreach (KeyValuePair<Vector2Int, GameObject> kv in _boardController.GetOccupiedTiles())
@@ -225,7 +227,11 @@ namespace Persistence
 
                 _boardController.SetTotalClearedLines(data.totalClearedLines);
 
-                // 3) Spawn ghost + active piece with the saved types (bypasses the random roll).
+                // 3) Restore the 7-bag exactly as it was when the run was paused. Empty list
+                // (v1 saves or fresh bags) lets PieceBag refill + reshuffle on the next draw.
+                PieceBag.RestoreFromSnapshot(data.bagState);
+
+                // 4) Spawn ghost + active piece with the saved types (bypasses the random roll).
                 _pieceSpawner.SpawnGhostPiece();
                 _pieceSpawner.SpawnPieceFromSave(data.currentPieceType, data.nextPieceType);
             }
