@@ -77,7 +77,9 @@ namespace Persistence
             try
             {
                 string json = File.ReadAllText(FilePath);
-                return JsonUtility.FromJson<GameSaveData>(json);
+                GameSaveData data = JsonUtility.FromJson<GameSaveData>(json);
+                // Apply forward migrations so older v1 saves load cleanly under the v2 schema.
+                return SaveMigrator.Migrate(data);
             }
             catch (IOException e)
             {

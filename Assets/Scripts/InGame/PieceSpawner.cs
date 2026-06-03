@@ -34,7 +34,11 @@ namespace InGame
 
         private void Start()
         {
-            _nextPieceType = (PieceType)Random.Range(0, 7);
+            // Seed the preview slot from the 7-bag. SaveManager.RestoreFromData calls
+            // SpawnPieceFromSave AFTER this, replacing the preview with the saved value
+            // and (in the restore path) replaying the saved bag state — so this initial
+            // draw is only used on truly fresh runs.
+            _nextPieceType = PieceBag.Next();
         }
 
         /// <summary>
@@ -153,7 +157,7 @@ namespace InGame
                     // otherwise UpdateTiles would be called with Bomb/Laser (no switch case) and
                     // tiles 1..3 would stay at their default (0,0) coords, eventually triggering
                     // game-over from the broken layout.
-                    _nextPieceType = (PieceType) Random.Range(0, 7);
+                    _nextPieceType = PieceBag.Next();
                     OnNextPieceChanged?.Invoke(_nextPieceType);
 
                     OnPieceSpawned?.Invoke();
@@ -166,7 +170,7 @@ namespace InGame
             InitializeCurPiece(curPiece);
 
             _curPieceType = _nextPieceType;
-            _nextPieceType = (PieceType) Random.Range(0, 7);
+            _nextPieceType = PieceBag.Next();
 
             // 3) If the bar is full and we don't already have a buffered ability, take the
             // pending ability now (which also empties the bar) and queue it for the next spawn.
