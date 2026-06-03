@@ -15,8 +15,13 @@ namespace Extras
     /// </summary>
     public static class VolumeBootstrap
     {
-        private const string PrefKey = "volumeLevel";
-        private const float DefaultVolume = 0.5f;
+        /// <summary>PlayerPrefs key shared by VolumeBootstrap and VolumeLevelSlider so the
+        /// "what key holds the master volume" answer lives in exactly one place.</summary>
+        public const string PrefKey = "volumeLevel";
+
+        /// <summary>Default master volume used when no saved value exists yet. Shared with
+        /// VolumeLevelSlider so the two never drift if the default is retuned.</summary>
+        public const float DefaultVolume = 0.5f;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Apply()

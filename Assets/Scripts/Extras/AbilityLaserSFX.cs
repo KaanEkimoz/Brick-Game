@@ -35,6 +35,7 @@ namespace Extras
 
         private void PlayLaser(Vector2Int _)
         {
+            if (!SFXToggle.IsSfxEnabled) return;
             if (_source != null && _laserClip != null)
                 _source.PlayOneShot(_laserClip, _volume);
         }

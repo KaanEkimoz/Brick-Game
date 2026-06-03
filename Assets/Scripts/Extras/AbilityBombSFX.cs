@@ -33,6 +33,7 @@ namespace Extras
 
         private void PlayBomb(Vector2Int _)
         {
+            if (!SFXToggle.IsSfxEnabled) return;
             if (_source != null && _bombClip != null)
                 _source.PlayOneShot(_bombClip, _volume);
         }

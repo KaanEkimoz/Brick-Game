@@ -31,6 +31,7 @@ public class PieceLandingSFX : MonoBehaviour
 
     private void Play()
     {
+        if (!SFXToggle.IsSfxEnabled) return;
         if (_source != null && _landingClip != null)
             _source.PlayOneShot(_landingClip, _volume);
     }

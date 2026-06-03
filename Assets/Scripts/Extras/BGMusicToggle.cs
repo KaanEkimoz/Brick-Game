@@ -28,6 +28,7 @@ public class BGMusicToggle : MonoBehaviour
 
         // Save the background music enabled state to player prefs
         PlayerPrefs.SetInt(PREFS_KEY, bgMusicEnabled ? 1 : 0);
+        PlayerPrefs.Save();
 
         // Play or stop music based on the new background music enabled state
         if (bgMusicEnabled)
@@ -46,6 +47,7 @@ public class BGMusicToggle : MonoBehaviour
 
         // Save the background music enabled state to player prefs
         PlayerPrefs.SetInt(PREFS_KEY, bgMusicEnabled ? 1 : 0);
+        PlayerPrefs.Save();
     }
     public void DisableBackgroundMusic()
     {
@@ -54,6 +56,7 @@ public class BGMusicToggle : MonoBehaviour
 
         // Save the background music enabled state to player prefs
         PlayerPrefs.SetInt(PREFS_KEY, bgMusicEnabled ? 1 : 0);
+        PlayerPrefs.Save();
 
 
         // Play or stop music based on the new background music enabled state

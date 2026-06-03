@@ -15,7 +15,6 @@ namespace Extras
         [SerializeField] private float _trimStart = 0.1f;
         [SerializeField] private float _playDuration = 0.35f;
         [SerializeField] [Range(0f, 1f)] private float _volume = 1f;
-        [SerializeField] private AudioSource _muteReference;
 
         private void OnEnable()
         {
@@ -29,8 +28,8 @@ namespace Extras
 
         private void HandleLinesCleared(int count)
         {
+            if (!SFXToggle.IsSfxEnabled) return;
             if (count <= 0 || _clip == null) return;
-            if (_muteReference != null && _muteReference.mute) return;
 
             GameObject go = new GameObject("LineClearSFX_OneShot");
             go.transform.SetParent(transform, false);
