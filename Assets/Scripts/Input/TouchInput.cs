@@ -36,7 +36,13 @@ namespace InputSystem
                  "the horizontal accumulator is ignored AND drained, so a thumb sliding mostly " +
                  "downward (e.g. a hard-drop swipe) can't sneak in a sideways step. Higher = " +
                  "stricter (rarer accidental side-step on vertical gestures). 0 disables the lock.")]
-        [SerializeField] private float _horizontalLockRatio = 2.0f;
+        [SerializeField] private float _horizontalLockRatio = 1.5f;
+
+        [Tooltip("Once a frame triggers the vertical lock, lock OUT all horizontal stepping for " +
+                 "the rest of THIS touch. Frame-only locking lets diagonal hard-drops sneak in a " +
+                 "side-step on the few frames where dx briefly catches up. Sticky commitment " +
+                 "removes that whole class of false side-steps.")]
+        [SerializeField] private bool _verticalLockSticky = true;
 
         [Header("Tap (rotate)")]
         [SerializeField] private float _tapMaxDuration = 0.25f;
@@ -54,18 +60,21 @@ namespace InputSystem
         [SerializeField] private float _hardDropMinDistance = 120f;
 
         [Header("Soft drop")]
-        [Tooltip("How far the finger must drag below its peak Y before soft drop starts firing.")]
-        [SerializeField] private float _softDropActivatePixels = 80f;
+        [Tooltip("How far the finger must drag below its peak Y before soft drop starts firing. " +
+                 "Lower = more responsive to light downward pressure. The sticky vertical lock " +
+                 "above already prevents diagonal hard-drops from leaking sideways, so this can " +
+                 "stay forgiving without false side-steps.")]
+        [SerializeField] private float _softDropActivatePixels = 40f;
 
         [Tooltip("Soft drop fires only when the touch is clearly more vertical than horizontal. "
                + "Multiplier applied to the horizontal travel — drop-below-peak must exceed "
                + "horizontalTravel × this factor. Higher = stricter (left/right drags less likely "
                + "to accidentally fire soft drop). 1.0 = equal vertical/horizontal threshold.")]
-        [SerializeField] private float _softDropVerticalDominance = 1.4f;
+        [SerializeField] private float _softDropVerticalDominance = 1.2f;
 
         [Tooltip("Slowest soft-drop tick interval (seconds). Held just past activation drops " +
-                 "this often.")]
-        [SerializeField] private float _softDropSlowInterval = 0.234f;
+                 "this often. Lower = more cells per second on a light downward press.")]
+        [SerializeField] private float _softDropSlowInterval = 0.15f;
 
         [Tooltip("Fastest soft-drop tick interval (seconds). Held far below activation drops " +
                  "this often.")]
@@ -85,6 +94,10 @@ namespace InputSystem
         private float _softDropNextTickTime;
         private bool _hardDropFired;
         private bool _movedBeyondTapRadius;
+        // True once this touch has been classified as vertical. Sticky for the rest of the touch
+        // so a hard-drop swipe with mild diagonal drift cannot drop in a phantom side-step on
+        // frames where dx briefly recovers.
+        private bool _verticalCommitted;
 
         private void Awake()
         {
@@ -175,6 +188,7 @@ namespace InputSystem
             _softDropNextTickTime = 0f;
             _hardDropFired = false;
             _movedBeyondTapRadius = false;
+            _verticalCommitted = false;
         }
 
         private void HandleMove(Touch t)
@@ -198,9 +212,18 @@ namespace InputSystem
             float absDY = Mathf.Abs(delta.y);
             bool verticalLocked = _horizontalLockRatio > 0f && absDY > absDX * _horizontalLockRatio;
 
-            if (verticalLocked)
+            // Sticky lock: once any frame in this touch is clearly vertical, refuse all
+            // subsequent horizontal stepping. A diagonal hard-drop has a few frames where dx
+            // briefly catches up to dy — without sticky commitment those would slip through
+            // and fire a phantom side-step right before the hard-drop lands.
+            if (verticalLocked && _verticalLockSticky) _verticalCommitted = true;
+            bool blockHorizontalStep = verticalLocked || _verticalCommitted;
+
+            if (blockHorizontalStep)
             {
-                _accumulatedHorizontalDelta *= 0.5f; // soft drain
+                // Hard reset (not a soft drain) once we've committed to vertical — any residue
+                // from earlier near-step frames is invalid for the rest of this touch.
+                _accumulatedHorizontalDelta = 0f;
             }
             else
             {

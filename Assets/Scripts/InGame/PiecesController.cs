@@ -15,7 +15,7 @@ namespace InGame
         // Lerped so the cap is exact and the per-level step is uniform. Defined in code
         // (not SerializeField) so behavior is deterministic regardless of scene state.
         private const float StartDropTime = 0.75f; // level 1
-        private const float MinDropTime = 0.30f;   // level MaxSpeedLevel (cap)
+        private const float MinDropTime = 0.26f;   // level MaxSpeedLevel (cap)
         private const int MaxSpeedLevel = 15;       // keep in sync with LevelController.maxLevel
 
         private float _dropTimeInSeconds = StartDropTime;
