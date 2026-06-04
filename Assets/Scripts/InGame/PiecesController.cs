@@ -11,7 +11,14 @@ namespace InGame
         public static PiecesController Instance;
         public static GameObject CurPiece;
 
-        private float _dropTimeInSeconds = 0.8f;
+        // Gravity (auto-drop) speed curve. Level 1 = slowest, MaxSpeedLevel = fastest.
+        // Lerped so the cap is exact and the per-level step is uniform. Defined in code
+        // (not SerializeField) so behavior is deterministic regardless of scene state.
+        private const float StartDropTime = 0.75f; // level 1
+        private const float MinDropTime = 0.30f;   // level MaxSpeedLevel (cap)
+        private const int MaxSpeedLevel = 15;       // keep in sync with LevelController.maxLevel
+
+        private float _dropTimeInSeconds = StartDropTime;
         private PieceMovement _curPieceMovement;
         private PieceRotation _curPieceRotation;
         private Coroutine _dropCurPiece;
@@ -198,7 +205,12 @@ namespace InGame
         }
         private void UpdateDropTimeAccordingTheLevel()
         {
-            _dropTimeInSeconds = 0.75f - (float)(LevelController.CurrentLevel - 1) / 40;
+            // Clamp the level here too (defense in depth): even if CurrentLevel were ever
+            // handed to us un-clamped, gravity can never drop below MinDropTime — so a
+            // WaitForSeconds(<=0) "instant fall" state is impossible.
+            int level = Mathf.Clamp(LevelController.CurrentLevel, 1, MaxSpeedLevel);
+            float t = (float)(level - 1) / (MaxSpeedLevel - 1);
+            _dropTimeInSeconds = Mathf.Lerp(StartDropTime, MinDropTime, t);
         }
         public void DestroyCurPiece()
         {
