@@ -31,12 +31,13 @@ namespace Extras
         {
             if(CurrentLevel == maxLevel)
                 return;
-        
-            CurrentLevel = 1 + totalClearedLines / 10;
-            OnLevelIncreased.Invoke();
-        
-            if (CurrentLevel >= maxLevel)
-                CurrentLevel = maxLevel;
+
+            // Clamp BEFORE broadcasting. Previously the event fired with the raw (un-clamped)
+            // level, so a multi-line clear that pushed the computed level past maxLevel made
+            // drop-time listeners speed up beyond the intended cap (and, at extreme line
+            // counts, toward a zero/negative wait = unplayable instant fall).
+            CurrentLevel = Mathf.Clamp(1 + totalClearedLines / 10, 1, maxLevel);
+            OnLevelIncreased?.Invoke();
             UpdateLevelText();
         }
         private void UpdateLevelText()
