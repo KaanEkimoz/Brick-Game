@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 namespace Ekimoz.Ads
@@ -23,6 +24,12 @@ namespace Ekimoz.Ads
         [SerializeField] private AdConfig _config;
 
         private IAdProvider _provider;
+
+        // Banner load-failure retry with backoff (pumped here because the provider is a plain
+        // C# object with no coroutine host). Reset on a successful load.
+        private Coroutine _bannerRetry;
+        private int _bannerRetryCount;
+        private const int MaxBannerRetries = 6;
 
         /// <summary>True when the player bought Remove Ads. No ads of any kind are shown.</summary>
         public bool AdsRemoved { get; private set; }
@@ -60,7 +67,34 @@ namespace Ekimoz.Ads
             _provider = new LevelPlayProvider();
             _provider.OnInterstitialClosed += () => OnInterstitialClosed?.Invoke();
             _provider.OnRewardedClosed += earned => OnRewardedClosed?.Invoke(earned);
+            _provider.OnBannerLoaded += HandleBannerLoaded;
+            _provider.OnBannerLoadFailed += HandleBannerLoadFailed;
             _provider.Initialize(_config);
+        }
+
+        private void HandleBannerLoaded()
+        {
+            // Fresh success — clear the backoff so a later refresh failure starts over.
+            _bannerRetryCount = 0;
+            if (_bannerRetry != null) { StopCoroutine(_bannerRetry); _bannerRetry = null; }
+        }
+
+        private void HandleBannerLoadFailed()
+        {
+            if (AdsRemoved) return;
+            if (_bannerRetry != null) StopCoroutine(_bannerRetry);
+            _bannerRetry = StartCoroutine(RetryBannerLoad());
+        }
+
+        private IEnumerator RetryBannerLoad()
+        {
+            if (_bannerRetryCount >= MaxBannerRetries) { _bannerRetry = null; yield break; }
+            _bannerRetryCount++;
+            // Exponential backoff capped at 60s: 4, 8, 16, 32, 60, 60...
+            float delay = Mathf.Min(60f, 4f * Mathf.Pow(2f, _bannerRetryCount - 1));
+            yield return new WaitForSecondsRealtime(delay);
+            _bannerRetry = null;
+            if (!AdsRemoved) _provider?.ReloadBanner();
         }
 
         /// <summary>
@@ -76,7 +110,10 @@ namespace Ekimoz.Ads
 
             if (removed)
             {
-                _provider?.HideBanner();
+                // Stop any pending banner retry and fully suppress the provider so a banner
+                // load that completes AFTER this call can never re-show for an owner.
+                if (_bannerRetry != null) { StopCoroutine(_bannerRetry); _bannerRetry = null; }
+                _provider?.SuppressAds();
                 Debug.Log("[Ads] Remove Ads applied — all ads suppressed.");
             }
         }

@@ -23,6 +23,12 @@ namespace Ekimoz.Ads
         /// <summary>Fired when a rewarded ad finishes. bool = reward actually earned.</summary>
         event Action<bool> OnRewardedClosed;
 
+        /// <summary>Fired when the banner finishes loading successfully.</summary>
+        event Action OnBannerLoaded;
+
+        /// <summary>Fired when a banner load attempt fails, so the host can schedule a retry.</summary>
+        event Action OnBannerLoadFailed;
+
         void Initialize(AdConfig config);
 
         void LoadInterstitial();
@@ -33,5 +39,15 @@ namespace Ekimoz.Ads
 
         void ShowBanner();
         void HideBanner();
+
+        /// <summary>Re-attempt loading the banner after a previous failure.</summary>
+        void ReloadBanner();
+
+        /// <summary>
+        /// Permanently suppress every ad for the rest of this session (Remove Ads owned).
+        /// Tears down the banner and blocks any future auto-show even if SDK init/load
+        /// completes later — closing the purchase-vs-init race.
+        /// </summary>
+        void SuppressAds();
     }
 }

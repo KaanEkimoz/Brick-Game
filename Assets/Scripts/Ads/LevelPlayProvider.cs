@@ -19,6 +19,10 @@ namespace Ekimoz.Ads
         private bool _bannerVisible;
         private bool _rewardEarnedThisShow;
 
+        // Set once Remove Ads is owned. Blocks every auto-show path inside the provider,
+        // even if SDK init / banner load completes AFTER suppression was requested.
+        private bool _suppressed;
+
         public bool IsInitialized { get; private set; }
         public bool IsInterstitialReady => _interstitial != null && _interstitial.IsAdReady();
         public bool IsRewardedReady => _rewarded != null && _rewarded.IsAdReady();
@@ -26,6 +30,8 @@ namespace Ekimoz.Ads
         public event Action OnInitialized;
         public event Action OnInterstitialClosed;
         public event Action<bool> OnRewardedClosed;
+        public event Action OnBannerLoaded;
+        public event Action OnBannerLoadFailed;
 
         public void Initialize(AdConfig config)
         {
@@ -48,6 +54,16 @@ namespace Ekimoz.Ads
         {
             IsInitialized = true;
             if (_config.VerboseLogging) Debug.Log("[Ads] LevelPlay init success.");
+
+            // Remove Ads may have been applied (restore) while the SDK was still initializing.
+            // If so, never create or load any ad unit — this is the fix for the banner showing
+            // for owners on a fresh install where the local pref hadn't been set yet at Awake.
+            if (_suppressed)
+            {
+                OnInitialized?.Invoke();
+                return;
+            }
+
             SetupInterstitial();
             SetupRewarded();
             SetupBanner();
@@ -131,19 +147,26 @@ namespace Ekimoz.Ads
 
         private void SetupBanner()
         {
+            if (_suppressed) return;
             if (string.IsNullOrWhiteSpace(_config.BannerAdUnitId)) return;
             _banner = new LevelPlayBannerAd(_config.BannerAdUnitId);
             _banner.OnAdLoaded += info =>
             {
                 _bannerLoaded = true;
                 if (_config.VerboseLogging) Debug.Log("[Ads] Banner loaded.");
-                // Show right away if the game asked for it before the load finished.
-                if (_bannerVisible) _banner.ShowAd();
+                OnBannerLoaded?.Invoke();
+                // Show right away if the game asked for it before the load finished —
+                // unless Remove Ads was applied in the meantime.
+                if (_bannerVisible && !_suppressed) _banner.ShowAd();
             };
             _banner.OnAdLoadFailed += err =>
             {
                 _bannerLoaded = false;
                 if (_config.VerboseLogging) Debug.LogWarning($"[Ads] Banner load failed: {err}");
+                // LevelPlay does NOT auto-retry a failed initial load (only auto-refreshes
+                // AFTER a successful one). Hand the retry to the host so a single startup
+                // miss doesn't leave the banner absent for the whole session.
+                if (!_suppressed) OnBannerLoadFailed?.Invoke();
             };
             _banner.OnAdClicked += _ => { if (_config.VerboseLogging) Debug.Log("[Ads] Banner clicked."); };
             _banner.LoadAd();
@@ -153,6 +176,7 @@ namespace Ekimoz.Ads
 
         public void ShowBanner()
         {
+            if (_suppressed) return;
             _bannerVisible = true;
             if (_banner == null)
             {
@@ -166,6 +190,31 @@ namespace Ekimoz.Ads
         {
             _bannerVisible = false;
             if (_banner != null) _banner.HideAd();
+        }
+
+        public void ReloadBanner()
+        {
+            if (_suppressed) return;
+            if (_banner == null)
+            {
+                // Init may have failed to reach SetupBanner; build it now.
+                SetupBanner();
+                return;
+            }
+            _bannerVisible = true;
+            _banner.LoadAd();
+        }
+
+        public void SuppressAds()
+        {
+            _suppressed = true;
+            _bannerVisible = false;
+            _bannerLoaded = false;
+            if (_banner != null)
+            {
+                _banner.HideAd();
+                _banner = null;
+            }
         }
     }
 }
