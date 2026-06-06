@@ -23,6 +23,13 @@ namespace Gameplay
         public static Action<Vector2Int> OnRowExploded;       // anchor cell of the cleared row
         public static Action<Vector2Int> OnColumnExploded;    // anchor cell of the cleared column
 
+        /// <summary>Fires after every ability hit with (anchor cell, cells destroyed).
+        /// Separate from the per-shape Bomb/Row/Column events because those drive VFX
+        /// (already wired to particle prefabs) and adding a count parameter would
+        /// break their existing signature. The "+N cells!" satisfaction popup hooks
+        /// here. Not fired when cleared == 0 (ability landed on empty board area).</summary>
+        public static Action<Vector2Int, int> OnAbilityCellsCleared;
+
         private void OnEnable()
         {
             PieceMovement.OnPieceSettled += HandleSettle;
@@ -72,6 +79,9 @@ namespace Gameplay
 
             if (cleared > 0 && _scoreController != null)
                 _scoreController.AddBonusScore(cleared * PointsPerTile * (LevelController.CurrentLevel + 1));
+
+            if (cleared > 0)
+                OnAbilityCellsCleared?.Invoke(anchor, cleared);
         }
     }
 }
