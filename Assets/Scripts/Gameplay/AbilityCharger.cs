@@ -76,5 +76,17 @@ namespace Gameplay
             OnChargeChanged?.Invoke(_charge, MaxCharge);
             return t;
         }
+
+        /// <summary>Wipes charge + armed pending and broadcasts the empty bar to UI listeners.
+        /// Called from PiecesController.DestroyCurPiece on the in-place Restart path so a
+        /// 4/5 charge (or already-armed Bomb/Laser) from the previous run does not carry
+        /// into the next — otherwise the next line clear would arm/fire an ability the
+        /// player never earned, and the AbilityChargeBarUI would stay falsely full.</summary>
+        public void ResetCharge()
+        {
+            _charge = 0;
+            _pending = null;
+            OnChargeChanged?.Invoke(_charge, MaxCharge);
+        }
     }
 }
