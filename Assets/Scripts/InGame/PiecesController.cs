@@ -230,6 +230,7 @@ namespace InGame
             //     a stale coroutine could keep dragging the next piece down.
             PieceBag.Reset();
             Gameplay.AbilityCharger.Instance?.ResetCharge();
+            PieceSpawner.Instance?.ResetBufferedAbility();
             softDropIsHolding = false;
         }
     }
