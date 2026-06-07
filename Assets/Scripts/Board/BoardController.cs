@@ -341,6 +341,11 @@ namespace Board
                 }
             }
             _totalClearedLines = 0;
+            // The GameOver/Pause Restart buttons call ClearBoard() to reset the run
+            // in-place (without reloading the scene). The Lines HUD listens to
+            // OnTotalClearedLinesChanged — without this invoke, the counter stays
+            // frozen at the previous run's value until the next live line clear.
+            OnTotalClearedLinesChanged?.Invoke(_totalClearedLines);
         }
     }
 }

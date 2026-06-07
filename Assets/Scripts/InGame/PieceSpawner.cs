@@ -11,6 +11,12 @@ namespace InGame
 
     public class PieceSpawner : MonoBehaviour
     {
+        // Single-spawner game (matches PieceBag's static design). Restart paths use
+        // this to clear _bufferedAbility — without a way to reach the instance,
+        // an armed Bomb/Laser buffered just before GameOver would carry into the
+        // next run and spawn immediately on Restart.
+        public static PieceSpawner Instance { get; private set; }
+
         [Space]
         [Header("Prefabs")]
         public GameObject ghostPiecePrefab;
@@ -32,6 +38,11 @@ namespace InGame
         private static PieceType _nextPieceType;
         private TileController[] _tiles;
 
+        private void Awake()
+        {
+            Instance = this;
+        }
+
         private void Start()
         {
             // Seed the preview slot from the 7-bag. SaveManager.RestoreFromData calls
@@ -39,6 +50,19 @@ namespace InGame
             // and (in the restore path) replaying the saved bag state — so this initial
             // draw is only used on truly fresh runs.
             _nextPieceType = PieceBag.Next();
+        }
+
+        /// <summary>Clears any ability that was armed but not yet spawned (e.g. AbilityCharger
+        /// hit MaxCharge mid-run, _bufferedAbility was set, then GameOver fired before the
+        /// next SpawnPiece). Called from PiecesController.DestroyCurPiece on the in-place
+        /// Restart path so the new run does not start with a free Bomb/Laser piece.
+        /// Also re-seeds _nextPieceType from the (just-reset) bag so the preview slot
+        /// stops showing the previous run's queued ability after restart.</summary>
+        public void ResetBufferedAbility()
+        {
+            _bufferedAbility = null;
+            _nextPieceType = PieceBag.Next();
+            OnNextPieceChanged?.Invoke(_nextPieceType);
         }
 
         /// <summary>

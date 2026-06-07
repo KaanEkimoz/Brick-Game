@@ -48,6 +48,11 @@ namespace Extras
         {
             CurrentLevel = 1;
             UpdateLevelText();
+            // Without this invoke, PiecesController.UpdateDropTimeAccordingTheLevel
+            // never re-runs and the gravity coroutine stays at the previous run's
+            // (faster) drop time. Result: HUD reads "Level 1" but pieces still fall
+            // at Level 12 speed after a restart.
+            OnLevelIncreased?.Invoke();
         }
 
         /// <summary>Restores the level from a save file. Fires OnLevelIncreased so drop-time and UI recalc.</summary>

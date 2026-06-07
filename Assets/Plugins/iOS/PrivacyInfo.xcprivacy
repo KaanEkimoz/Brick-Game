@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+    Brick Game — App-level Privacy Manifest (Apple required, 2024+).
+
+    Declares the categories of data the app collects + how each is used + whether each is
+    linked to user identity / used for tracking. App Store Connect cross-checks this file
+    against the Privacy Nutrition Labels you fill in the store listing; mismatches block
+    submission.
+
+    What Brick Game actually does:
+      • Shows ads via LevelPlay (Unity Ads + ironSource Exchange). Reads IDFA when the user
+        grants ATT permission. The IDFA is used for third-party ad targeting -> "used for
+        tracking" = true.
+      • Sells one non-consumable IAP (Remove Ads). Apple handles billing, the app sees only
+        a receipt — no PII collected by us.
+      • No analytics, no account, no leaderboard, no chat. Game progress + settings live in
+        local PlayerPrefs only (not collected, not transmitted).
+
+    SDK-level privacy manifests (LevelPlay, Unity IAP) are bundled INSIDE those packages —
+    Apple aggregates them automatically. This file only declares the app-level summary.
+-->
+<plist version="1.0">
+<dict>
+    <!--
+        Required-reason API access. Brick Game itself does not call any reason-gated API,
+        but Unity engine + LevelPlay SDK do (timestamps, system boot time, file timestamp,
+        disk space for cache eviction). Reasons listed match Unity's documented usage and
+        are accepted by Apple Reviewer.
+    -->
+    <key>NSPrivacyAccessedAPITypes</key>
+    <array>
+        <dict>
+            <key>NSPrivacyAccessedAPIType</key>
+            <string>NSPrivacyAccessedAPICategoryFileTimestamp</string>
+            <key>NSPrivacyAccessedAPITypeReasons</key>
+            <array>
+                <string>C617.1</string><!-- inside app container, no data leaves device -->
+            </array>
+        </dict>
+        <dict>
+            <key>NSPrivacyAccessedAPIType</key>
+            <string>NSPrivacyAccessedAPICategorySystemBootTime</string>
+            <key>NSPrivacyAccessedAPITypeReasons</key>
+            <array>
+                <string>35F9.1</string><!-- measure elapsed time within app -->
+            </array>
+        </dict>
+        <dict>
+            <key>NSPrivacyAccessedAPIType</key>
+            <string>NSPrivacyAccessedAPICategoryDiskSpace</string>
+            <key>NSPrivacyAccessedAPITypeReasons</key>
+            <array>
+                <string>E174.1</string><!-- inform user about low disk before downloading content -->
+            </array>
+        </dict>
+        <dict>
+            <key>NSPrivacyAccessedAPIType</key>
+            <string>NSPrivacyAccessedAPICategoryUserDefaults</string>
+            <key>NSPrivacyAccessedAPITypeReasons</key>
+            <array>
+                <string>CA92.1</string><!-- access info from same app group, no sharing -->
+            </array>
+        </dict>
+    </array>
+
+    <!--
+        Tracking declaration. Apple defines "tracking" as linking user data to third-party
+        data for advertising or measurement. Brick Game's LevelPlay integration does exactly
+        this (when ATT is granted), so this MUST be true. The tracking-domains list stays
+        empty here — LevelPlay's own privacy manifest declares its endpoints, Apple merges.
+    -->
+    <key>NSPrivacyTracking</key>
+    <true/>
+
+    <key>NSPrivacyTrackingDomains</key>
+    <array/>
+
+    <!--
+        Collected data types. IDFA-for-ads is the only collection Brick Game performs
+        itself (via LevelPlay). No name, email, location, contacts, photos, health,
+        financial, or sensitive data collected.
+    -->
+    <key>NSPrivacyCollectedDataTypes</key>
+    <array>
+        <dict>
+            <key>NSPrivacyCollectedDataType</key>
+            <string>NSPrivacyCollectedDataTypeDeviceID</string>
+            <key>NSPrivacyCollectedDataTypeLinked</key>
+            <true/><!-- IDFA is linked to the user (ad targeting needs it) -->
+            <key>NSPrivacyCollectedDataTypeTracking</key>
+            <true/>
+            <key>NSPrivacyCollectedDataTypePurposes</key>
+            <array>
+                <string>NSPrivacyCollectedDataTypePurposeThirdPartyAdvertising</string>
+            </array>
+        </dict>
+    </array>
+</dict>
+</plist>
