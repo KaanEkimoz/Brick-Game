@@ -34,6 +34,33 @@ public static class iOSBuildPostProcess
         // LevelPlay already injects NSAppTransportSecurity exceptions; we don't override here.
 
         plist.WriteToFile(plistPath);
+
+        // ITMS-91064 fix: UnityFramework/PrivacyInfo.xcprivacy needs NSPrivacyTrackingDomains.
+        // Unity's merge process drops the key from Assets/Plugins/iOS/PrivacyInfo.xcprivacy when
+        // the source array is empty. ironSource/LevelPlay SDK manifests don't declare their own
+        // tracking domains either, so we inject them at the app-framework level.
+        InjectTrackingDomainsIntoPrivacyManifest(pathToBuiltProject);
+    }
+
+    static void InjectTrackingDomainsIntoPrivacyManifest(string pathToBuiltProject)
+    {
+        string privacyPath = Path.Combine(pathToBuiltProject, "UnityFramework", "PrivacyInfo.xcprivacy");
+        if (!File.Exists(privacyPath)) return;
+
+        var privacy = new PlistDocument();
+        privacy.ReadFromFile(privacyPath);
+
+        if (privacy.root["NSPrivacyTrackingDomains"] != null)
+            privacy.root.values.Remove("NSPrivacyTrackingDomains");
+
+        var domains = privacy.root.CreateArray("NSPrivacyTrackingDomains");
+        domains.AddString("outcome.supersonicads.com");
+        domains.AddString("t.adxion.com");
+        domains.AddString("ironsrc.com");
+        domains.AddString("supersonicads.com");
+        domains.AddString("unityads.unity3d.com");
+
+        privacy.WriteToFile(privacyPath);
     }
 }
 #endif
