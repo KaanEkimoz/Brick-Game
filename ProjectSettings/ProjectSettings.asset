@@ -271,7 +271,7 @@ PlayerSettings:
   AndroidAllowedArchitectures: -1
   AndroidSplashScreenScale: 1
   androidSplashScreen: {fileID: 2800000, guid: b2b8c7c5131269d42a359347e17a4c5f, type: 3}
-  AndroidKeystoreName: /Users/kaanusta/Downloads/user.keystore
+  AndroidKeystoreName: "/Users/kaanusta/Downloads/Oyun Geli\u015Ftirme/Anahtarlar/user.keystore"
   AndroidKeyaliasName: ekimozgames
   AndroidEnableArmv9SecurityFeatures: 1
   AndroidEnableArm64MTE: 0

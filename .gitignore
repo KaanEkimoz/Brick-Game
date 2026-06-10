@@ -85,3 +85,8 @@ ProjectSettings/Packages/
 # App Store Connect upload staging (icons, screenshots, preview videos — ~25 MB)
 # Not part of source — Apple receives these via the ASC web UI, not git.
 asc_upload/
+
+
+# Apple Developer CSR session artifacts (cert request files — not for repo)
+distribution.csr
+*.csr
