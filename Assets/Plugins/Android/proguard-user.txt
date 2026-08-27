@@ -1,0 +1,57 @@
+# ==========================================================================
+# Brick Game - Custom R8/ProGuard keep rules
+# Enabled alongside PlayerSettings.Android.minifyRelease = true (R8).
+# Purpose: satisfy Google Play code-optimization requirement (>=25% shrink)
+# while protecting reflection-heavy SDKs (LevelPlay/ironSource ads + IAP)
+# from being stripped. Most of these SDKs also ship their own consumer
+# rules; these are conservative safety nets. Verify with a device build.
+# ==========================================================================
+
+# --- Keep line numbers / source for readable crash stacks ---
+-keepattributes SourceFile,LineNumberTable
+-keepattributes *Annotation*
+-keepattributes Signature,InnerClasses,EnclosingMethod
+
+# --- JNI / native bridge (Unity <-> native) ---
+-keepclasseswithmembernames class * {
+    native <methods>;
+}
+
+# --- Unity engine / player ---
+-keep class com.unity3d.player.** { *; }
+-dontwarn com.unity3d.player.**
+
+# --- LevelPlay / ironSource ads mediation (reflection-driven adapters) ---
+-keep class com.ironsource.** { *; }
+-keep class com.unity3d.mediation.** { *; }
+-keep class com.unity3d.ironsourceads.** { *; }
+-dontwarn com.ironsource.**
+-dontwarn com.unity3d.mediation.**
+
+# --- Network adapters commonly loaded by name via mediation ---
+-keep class com.unity3d.ads.** { *; }
+-keep class com.applovin.** { *; }
+-keep class com.google.android.gms.ads.** { *; }
+-dontwarn com.applovin.**
+-dontwarn com.google.android.gms.ads.**
+
+# --- Unity IAP / Google Play Billing (reflection + AIDL) ---
+-keep class com.android.billingclient.** { *; }
+-keep class com.unity.purchasing.** { *; }
+-keep class com.unity3d.services.** { *; }
+-dontwarn com.android.billingclient.**
+
+# --- Google Play services / core (partial keep, referenced reflectively) ---
+-keep class com.google.android.play.core.** { *; }
+-dontwarn com.google.android.play.core.**
+
+# --- Generic: keep enum values() / valueOf() used by serializers ---
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
+# --- Generic: keep Parcelable CREATOR fields ---
+-keepclassmembers class * implements android.os.Parcelable {
+    public static final ** CREATOR;
+}
