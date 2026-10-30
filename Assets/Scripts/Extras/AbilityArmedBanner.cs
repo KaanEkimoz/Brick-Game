@@ -85,7 +85,9 @@ namespace Extras
             }
             if (_subText != null)
             {
-                _subText.text = _subTemplate.Replace("{ability}", title);
+                _subText.text = ability == AbilityType.Patch
+                    ? $"Fills the {AbilityExecutor.PatchCellCount} lowest holes"
+                    : _subTemplate.Replace("{ability}", title);
                 _subText.color = tint;
             }
         }

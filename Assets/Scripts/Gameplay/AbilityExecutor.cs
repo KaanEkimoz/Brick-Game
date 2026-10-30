@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Board;
 using Extras;
 using InGame;
@@ -21,8 +22,10 @@ namespace Gameplay
         // Per-tile base points; multiplied by (level + 1) like the line-clear formula.
         private const int PointsPerTile = 5;
 
-        /// <summary>Rows the Patch ability reaches, counted downward from the charged tile's row.</summary>
-        public const int PatchRowCount = 3;
+        /// <summary>Holes one Patch fills, lowest first.</summary>
+        public const int PatchCellCount = 6;
+
+        private readonly List<Vector2Int> _patchCells = new List<Vector2Int>();
 
         public static Action<Vector2Int> OnBombExploded;
         public static Action<Vector2Int> OnRowExploded;       // anchor cell of the cleared row
@@ -91,8 +94,13 @@ namespace Gameplay
                     // The charged tile stays on the board, so drop its tint and clone a sibling.
                     chargedTile.GetComponent<SpriteRenderer>().color = Color.white;
                     int templateIndex = (marker.TileIndex + 1) % PieceController.Tiles.Length;
-                    cleared = _boardController.PatchHoles(anchor.y - PatchRowCount + 1, anchor.y,
-                        PieceController.Tiles[templateIndex].gameObject);
+                    _boardController.CollectPatchCells(PatchCellCount, null, _patchCells);
+                    _boardController.FillCells(_patchCells, PieceController.Tiles[templateIndex].gameObject);
+                    cleared = _patchCells.Count;
+
+                    // Nothing to fill: leave the bar one clear short so the ability is not wasted.
+                    if (cleared == 0 && AbilityCharger.Instance != null)
+                        AbilityCharger.Instance.RestoreCharge(AbilityCharger.MaxCharge - 1);
                     break;
                 }
             }

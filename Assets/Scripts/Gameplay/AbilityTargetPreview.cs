@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Board;
 using InGame;
 using Piece;
@@ -8,15 +9,19 @@ namespace Gameplay
 {
     /// <summary>
     /// Shows the board area a charged piece will hit if it drops from its current position.
-    /// Added at runtime by AbilityExecutor, so it needs no scene wiring. A single stretched
-    /// sprite covers the target rectangle.
+    /// Added at runtime by AbilityExecutor, so it needs no scene wiring. One stretched sprite
+    /// covers a Bomb or Laser target; Patch marks each hole it will fill.
     /// </summary>
     public class AbilityTargetPreview : MonoBehaviour
     {
         private const int SortingOrder = 8; // one above the tiles
         private static readonly Color AreaColor = new Color(1f, 1f, 1f, 0.22f);
+        private static readonly Color PatchCellColor = new Color(0.45f, 1f, 0.55f, 0.6f);
 
-        private SpriteRenderer _area;
+        private readonly List<SpriteRenderer> _shapes = new List<SpriteRenderer>();
+        private readonly List<Vector2Int> _landingTiles = new List<Vector2Int>();
+        private readonly List<Vector2Int> _patchCells = new List<Vector2Int>();
+        private Sprite _shapeSprite;
         private AbilityMarker _marker;
 
         private void OnEnable()
@@ -48,26 +53,57 @@ namespace Gameplay
         private void Hide()
         {
             _marker = null;
-            if (_area != null) _area.enabled = false;
+            HideShapesFrom(0);
         }
 
         private void Refresh()
         {
             if (_marker == null)
             {
-                if (_area != null) _area.enabled = false;
+                HideShapesFrom(0);
                 return;
             }
 
             TileController chargedTile = PieceController.Tiles[_marker.TileIndex];
-            Vector2Int landing = chargedTile.coordinates + Vector2Int.down * GetDropDistance();
-            GetTargetBounds(landing, out Vector2Int min, out Vector2Int max);
+            int dropDistance = GetDropDistance();
 
-            EnsureArea(chargedTile);
+            if (_marker.Ability == AbilityType.Patch)
+            {
+                ShowPatchCells(chargedTile, dropDistance);
+                return;
+            }
+
+            GetTargetBounds(chargedTile.coordinates + Vector2Int.down * dropDistance, out Vector2Int min, out Vector2Int max);
+            ShowRect(0, chargedTile, min, max, AreaColor);
+            HideShapesFrom(1);
+        }
+
+        private void ShowPatchCells(TileController chargedTile, int dropDistance)
+        {
+            _landingTiles.Clear();
+            foreach (TileController tile in PieceController.Tiles)
+                _landingTiles.Add(tile.coordinates + Vector2Int.down * dropDistance);
+
+            BoardController.Instance.CollectPatchCells(AbilityExecutor.PatchCellCount, _landingTiles, _patchCells);
+            for (int i = 0; i < _patchCells.Count; i++)
+                ShowRect(i, chargedTile, _patchCells[i], _patchCells[i], PatchCellColor);
+            HideShapesFrom(_patchCells.Count);
+        }
+
+        private void ShowRect(int index, TileController tile, Vector2Int min, Vector2Int max, Color color)
+        {
+            SpriteRenderer shape = GetShape(index, tile);
             Vector2 center = (Vector2)(min + max) * 0.5f;
-            _area.transform.position = BoardController.CellToWorld(center.x, center.y);
-            _area.transform.localScale = new Vector3(max.x - min.x + 1, max.y - min.y + 1, 1f);
-            _area.enabled = true;
+            shape.transform.position = BoardController.CellToWorld(center.x, center.y);
+            shape.transform.localScale = new Vector3(max.x - min.x + 1, max.y - min.y + 1, 1f);
+            shape.color = color;
+            shape.enabled = true;
+        }
+
+        private void HideShapesFrom(int index)
+        {
+            for (int i = index; i < _shapes.Count; i++)
+                _shapes[i].enabled = false;
         }
 
         private static int GetDropDistance()
@@ -102,12 +138,8 @@ namespace Gameplay
                     min = new Vector2Int(landing.x, 0);
                     max = new Vector2Int(landing.x, boardMax.y);
                     break;
-                case AbilityType.Laser:
-                    min = new Vector2Int(0, landing.y);
-                    max = new Vector2Int(boardMax.x, landing.y);
-                    break;
                 default:
-                    min = new Vector2Int(0, landing.y - AbilityExecutor.PatchRowCount + 1);
+                    min = new Vector2Int(0, landing.y);
                     max = new Vector2Int(boardMax.x, landing.y);
                     break;
             }
@@ -116,19 +148,24 @@ namespace Gameplay
             max = Vector2Int.Min(max, boardMax);
         }
 
-        private void EnsureArea(TileController tile)
+        private SpriteRenderer GetShape(int index, TileController tile)
         {
-            if (_area != null) return;
+            if (_shapeSprite == null)
+                _shapeSprite = Sprite.Create(Texture2D.whiteTexture, new Rect(0f, 0f, 1f, 1f), new Vector2(0.5f, 0.5f), 1f);
 
-            GameObject go = new GameObject("AbilityTargetArea");
-            go.transform.SetParent(transform, false);
-            _area = go.AddComponent<SpriteRenderer>();
-            _area.sprite = Sprite.Create(Texture2D.whiteTexture, new Rect(0f, 0f, 1f, 1f), new Vector2(0.5f, 0.5f), 1f);
-            // Share the tile material so the overlay renders through the same URP path.
-            _area.sharedMaterial = tile.GetComponent<SpriteRenderer>().sharedMaterial;
-            _area.sortingLayerID = tile.GetComponent<SpriteRenderer>().sortingLayerID;
-            _area.sortingOrder = SortingOrder;
-            _area.color = AreaColor;
+            while (_shapes.Count <= index)
+            {
+                GameObject go = new GameObject("AbilityTargetShape");
+                go.transform.SetParent(transform, false);
+                SpriteRenderer shape = go.AddComponent<SpriteRenderer>();
+                shape.sprite = _shapeSprite;
+                // Share the tile material so the overlay renders through the same URP path.
+                shape.sharedMaterial = tile.GetComponent<SpriteRenderer>().sharedMaterial;
+                shape.sortingLayerID = tile.GetComponent<SpriteRenderer>().sortingLayerID;
+                shape.sortingOrder = SortingOrder;
+                _shapes.Add(shape);
+            }
+            return _shapes[index];
         }
     }
 }

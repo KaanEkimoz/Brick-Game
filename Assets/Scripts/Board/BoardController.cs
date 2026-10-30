@@ -154,28 +154,46 @@ namespace Board
             return count;
         }
 
-        /// <summary>Fills every empty cell in rows minY..maxY that has a tile somewhere above it, cloning the given tile. Open wells stay open. Returns the number of cells filled.</summary>
-        public int PatchHoles(int minY, int maxY, GameObject tileTemplate)
+        /// <summary>Collects the lowest covered holes, bottom row first, up to maxCells. A hole is an empty cell with a tile above it in the same column. landingTiles lets the target preview count a piece that has not settled yet; pass null once it has.</summary>
+        public void CollectPatchCells(int maxCells, IList<Vector2Int> landingTiles, List<Vector2Int> results)
         {
-            int count = 0;
-            for (int x = 0; x < gridSizeX; x++)
+            results.Clear();
+            for (int y = 0; y < gridSizeY; y++)
             {
-                int top = gridSizeY - 1;
-                while (top >= 0 && !_fullGrid[x, top].isOccupied) top--;
-
-                for (int y = Mathf.Max(minY, 0); y <= Mathf.Min(maxY, top - 1); y++)
+                for (int x = 0; x < gridSizeX; x++)
                 {
+                    Vector2Int cell = new Vector2Int(x, y);
                     if (_fullGrid[x, y].isOccupied) continue;
-                    GameObject tileGo = Instantiate(tileTemplate, transform);
-                    tileGo.transform.localScale = tileTemplate.transform.lossyScale;
-                    TileController tile = tileGo.GetComponent<TileController>();
-                    tile.tileIndex = -1; // sentinel: not part of the active piece's Tiles array
-                    tile.UpdatePosition(new Vector2Int(x, y));
-                    OccupyPos(tile.coordinates, tileGo);
-                    count++;
+                    if (landingTiles != null && landingTiles.Contains(cell)) continue;
+                    if (!HasTileAbove(cell, landingTiles)) continue;
+                    results.Add(cell);
+                    if (results.Count == maxCells) return;
                 }
             }
-            return count;
+        }
+
+        private bool HasTileAbove(Vector2Int cell, IList<Vector2Int> landingTiles)
+        {
+            for (int y = cell.y + 1; y < gridSizeY; y++)
+            {
+                if (_fullGrid[cell.x, y].isOccupied) return true;
+                if (landingTiles != null && landingTiles.Contains(new Vector2Int(cell.x, y))) return true;
+            }
+            return false;
+        }
+
+        /// <summary>Places a clone of the given tile on each cell.</summary>
+        public void FillCells(List<Vector2Int> cells, GameObject tileTemplate)
+        {
+            foreach (Vector2Int cell in cells)
+            {
+                GameObject tileGo = Instantiate(tileTemplate, transform);
+                tileGo.transform.localScale = tileTemplate.transform.lossyScale;
+                TileController tile = tileGo.GetComponent<TileController>();
+                tile.tileIndex = -1; // sentinel: not part of the active piece's Tiles array
+                tile.UpdatePosition(cell);
+                OccupyPos(cell, tileGo);
+            }
         }
 
         private bool DestroyTileAt(int x, int y)
