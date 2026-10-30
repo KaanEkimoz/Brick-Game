@@ -154,6 +154,30 @@ namespace Board
             return count;
         }
 
+        /// <summary>Fills every empty cell in rows minY..maxY that has a tile somewhere above it, cloning the given tile. Open wells stay open. Returns the number of cells filled.</summary>
+        public int PatchHoles(int minY, int maxY, GameObject tileTemplate)
+        {
+            int count = 0;
+            for (int x = 0; x < gridSizeX; x++)
+            {
+                int top = gridSizeY - 1;
+                while (top >= 0 && !_fullGrid[x, top].isOccupied) top--;
+
+                for (int y = Mathf.Max(minY, 0); y <= Mathf.Min(maxY, top - 1); y++)
+                {
+                    if (_fullGrid[x, y].isOccupied) continue;
+                    GameObject tileGo = Instantiate(tileTemplate, transform);
+                    tileGo.transform.localScale = tileTemplate.transform.lossyScale;
+                    TileController tile = tileGo.GetComponent<TileController>();
+                    tile.tileIndex = -1; // sentinel: not part of the active piece's Tiles array
+                    tile.UpdatePosition(new Vector2Int(x, y));
+                    OccupyPos(tile.coordinates, tileGo);
+                    count++;
+                }
+            }
+            return count;
+        }
+
         private bool DestroyTileAt(int x, int y)
         {
             GridUnit unit = _fullGrid[x, y];

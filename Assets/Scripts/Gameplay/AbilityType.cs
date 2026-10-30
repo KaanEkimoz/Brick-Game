@@ -2,7 +2,8 @@ namespace Gameplay
 {
     public enum AbilityType
     {
-        Bomb,   // clears a 3x3 area centred on the ability piece
-        Laser,  // single-tile beam; rotates between horizontal (row) and vertical (column) clear
+        Bomb,   // clears a 3x3 area centred on the charged tile
+        Laser,  // clears the charged tile's row or column; each rotation flips the axis
+        Patch,  // fills covered holes in the charged tile's row and the two rows below it
     }
 }

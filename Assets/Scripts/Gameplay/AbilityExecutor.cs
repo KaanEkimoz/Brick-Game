@@ -3,13 +3,15 @@ using Board;
 using Extras;
 using InGame;
 using Piece;
+using Tiles;
 using UnityEngine;
 
 namespace Gameplay
 {
     /// <summary>
     /// Listens for piece landings; if the landed piece carries an AbilityMarker, fires the
-    /// corresponding board-clear effect and awards bonus score for the tiles it destroyed.
+    /// corresponding board effect from the charged tile and awards bonus score for the tiles
+    /// it changed. Runs before CheckLineClears, so rows it completes score as normal line clears.
     /// </summary>
     public class AbilityExecutor : MonoBehaviour
     {
@@ -19,6 +21,9 @@ namespace Gameplay
         // Per-tile base points; multiplied by (level + 1) like the line-clear formula.
         private const int PointsPerTile = 5;
 
+        /// <summary>Rows the Patch ability reaches, counted downward from the charged tile's row.</summary>
+        public const int PatchRowCount = 3;
+
         public static Action<Vector2Int> OnBombExploded;
         public static Action<Vector2Int> OnRowExploded;       // anchor cell of the cleared row
         public static Action<Vector2Int> OnColumnExploded;    // anchor cell of the cleared column
@@ -27,8 +32,13 @@ namespace Gameplay
         /// Separate from the per-shape Bomb/Row/Column events because those drive VFX
         /// (already wired to particle prefabs) and adding a count parameter would
         /// break their existing signature. The "+N cells!" satisfaction popup hooks
-        /// here. Not fired when cleared == 0 (ability landed on empty board area).</summary>
+        /// here. For Patch the count is cells filled. Not fired when the count is 0.</summary>
         public static Action<Vector2Int, int> OnAbilityCellsCleared;
+
+        private void Awake()
+        {
+            gameObject.AddComponent<AbilityTargetPreview>();
+        }
 
         private void OnEnable()
         {
@@ -51,7 +61,8 @@ namespace Gameplay
             if (_boardController == null || PieceController.Tiles == null || PieceController.Tiles.Length == 0)
                 return;
 
-            Vector2Int anchor = PieceController.Tiles[0].coordinates;
+            TileController chargedTile = PieceController.Tiles[marker.TileIndex];
+            Vector2Int anchor = chargedTile.coordinates;
             int cleared = 0;
             switch (marker.Ability)
             {
@@ -73,6 +84,15 @@ namespace Gameplay
                         cleared = _boardController.ClearColumnCells(anchor.x);
                         OnColumnExploded?.Invoke(anchor);
                     }
+                    break;
+                }
+                case AbilityType.Patch:
+                {
+                    // The charged tile stays on the board, so drop its tint and clone a sibling.
+                    chargedTile.GetComponent<SpriteRenderer>().color = Color.white;
+                    int templateIndex = (marker.TileIndex + 1) % PieceController.Tiles.Length;
+                    cleared = _boardController.PatchHoles(anchor.y - PatchRowCount + 1, anchor.y,
+                        PieceController.Tiles[templateIndex].gameObject);
                     break;
                 }
             }

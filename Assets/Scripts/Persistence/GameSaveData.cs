@@ -12,12 +12,14 @@ namespace Persistence
     ///   1 — pre-v1.3.0: no bag state (consecutive duplicate pieces possible via raw RNG).
     ///   2 — v1.3.0+: bagState captures the remaining pieces of the active 7-bag so a resumed
     ///                run replays the same draws the player would have seen had they not closed.
-    /// SaveMigrator handles v1 → v2 (bagState starts empty, next draw refills the bag).
+    ///   3 — ability state: bar charge plus the falling piece's charged tile.
+    /// SaveMigrator handles v1 → v2 (bagState starts empty, next draw refills the bag) and
+    /// v2 → v3 (ability pieces in the saved slots become normal tetrominoes).
     /// </summary>
     [Serializable]
     public class GameSaveData
     {
-        public const int CurrentVersion = 2;
+        public const int CurrentVersion = 3;
 
         public int saveVersion = CurrentVersion;
 
@@ -32,6 +34,12 @@ namespace Persistence
         /// Empty list → PieceBag will refill + reshuffle on the next draw, which is the
         /// correct behavior for both fresh saves and migrated v1 saves.</summary>
         public List<int> bagState = new List<int>();
+
+        public int abilityCharge;
+
+        /// <summary>AbilityType loaded on the falling piece, or -1 when it carries none.</summary>
+        public int currentAbility = -1;
+        public int currentAbilityTile;
 
         public List<TileSaveData> tiles = new List<TileSaveData>();
     }

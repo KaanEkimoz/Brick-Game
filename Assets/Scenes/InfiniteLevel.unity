@@ -9754,7 +9754,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Bomb piece
+  m_text: 'Bomb tile
 
     clears a 3x3 area'
   m_isRightToLeft: 0
@@ -16031,7 +16031,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Laser piece - rotate it
+  m_text: 'Laser tile - rotate it
 
     to fire a row or column'
   m_isRightToLeft: 0

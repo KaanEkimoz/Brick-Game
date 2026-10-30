@@ -94,19 +94,6 @@ namespace Piece
             if (PieceController.Tiles == null || PieceController.Tiles.Length == 0)
                 return;
 
-            // Single-tile pieces normally have no meaningful rotation, except the Laser
-            // ability which uses rotation to flip its firing axis (row vs column) in place.
-            if (PieceController.Tiles.Length == 1)
-            {
-                LaserOrientation laser = GetComponent<LaserOrientation>();
-                if (laser != null)
-                {
-                    laser.Toggle();
-                    OnPieceRotation?.Invoke();
-                }
-                return;
-            }
-
             int oldRotationIndex = RotationIndex;
             RotationIndex += clockwise ? 1 : -1;
             RotationIndex = EkimozUtils.Mod(RotationIndex, 4);
@@ -126,6 +113,12 @@ namespace Piece
             if (!canOffset)
             {
                 RotatePiece(!clockwise, false);
+            }
+            else
+            {
+                // A charged Laser flips its firing axis (row vs column) with each rotation.
+                LaserOrientation laser = GetComponent<LaserOrientation>();
+                if (laser != null) laser.Toggle();
             }
         
             OnPieceRotation?.Invoke();
