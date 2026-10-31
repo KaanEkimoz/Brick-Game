@@ -323,6 +323,22 @@
   {
    "en": "Language",
    "text": "Dil"
+  },
+  {
+   "en": "Leaderboard",
+   "text": "Liderlik Tablosu"
+  },
+  {
+   "en": "Loading...",
+   "text": "Yükleniyor..."
+  },
+  {
+   "en": "No scores yet",
+   "text": "Henüz skor yok"
+  },
+  {
+   "en": "Sign in to Play Games to see the leaderboard",
+   "text": "Liderlik tablosu için Play Games'e giriş yap"
   }
  ]
 }

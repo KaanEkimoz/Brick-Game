@@ -42,6 +42,11 @@ namespace Persistence
         public int currentAbilityTile;
 
         public List<TileSaveData> tiles = new List<TileSaveData>();
+
+        /// <summary>Leaderboard checks. A save without a valid signature plays on unranked.</summary>
+        public float runSeconds;
+        public bool ranked;
+        public string signature;
     }
 
     [Serializable]
