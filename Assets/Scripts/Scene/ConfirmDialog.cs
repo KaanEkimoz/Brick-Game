@@ -16,32 +16,33 @@ namespace Scene
         public const string MainMenuYes = "Yes";
         public const string NoText = "Cancel";
 
-        private const float ButtonFontSize = 26f;
+        private const float ButtonFontSize = 44f;
         private static readonly Color BackdropColor = new Color(0f, 0f, 0.08f, 0.92f);
 
         private GameObject _root;
 
-        /// <summary>Builds the hidden dialog inside the menu and hooks the guarded button.</summary>
-        public void Build(Transform menu, Button guardedButton, Button cancelTemplate, string title, string message, string yesText)
+        /// <summary>Builds the hidden dialog on the guarded button's panel and hooks the button.
+        /// The menu roots above the panels are plain transforms with a large scale.</summary>
+        public void Build(Button guardedButton, Button cancelTemplate, string title, string message, string yesText)
         {
-            _root = CreateBackdrop(menu);
+            _root = CreateBackdrop(guardedButton.transform.parent);
 
             TMP_Text buttonLabel = cancelTemplate.GetComponentInChildren<TMP_Text>(true);
-            CreateText(Localization.Loc.T(title), buttonLabel, 44f, new Vector2(0f, 150f));
-            CreateText(Localization.Loc.T(message), buttonLabel, 20f, new Vector2(0f, 90f));
+            CreateText(Localization.Loc.T(title), buttonLabel, 64f, new Vector2(0f, 230f));
+            CreateText(Localization.Loc.T(message), buttonLabel, 34f, new Vector2(0f, 120f));
 
             Button.ButtonClickedEvent guardedChain = guardedButton.onClick;
             guardedButton.onClick = new Button.ButtonClickedEvent();
             guardedButton.onClick.AddListener(() => _root.SetActive(true));
 
-            Button yes = CreateButton(guardedButton, yesText, new Vector2(0f, -10f));
+            Button yes = CreateButton(guardedButton, yesText, new Vector2(0f, -30f));
             yes.onClick.AddListener(() =>
             {
                 _root.SetActive(false);
                 guardedChain.Invoke();
             });
 
-            Button no = CreateButton(cancelTemplate, NoText, new Vector2(0f, -90f));
+            Button no = CreateButton(cancelTemplate, NoText, new Vector2(0f, -160f));
             no.onClick.AddListener(() => _root.SetActive(false));
         }
 
@@ -70,14 +71,15 @@ namespace Scene
             label.alignment = TextAlignmentOptions.Center;
             label.raycastTarget = false;
             label.text = text;
-            PlaceCentered(label.rectTransform, position, new Vector2(520f, 80f));
+            PlaceCentered(label.rectTransform, position, new Vector2(560f, 110f));
         }
 
         private Button CreateButton(Button template, string text, Vector2 position)
         {
             Button button = Instantiate(template, _root.transform);
             button.onClick = new Button.ButtonClickedEvent();
-            PlaceCentered((RectTransform)button.transform, position, new Vector2(360f, 64f));
+            button.transform.localScale = Vector3.one;
+            PlaceCentered((RectTransform)button.transform, position, new Vector2(440f, 110f));
 
             TMP_Text label = button.GetComponentInChildren<TMP_Text>(true);
             label.font = Levels.PlainFont.Asset;
