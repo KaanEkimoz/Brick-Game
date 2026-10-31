@@ -12,6 +12,7 @@ namespace Gameplay
     public class SegmentedChargeBar : MonoBehaviour
     {
         private const string FlashOverlayPath = "Slider/Fill Area/BurstOverlay";
+        private const float BoltOffset = 0.06f; // the bolt art sits left of its sprite's centre
         private const float SegmentsTop = 0.86f;
         private const float SegmentsBottom = 0.02f;
         private const float SidePadding = 0.14f;
@@ -23,6 +24,8 @@ namespace Gameplay
         private static readonly Color TopColor = new Color(0.2f, 0.95f, 1f, 1f);
         private static readonly Color EmptyColor = new Color(0.03f, 0.07f, 0.2f, 0.9f);
         private static readonly Color BoltColor = new Color(0.45f, 0.9f, 1f, 1f);
+        private static readonly Color PanelColor = new Color(0.06f, 0.16f, 0.42f, 0.8f);
+        private static readonly Color BorderColor = new Color(0.25f, 0.6f, 1f, 0.7f);
 
         private Image[] _segments;
         private Outline[] _glows;
@@ -35,9 +38,19 @@ namespace Gameplay
             if (flashOverlay != null) flashOverlay.SetParent(transform, false);
             if (oldSlider != null) oldSlider.gameObject.SetActive(false);
 
-            // The bar now covers a tall strip; it must not swallow swipes that start on it.
+            // The old panel sprite has transparent margins that stretch with the bar, so the
+            // panel is a plain rect that matches the scene anchors exactly. It covers a tall
+            // strip and must not swallow swipes that start on it.
             Image rootImage = GetComponent<Image>();
-            if (rootImage != null) rootImage.raycastTarget = false;
+            if (rootImage != null)
+            {
+                rootImage.sprite = null;
+                rootImage.color = PanelColor;
+                rootImage.raycastTarget = false;
+                Outline border = gameObject.AddComponent<Outline>();
+                border.effectColor = BorderColor;
+                border.effectDistance = new Vector2(2f, 2f);
+            }
 
             _segments = new Image[AbilityCharger.MaxCharge];
             _glows = new Outline[AbilityCharger.MaxCharge];
@@ -82,8 +95,8 @@ namespace Gameplay
             bolt.sprite = boltSprite;
             bolt.preserveAspect = true;
             bolt.color = BoltColor;
-            bolt.rectTransform.anchorMin = new Vector2(SidePadding, SegmentsTop + SegmentGap);
-            bolt.rectTransform.anchorMax = new Vector2(1f - SidePadding, 0.98f);
+            bolt.rectTransform.anchorMin = new Vector2(SidePadding + BoltOffset, SegmentsTop + SegmentGap);
+            bolt.rectTransform.anchorMax = new Vector2(1f - SidePadding + BoltOffset, 0.98f);
         }
 
         private Image CreateImage(string objectName)

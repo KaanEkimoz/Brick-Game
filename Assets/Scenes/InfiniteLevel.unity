@@ -8328,7 +8328,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1474670482}
         m_TargetAssemblyTypeName: PauseTheGame, Assembly-CSharp
-        m_MethodName: ResumeGame
+        m_MethodName: ResumeWithCountdown
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -8626,8 +8626,8 @@ RectTransform:
   - {fileID: 1061053092}
   m_Father: {fileID: 342035185}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.855, y: 0.16}
-  m_AnchorMax: {x: 0.975, y: 0.655}
+  m_AnchorMin: {x: 0.85, y: 0.1443}
+  m_AnchorMax: {x: 0.965, y: 0.664}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}

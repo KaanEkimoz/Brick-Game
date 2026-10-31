@@ -7,7 +7,7 @@ namespace InGame
     public partial class PiecesController
     {
         // Convenience alias so the tutorial-gate calls below read naturally.
-        private static bool Allow(TutorialController.TutorialGesture g) => TutorialController.IsGestureAllowed(g);
+        private static bool Allow(TutorialController.TutorialGesture g) => !PauseTheGame.IsPaused && TutorialController.IsGestureAllowed(g);
 
 
         private void Update()
