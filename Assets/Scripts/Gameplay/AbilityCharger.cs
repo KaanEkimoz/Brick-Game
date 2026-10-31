@@ -6,7 +6,7 @@ namespace Gameplay
 {
     /// <summary>
     /// Tracks line clears in Extended mode and, when the bar fills, picks a random ability that the
-    /// next spawned piece will carry. Classic mode runs identical code paths but never arms.
+    /// next spawned tetromino will carry on one tile. Classic mode runs identical code paths but never arms.
     /// </summary>
     public class AbilityCharger : MonoBehaviour
     {
@@ -51,7 +51,7 @@ namespace Gameplay
 
             if (_charge >= MaxCharge)
             {
-                _pending = (AbilityType)UnityEngine.Random.Range(0, 2);
+                _pending = (AbilityType)UnityEngine.Random.Range(0, Enum.GetValues(typeof(AbilityType)).Length);
                 OnAbilityArmed?.Invoke(_pending.Value);
             }
         }
@@ -67,7 +67,7 @@ namespace Gameplay
         }
 #endif
 
-        /// <summary>Consume the armed ability (called by the spawner when an ability piece is emitted).</summary>
+        /// <summary>Consume the armed ability (called by the spawner when it charges a piece).</summary>
         public AbilityType ConsumePending()
         {
             AbilityType t = _pending ?? AbilityType.Bomb;
@@ -75,6 +75,14 @@ namespace Gameplay
             _charge = 0;
             OnChargeChanged?.Invoke(_charge, MaxCharge);
             return t;
+        }
+
+        /// <summary>Restores the bar from a save file and refreshes the UI.</summary>
+        public void RestoreCharge(int charge)
+        {
+            _charge = Mathf.Clamp(charge, 0, MaxCharge - 1);
+            _pending = null;
+            OnChargeChanged?.Invoke(_charge, MaxCharge);
         }
 
         /// <summary>Wipes charge + armed pending and broadcasts the empty bar to UI listeners.

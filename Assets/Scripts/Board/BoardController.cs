@@ -154,6 +154,48 @@ namespace Board
             return count;
         }
 
+        /// <summary>Collects the lowest covered holes, bottom row first, up to maxCells. A hole is an empty cell with a tile above it in the same column. landingTiles lets the target preview count a piece that has not settled yet; pass null once it has.</summary>
+        public void CollectPatchCells(int maxCells, IList<Vector2Int> landingTiles, List<Vector2Int> results)
+        {
+            results.Clear();
+            for (int y = 0; y < gridSizeY; y++)
+            {
+                for (int x = 0; x < gridSizeX; x++)
+                {
+                    Vector2Int cell = new Vector2Int(x, y);
+                    if (_fullGrid[x, y].isOccupied) continue;
+                    if (landingTiles != null && landingTiles.Contains(cell)) continue;
+                    if (!HasTileAbove(cell, landingTiles)) continue;
+                    results.Add(cell);
+                    if (results.Count == maxCells) return;
+                }
+            }
+        }
+
+        private bool HasTileAbove(Vector2Int cell, IList<Vector2Int> landingTiles)
+        {
+            for (int y = cell.y + 1; y < gridSizeY; y++)
+            {
+                if (_fullGrid[cell.x, y].isOccupied) return true;
+                if (landingTiles != null && landingTiles.Contains(new Vector2Int(cell.x, y))) return true;
+            }
+            return false;
+        }
+
+        /// <summary>Places a clone of the given tile on each cell.</summary>
+        public void FillCells(List<Vector2Int> cells, GameObject tileTemplate)
+        {
+            foreach (Vector2Int cell in cells)
+            {
+                GameObject tileGo = Instantiate(tileTemplate, transform);
+                tileGo.transform.localScale = tileTemplate.transform.lossyScale;
+                TileController tile = tileGo.GetComponent<TileController>();
+                tile.tileIndex = -1; // sentinel: not part of the active piece's Tiles array
+                tile.UpdatePosition(cell);
+                OccupyPos(cell, tileGo);
+            }
+        }
+
         private bool DestroyTileAt(int x, int y)
         {
             GridUnit unit = _fullGrid[x, y];

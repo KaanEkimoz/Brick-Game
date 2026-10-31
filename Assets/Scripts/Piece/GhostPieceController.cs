@@ -21,8 +21,7 @@ namespace Piece
         }
         private void UpdateGhostTiles()
         {
-            // Extended-mode ability pieces carry fewer tiles than the ghost's four; skip the
-            // preview and park the unused ghost tiles off-screen so they don't linger.
+            // No active piece tiles: park the ghost tiles off-screen so they don't linger.
             if (PieceController.Tiles == null || PieceController.Tiles.Length < ghostTiles.Length)
             {
                 foreach (var gt in ghostTiles)

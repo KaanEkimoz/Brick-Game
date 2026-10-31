@@ -79,6 +79,11 @@ namespace Extras
                 case 4:
                     AddScore(1200 * (LevelController.CurrentLevel + 1));
                     break;
+                default:
+                    // A Patch can complete more than four rows at once; pay those as a Tetris.
+                    if (consecutiveLineClears > 4)
+                        AddScore(1200 * (LevelController.CurrentLevel + 1));
+                    break;
             }
         }
         private void AddScore(int point)

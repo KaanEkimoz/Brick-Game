@@ -1,3 +1,5 @@
+using Gameplay;
+using InGame;
 using UnityEngine;
 
 namespace Persistence
@@ -31,6 +33,19 @@ namespace Persistence
                 data.saveVersion = 2;
             }
 
+            // v2 → v3: ability pieces left the save slots. Older saves could hold Bomb/Laser
+            // there, which SpawnPieceFromSave cannot lay out; swap in a tetromino and leave the
+            // bar one clear short so the earned ability is not lost.
+            if (data.saveVersion == 2)
+            {
+                data.currentAbility = -1;
+                bool heldAbility = IsAbilityPiece(data.currentPieceType) || IsAbilityPiece(data.nextPieceType);
+                if (IsAbilityPiece(data.currentPieceType)) data.currentPieceType = PieceType.T;
+                if (IsAbilityPiece(data.nextPieceType)) data.nextPieceType = PieceType.T;
+                if (heldAbility) data.abilityCharge = AbilityCharger.MaxCharge - 1;
+                data.saveVersion = 3;
+            }
+
             // (Future migrations chain here as additional "if (data.saveVersion == N)" blocks.)
 
             if (data.saveVersion != GameSaveData.CurrentVersion)
@@ -42,5 +57,7 @@ namespace Persistence
 
             return data;
         }
+
+        private static bool IsAbilityPiece(PieceType type) => type == PieceType.Bomb || type == PieceType.Laser;
     }
 }

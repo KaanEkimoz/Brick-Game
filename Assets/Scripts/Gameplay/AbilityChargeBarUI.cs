@@ -14,6 +14,13 @@ namespace Gameplay
         [SerializeField] private Image _armedIcon;
         [SerializeField] private Sprite _bombSprite;
         [SerializeField] private Sprite _laserSprite;
+        [SerializeField] private Sprite _boltSprite;
+
+        private void Awake()
+        {
+            if (_root != null)
+                _root.AddComponent<SegmentedChargeBar>().Build(_chargeSlider, _boltSprite);
+        }
 
         private void OnEnable()
         {

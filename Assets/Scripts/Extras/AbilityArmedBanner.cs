@@ -33,10 +33,13 @@ namespace Extras
         [Tooltip("Tint applied to headline + sub-text when a Laser is armed.")]
         [SerializeField] private Color _laserColor = new Color(0.35f, 0.85f, 1f, 1f);
 
-        [Tooltip("Headline copy. Substring {ability} is replaced with BOMB / LASER.")]
+        [Tooltip("Tint applied to headline + sub-text when a Patch is armed.")]
+        [SerializeField] private Color _patchColor = new Color(0.45f, 1f, 0.55f, 1f);
+
+        [Tooltip("Headline copy. Substring {ability} is replaced with BOMB / LASER / PATCH.")]
         [SerializeField] private string _headlineTemplate = "{ability} READY!";
 
-        [Tooltip("Sub-line copy. Substring {ability} is replaced with Bomb / Laser.")]
+        [Tooltip("Sub-line copy. Substring {ability} is replaced with Bomb / Laser / Patch.")]
         [SerializeField] private string _subTemplate = "{ability} piece coming up";
 
         [SerializeField] private float _duration = 1.2f;
@@ -66,9 +69,14 @@ namespace Extras
 
         private void ApplyAbilityCopy(AbilityType ability)
         {
-            string upper = ability == AbilityType.Bomb ? "BOMB" : "LASER";
-            string title = ability == AbilityType.Bomb ? "Bomb" : "Laser";
-            Color tint = ability == AbilityType.Bomb ? _bombColor : _laserColor;
+            string title = ability.ToString();
+            string upper = title.ToUpperInvariant();
+            Color tint = ability switch
+            {
+                AbilityType.Bomb => _bombColor,
+                AbilityType.Laser => _laserColor,
+                _ => _patchColor,
+            };
 
             if (_headlineText != null)
             {
@@ -77,7 +85,9 @@ namespace Extras
             }
             if (_subText != null)
             {
-                _subText.text = _subTemplate.Replace("{ability}", title);
+                _subText.text = ability == AbilityType.Patch
+                    ? $"Fills the {AbilityExecutor.PatchCellCount} lowest holes"
+                    : _subTemplate.Replace("{ability}", title);
                 _subText.color = tint;
             }
         }
