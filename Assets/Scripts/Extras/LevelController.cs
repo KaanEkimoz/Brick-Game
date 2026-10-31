@@ -48,7 +48,7 @@ namespace Extras
         }
         private void UpdateLevelText()
         {
-            levelText.text = "Level\n" + (DisplayLevel > 0 ? DisplayLevel : CurrentLevel);
+            levelText.text = Localization.Loc.Caps("Level") + "\n" + (DisplayLevel > 0 ? DisplayLevel : CurrentLevel);
         }
         public void ResetLevel()
         {

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using Extras;
+using Localization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,10 +16,13 @@ namespace Levels
     {
         private const string PlayButtonName = "B_Play";
         private const string ExtendedButtonName = "B_PlayExtended";
+        private const string SettingsIconName = "B_SettingsIcon";
+        private const string LanguageIconPath = "Icons/icon_language_neon";
         private const string MenuButtonText = "Play";
         private const string ModeImageFolder = "ModeSelect/";
         private const string WinSoundPath = "LevelAudio/level_win";
         private const string WinTitleText = "LEVEL CLEARED!";
+        private const string LanguageKey = "Language";
         private const float MenuButtonFontSize = 58f;
         private const float WinCelebrationSeconds = 2f;
         private const float WinPopSeconds = 0.3f;
@@ -26,6 +30,9 @@ namespace Levels
         private const int CanvasOrder = 100;
         private const float DividerThickness = 0.007f;
         private const float BackIconSize = 110f;
+        private const float LanguageIconGap = 12f;
+        private const float LanguageRowHeight = 140f;
+        private const float LanguageHeadingHeight = 200f;
         private const float IntroMinHoldSeconds = 3f;
         private const float IntroMaxHoldSeconds = 7f;
         private const float IntroSecondsPerCharacter = 0.06f;
@@ -43,8 +50,8 @@ namespace Levels
         private static readonly Vector2 LowerBorder = new Vector2(0.29f, 0.39f);
         private static readonly Color Accent = new Color(0.2f, 0.95f, 1f, 1f);
         private static readonly Color IntroDim = new Color(0f, 0f, 0.05f, 0.75f);
-        private static readonly Vector2 IntroPanelSize = new Vector2(800f, 340f);
-        private static readonly Vector2 WinPanelSize = new Vector2(880f, 700f);
+        private static readonly Vector2 IntroPanelSize = new Vector2(800f, 440f);
+        private static readonly Vector2 WinPanelSize = new Vector2(880f, 780f);
         private static readonly Vector2 WinButtonSize = new Vector2(640f, 150f);
         private static readonly Vector2 WinRuleSize = new Vector2(520f, 4f);
         private static readonly Color WinTitleTop = new Color(1f, 0.97f, 0.72f, 1f);
@@ -54,12 +61,13 @@ namespace Levels
         private static readonly Color ExtendedAccent = new Color(1f, 0.45f, 0.9f, 1f);
         private static readonly Color BadgeColor = new Color(0.01f, 0.03f, 0.14f, 0.88f);
         private static readonly Vector2 BadgePadding = new Vector2(64f, 22f);
-        private static readonly Color MenuButtonTextColor = new Color(0.08f, 0.3f, 0.8f, 1f);
+        private static readonly Color SelectedLanguageTextColor = new Color(0.8f, 0.1f, 0.55f, 1f);
         private static readonly Color ModeImageTint = new Color(0.68f, 0.68f, 0.74f, 1f);
 
         private Transform _canvas;
         private TMP_FontAsset _font;
         private TMP_FontAsset _plainFont;
+        private Image _panelFrame;
         private TextMeshProUGUI _objectiveText;
         private GameObject _screen;
         private LevelSession _session;
@@ -71,8 +79,10 @@ namespace Levels
             _session = GetComponent<LevelSession>();
             _font = FindAnyObjectByType<ScoreController>(FindObjectsInactive.Include)?.scoreText.font;
             _plainFont = PlainFont.Asset;
+            _panelFrame = Scene.PanelStyle.FindFrame();
             BuildCanvas();
             BuildMenuButton();
+            BuildLanguageButton();
             BuildObjectiveLine();
         }
 
@@ -126,10 +136,75 @@ namespace Levels
             click.onClick = new Button.ButtonClickedEvent();
             click.onClick.AddListener(ShowModeSelect);
             TMP_Text label = play.GetComponentInChildren<TMP_Text>(true);
-            if (label != null) label.text = MenuButtonText;
+            if (label != null) label.text = Loc.Caps(MenuButtonText);
 
             _classicButton.gameObject.SetActive(false);
             _extendedButton.gameObject.SetActive(false);
+        }
+
+        // Sits under the gear icon and copies its look.
+        private void BuildLanguageButton()
+        {
+            foreach (Button settings in Resources.FindObjectsOfTypeAll<Button>())
+            {
+                if (settings.name != SettingsIconName || !settings.gameObject.scene.IsValid()) continue;
+
+                Button button = Instantiate(settings, settings.transform.parent);
+                button.name = "B_LanguageIcon";
+                button.onClick = new Button.ButtonClickedEvent();
+                button.onClick.AddListener(ShowLanguageSelect);
+                button.GetComponent<Image>().sprite = Resources.Load<Sprite>(LanguageIconPath);
+
+                RectTransform rect = (RectTransform)button.transform;
+                rect.anchoredPosition += Vector2.down * (rect.rect.height + LanguageIconGap);
+                return;
+            }
+        }
+
+        // Each language keeps its own name, whichever language is active.
+        private void ShowLanguageSelect()
+        {
+            Transform screen = OpenScreen();
+            screen.GetComponent<Image>().color = IntroDim;
+
+            Language[] languages = (Language[])Enum.GetValues(typeof(Language));
+            int rows = languages.Length + 1;
+            float height = LanguageHeadingHeight + rows * LanguageRowHeight + LanguageRowHeight * 0.5f;
+            RectTransform panel = CreatePanel(screen, new Vector2(WinPanelSize.x, height));
+
+            float top = height * 0.5f;
+            TextMeshProUGUI heading = CreateHeading(panel, Loc.Caps(LanguageKey), 66f);
+            Place(heading.rectTransform, new Vector2(0f, top - LanguageHeadingHeight * 0.6f), new Vector2(740f, 90f));
+
+            for (int i = 0; i < rows; i++)
+            {
+                float y = top - LanguageHeadingHeight - LanguageRowHeight * (i + 0.5f);
+                Button row = i < languages.Length
+                    ? CreateLanguageRow(panel, languages[i])
+                    : CreateMenuStyleButton(panel, "Back", CloseScreen);
+                Place((RectTransform)row.transform, new Vector2(0f, y), WinButtonSize);
+            }
+        }
+
+        private Button CreateLanguageRow(Transform panel, Language language)
+        {
+            string name = Loc.NativeName(language).ToUpperInvariant();
+            Button row = CreateMenuStyleButton(panel, name, () => SelectLanguage(language));
+            if (language == Loc.Current)
+                row.GetComponentInChildren<TMP_Text>(true).color = SelectedLanguageTextColor;
+            return row;
+        }
+
+        // Reloading rebuilds every screen in the new language; this list is only in the menu.
+        private void SelectLanguage(Language language)
+        {
+            if (language == Loc.Current)
+            {
+                CloseScreen();
+                return;
+            }
+            Loc.Select(language);
+            _session.ReturnToMenu();
         }
 
         private void BuildObjectiveLine()
@@ -155,17 +230,23 @@ namespace Levels
             _objectiveText.text = text;
         }
 
+        // Runs in the neon font, like the rest of the HUD.
+        private static string Objective(string format, int value, int target)
+        {
+            return Loc.Upper(Loc.F(format, value, target));
+        }
+
         private string DescribeObjective(LevelDefinition level)
         {
             int value = _session.Progress;
             switch (level.objective)
             {
-                case "Lines": return $"Clear lines: {value}/{level.target}";
-                case "Score": return $"Reach score: {value}/{level.target}";
-                case "AbilityCells": return $"Ability cells: {value}/{level.target}";
-                case "Tetrises": return $"Tetrises: {value}/{level.target}";
-                case "Combo": return $"Combo: {value}/{level.target}";
-                case "Gold": return $"Gold left: {value}";
+                case "Lines": return Objective("Clear lines: {0}/{1}", value, level.target);
+                case "Score": return Objective("Reach score: {0}/{1}", value, level.target);
+                case "AbilityCells": return Objective("Ability cells: {0}/{1}", value, level.target);
+                case "Tetrises": return Objective("Tetrises: {0}/{1}", value, level.target);
+                case "Combo": return Objective("Combo: {0}/{1}", value, level.target);
+                case "Gold": return Objective("Gold left: {0}", value, level.target);
                 default: return $"Tiles left: {value}";
             }
         }
@@ -195,9 +276,9 @@ namespace Levels
 
             Vector2 classicAnchor = new Vector2(0.5f, 0.84f);
             Vector2 extendedAnchor = new Vector2(0.5f, 0.2f);
-            CreateModeLabel(screen, "Classic", "Endless blocks", classicAnchor, Accent);
-            CreateModeLabel(screen, "Levels", $"Level {NextLevel().id}", new Vector2(0.5f, 0.51f), LevelsAccent);
-            CreateModeLabel(screen, "Extended", "Bombs and lasers", extendedAnchor, ExtendedAccent);
+            CreateModeLabel(screen, Loc.Caps("Classic"), Loc.T("Endless blocks"), classicAnchor, Accent);
+            CreateModeLabel(screen, Loc.Caps("Levels"), Loc.F("Level {0}", NextLevel().id), new Vector2(0.5f, 0.51f), LevelsAccent);
+            CreateModeLabel(screen, Loc.Caps("Extended"), Loc.T("Bombs and lasers"), extendedAnchor, ExtendedAccent);
             CreateHighScoreLabel(screen, ScoreController.ClassicHighScore, classicAnchor);
             CreateHighScoreLabel(screen, ScoreController.ExtendedHighScore, extendedAnchor);
 
@@ -287,7 +368,7 @@ namespace Levels
             border.effectColor = accent;
             border.effectDistance = new Vector2(3f, 3f);
 
-            TextMeshProUGUI label = CreatePlainText(go.transform, text.ToUpperInvariant(), 44f, accent);
+            TextMeshProUGUI label = CreatePlainText(go.transform, Loc.Upper(text), 44f, accent);
             label.fontStyle = FontStyles.Bold;
             label.characterSpacing = 8f;
             label.textWrappingMode = TextWrappingModes.NoWrap;
@@ -303,7 +384,7 @@ namespace Levels
         {
             if (highScore <= 0) return;
 
-            TextMeshProUGUI label = CreatePlainText(screen, $"High Score: {highScore}", 42f, Color.white);
+            TextMeshProUGUI label = CreatePlainText(screen, Loc.F("High Score: {0}", highScore), 42f, Color.white);
             label.fontStyle = FontStyles.Bold;
             label.outlineWidth = 0.2f;
             label.outlineColor = Color.black;
@@ -353,23 +434,22 @@ namespace Levels
         {
             RectTransform panel = CreatePanel(screen, IntroPanelSize);
 
-            TextMeshProUGUI title = CreatePlainText(panel, $"Level {level.id}", 46f, Accent);
-            Place(title.rectTransform, new Vector2(0f, 110f), new Vector2(740f, 70f));
+            TextMeshProUGUI title = CreateHeading(panel, Loc.Upper(Loc.F("Level {0}", level.id)), 56f);
+            Place(title.rectTransform, new Vector2(0f, 135f), new Vector2(680f, 70f));
             TextMeshProUGUI goal = CreatePlainText(panel, DescribeGoal(level), 50f, Color.white);
             Place(goal.rectTransform, new Vector2(0f, 30f), new Vector2(740f, 70f));
-            TextMeshProUGUI hint = CreatePlainText(panel, level.hint, 36f, Color.white);
+            TextMeshProUGUI hint = CreatePlainText(panel, Loc.LevelHint(level.id, level.hint), 36f, Color.white);
             Place(hint.rectTransform, new Vector2(0f, -80f), new Vector2(720f, 120f));
             return panel;
         }
 
-        private static RectTransform CreatePanel(Transform parent, Vector2 size)
+        private RectTransform CreatePanel(Transform parent, Vector2 size)
         {
-            GameObject go = new GameObject("Panel", typeof(RectTransform), typeof(Image), typeof(Outline));
+            GameObject go = new GameObject("Panel", typeof(RectTransform), typeof(Image));
             go.transform.SetParent(parent, false);
-            go.GetComponent<Image>().color = PanelBlue;
-            Outline border = go.GetComponent<Outline>();
-            border.effectColor = Accent;
-            border.effectDistance = new Vector2(3f, 3f);
+            Image image = go.GetComponent<Image>();
+            image.color = PanelBlue;
+            if (_panelFrame != null) Scene.PanelStyle.ApplyFrame(image, _panelFrame);
             RectTransform panel = (RectTransform)go.transform;
             Place(panel, Vector2.zero, size);
             return panel;
@@ -412,13 +492,13 @@ namespace Levels
         {
             switch (level.objective)
             {
-                case "Lines": return $"Clear {level.target} lines";
-                case "Score": return $"Reach {level.target} points";
-                case "AbilityCells": return $"Hit {level.target} cells with abilities";
-                case "Tetrises": return level.target == 1 ? "Clear a Tetris" : $"Clear {level.target} Tetrises";
-                case "Combo": return $"Clear lines {level.target} pieces in a row";
-                case "Gold": return "Clear all the gold";
-                default: return "Clear the board";
+                case "Lines": return Loc.F("Clear {0} lines", level.target);
+                case "Score": return Loc.F("Reach {0} points", level.target);
+                case "AbilityCells": return Loc.F("Hit {0} cells with abilities", level.target);
+                case "Tetrises": return level.target == 1 ? Loc.T("Clear a Tetris") : Loc.F("Clear {0} Tetrises", level.target);
+                case "Combo": return Loc.F("Clear lines {0} pieces in a row", level.target);
+                case "Gold": return Loc.T("Clear all the gold");
+                default: return Loc.T("Clear the board");
             }
         }
 
@@ -461,16 +541,16 @@ namespace Levels
 
             RectTransform panel = CreatePanel(screen, WinPanelSize);
             TextMeshProUGUI heading = CreateWinTitle(panel, 76f);
-            Place(heading.rectTransform, new Vector2(0f, 245f), new Vector2(840f, 100f));
+            Place(heading.rectTransform, new Vector2(0f, 255f), new Vector2(720f, 100f));
 
             GameObject rule = new GameObject("Rule", typeof(RectTransform), typeof(Image));
             rule.transform.SetParent(panel, false);
             rule.GetComponent<Image>().color = LevelsAccent;
             Place((RectTransform)rule.transform, new Vector2(0f, 180f), WinRuleSize);
 
-            TextMeshProUGUI title = CreatePlainText(panel, $"Level {level.id}  \u00b7  {level.name}", 46f, Color.white);
+            TextMeshProUGUI title = CreatePlainText(panel, $"{Loc.F("Level {0}", level.id)}  \u00b7  {Loc.LevelName(level.id, level.name)}", 46f, Color.white);
             Place(title.rectTransform, new Vector2(0f, 120f), new Vector2(820f, 70f));
-            TextMeshProUGUI score = CreatePlainText(panel, $"Score: {ScoreController.score}", 40f, Color.white);
+            TextMeshProUGUI score = CreatePlainText(panel, Loc.F("Score: {0}", ScoreController.score), 40f, Color.white);
             Place(score.rectTransform, new Vector2(0f, 55f), new Vector2(820f, 60f));
 
             LevelDefinition next = LevelCatalog.Get(level.id + 1);
@@ -486,8 +566,8 @@ namespace Levels
 
         private TextMeshProUGUI CreateWinTitle(Transform parent, float size)
         {
-            TextMeshProUGUI label = CreatePlainText(parent, WinTitleText, size, Color.white);
-            label.fontStyle = FontStyles.Bold;
+            TextMeshProUGUI label = CreateHeading(parent, Loc.Caps(WinTitleText), size);
+            label.color = Color.white;
             label.enableVertexGradient = true;
             label.colorGradient = new VertexGradient(WinTitleTop, WinTitleTop, WinTitleBottom, WinTitleBottom);
             label.outlineWidth = 0.2f;
@@ -507,12 +587,12 @@ namespace Levels
             dim.GetComponent<Image>().color = IntroDim;
 
             RectTransform panel = CreatePanel(dim.transform, WinPanelSize);
-            TextMeshProUGUI heading = CreatePlainText(panel, Scene.ConfirmDialog.MainMenuTitle, 66f, Accent);
-            Place(heading.rectTransform, new Vector2(0f, 235f), new Vector2(740f, 90f));
-            TextMeshProUGUI message = CreatePlainText(panel, Scene.ConfirmDialog.MainMenuMessage, 40f, Color.white);
+            TextMeshProUGUI heading = CreateHeading(panel, Loc.Caps(Scene.ConfirmDialog.MainMenuTitle), 66f);
+            Place(heading.rectTransform, new Vector2(0f, 245f), new Vector2(720f, 90f));
+            TextMeshProUGUI message = CreatePlainText(panel, Loc.T(Scene.ConfirmDialog.MainMenuMessage), 40f, Color.white);
             Place(message.rectTransform, new Vector2(0f, 145f), new Vector2(740f, 70f));
 
-            Button yes = CreateMenuStyleButton(panel, Scene.ConfirmDialog.MainMenuYes, _session.ReturnToMenu);
+            Button yes = CreateMenuStyleButton(panel, Scene.ConfirmDialog.ConfirmText, _session.ReturnToMenu);
             Place((RectTransform)yes.transform, new Vector2(0f, -40f), WinButtonSize);
             Button no = CreateMenuStyleButton(panel, Scene.ConfirmDialog.NoText, () => Destroy(dim));
             Place((RectTransform)no.transform, new Vector2(0f, -190f), WinButtonSize);
@@ -532,10 +612,9 @@ namespace Levels
             TMP_Text text = button.GetComponentInChildren<TMP_Text>(true);
             if (text != null)
             {
-                text.text = label;
-                text.enableAutoSizing = false;
-                text.fontSize = MenuButtonFontSize;
-                text.color = MenuButtonTextColor;
+                text.text = Loc.Caps(label);
+                Scene.PanelStyle.FitButtonLabel(text, MenuButtonFontSize, WinButtonSize.x);
+                text.color = Scene.PanelStyle.ButtonTextColor;
                 text.alignment = TextAlignmentOptions.Center;
                 text.rectTransform.anchorMin = Vector2.zero;
                 text.rectTransform.anchorMax = Vector2.one;
@@ -582,7 +661,14 @@ namespace Levels
             return button;
         }
 
-        // Panels and buttons use the plain font; the in-game HUD keeps the game's own.
+        private TextMeshProUGUI CreateHeading(Transform parent, string text, float size)
+        {
+            TextMeshProUGUI label = CreateText(parent, text, size, Accent);
+            Scene.PanelStyle.FitLine(label, size);
+            return label;
+        }
+
+        // Sentences on panels use the plain font; headings and the HUD keep the game's own.
         private TextMeshProUGUI CreatePlainText(Transform parent, string text, float size, Color color)
         {
             TextMeshProUGUI label = CreateText(parent, text, size, color);

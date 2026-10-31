@@ -13,77 +13,91 @@ namespace Scene
     {
         public const string MainMenuTitle = "Main Menu?";
         public const string MainMenuMessage = "Are you sure you want to leave?";
-        public const string MainMenuYes = "Yes";
+        public const string ConfirmText = "Confirm";
         public const string NoText = "Cancel";
 
-        private const float ButtonFontSize = 26f;
-        private static readonly Color BackdropColor = new Color(0f, 0f, 0.08f, 0.92f);
+        private const float TitleFontSize = 50f;
+        private const float MessageFontSize = 30f;
+        private const float ButtonFontSize = 44f;
+        private static readonly Vector2 TextSize = new Vector2(490f, 110f);
+        private static readonly Vector2 ButtonSize = new Vector2(485f, 114f);
 
         private GameObject _root;
 
-        /// <summary>Builds the hidden dialog inside the menu and hooks the guarded button.</summary>
-        public void Build(Transform menu, Button guardedButton, Button cancelTemplate, string title, string message, string yesText)
+        /// <summary>Builds the hidden dialog on the guarded button's panel and hooks the button.
+        /// The menu roots above the panels are plain transforms with a large scale.</summary>
+        public void Build(Button guardedButton, Button cancelTemplate, string title, string message, string yesText)
         {
-            _root = CreateBackdrop(menu);
+            Transform panel = guardedButton.transform.parent;
+            _root = CreateBackdrop(panel);
 
-            TMP_Text buttonLabel = cancelTemplate.GetComponentInChildren<TMP_Text>(true);
-            CreateText(title, buttonLabel, 44f, new Vector2(0f, 150f));
-            CreateText(message, buttonLabel, 20f, new Vector2(0f, 90f));
+            TMP_Text neonLabel = cancelTemplate.GetComponentInChildren<TMP_Text>(true);
+            TextMeshProUGUI heading = CreateText(Localization.Loc.Caps(title), neonLabel.font, TitleFontSize, neonLabel.color, new Vector2(0f, 185f));
+            PanelStyle.FitLine(heading, TitleFontSize);
+            CreateText(Localization.Loc.T(message), Levels.PlainFont.Asset, MessageFontSize, Color.white, new Vector2(0f, 105f));
 
             Button.ButtonClickedEvent guardedChain = guardedButton.onClick;
             guardedButton.onClick = new Button.ButtonClickedEvent();
             guardedButton.onClick.AddListener(() => _root.SetActive(true));
 
-            Button yes = CreateButton(guardedButton, yesText, new Vector2(0f, -10f));
+            Button template = PanelStyle.FindButton();
+            Button yes = CreateButton(template, yesText, new Vector2(0f, -30f));
             yes.onClick.AddListener(() =>
             {
                 _root.SetActive(false);
                 guardedChain.Invoke();
             });
 
-            Button no = CreateButton(cancelTemplate, NoText, new Vector2(0f, -90f));
+            Button no = CreateButton(template, NoText, new Vector2(0f, -165f));
             no.onClick.AddListener(() => _root.SetActive(false));
         }
 
-        private static GameObject CreateBackdrop(Transform parent)
+        private static GameObject CreateBackdrop(Transform panel)
         {
             GameObject go = new GameObject("ConfirmDialog", typeof(RectTransform), typeof(Image));
-            go.transform.SetParent(parent, false);
+            go.transform.SetParent(panel, false);
             RectTransform rect = (RectTransform)go.transform;
             rect.anchorMin = Vector2.zero;
             rect.anchorMax = Vector2.one;
             rect.offsetMin = Vector2.zero;
             rect.offsetMax = Vector2.zero;
-            go.GetComponent<Image>().color = BackdropColor;
+            PanelStyle.ApplyFrame(go.GetComponent<Image>(), panel.GetComponent<Image>());
             go.SetActive(false);
             return go;
         }
 
-        private void CreateText(string text, TMP_Text style, float fontSize, Vector2 position)
+        private TextMeshProUGUI CreateText(string text, TMP_FontAsset font, float fontSize, Color color, Vector2 position)
         {
             GameObject go = new GameObject("Text", typeof(RectTransform));
             go.transform.SetParent(_root.transform, false);
             TextMeshProUGUI label = go.AddComponent<TextMeshProUGUI>();
-            label.font = Levels.PlainFont.Asset;
+            label.font = font;
             label.fontSize = fontSize;
-            label.color = style.color;
+            label.color = color;
             label.alignment = TextAlignmentOptions.Center;
             label.raycastTarget = false;
             label.text = text;
-            PlaceCentered(label.rectTransform, position, new Vector2(520f, 80f));
+            PlaceCentered(label.rectTransform, position, TextSize);
+            return label;
         }
 
         private Button CreateButton(Button template, string text, Vector2 position)
         {
             Button button = Instantiate(template, _root.transform);
+            button.gameObject.SetActive(true);
             button.onClick = new Button.ButtonClickedEvent();
-            PlaceCentered((RectTransform)button.transform, position, new Vector2(360f, 64f));
+            button.transform.localScale = Vector3.one;
+            PlaceCentered((RectTransform)button.transform, position, ButtonSize);
 
             TMP_Text label = button.GetComponentInChildren<TMP_Text>(true);
-            label.font = Levels.PlainFont.Asset;
-            label.text = text;
-            label.fontSize = ButtonFontSize;
-            label.rectTransform.anchoredPosition = Vector2.zero;
+            label.text = Localization.Loc.Caps(text);
+            label.color = PanelStyle.ButtonTextColor;
+            label.alignment = TextAlignmentOptions.Center;
+            PanelStyle.FitButtonLabel(label, ButtonFontSize, ButtonSize.x);
+            label.rectTransform.anchorMin = Vector2.zero;
+            label.rectTransform.anchorMax = Vector2.one;
+            label.rectTransform.offsetMin = Vector2.zero;
+            label.rectTransform.offsetMax = Vector2.zero;
             return button;
         }
 

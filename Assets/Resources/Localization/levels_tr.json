@@ -1,0 +1,504 @@
+{
+  "entries": [
+    {
+      "id": 1,
+      "name": "İlk Adımlar",
+      "hint": "Beş kareyi yan yana dizip iki satırı temizle."
+    },
+    {
+      "id": 2,
+      "name": "Uzun ve Kare",
+      "hint": "Bir satırı doldurup temizle. Uzun parçalar işe yarar."
+    },
+    {
+      "id": 3,
+      "name": "Düz Arazi",
+      "hint": "Yığını düz tut ve dört satırı temizle."
+    },
+    {
+      "id": 4,
+      "name": "Minik Kuyu",
+      "hint": "Sağ sütunu boş bırak, sonra içine uzun parça at."
+    },
+    {
+      "id": 5,
+      "name": "Merdiven",
+      "hint": "Basamakları yukarıdan aşağıya, satır satır doldur."
+    },
+    {
+      "id": 6,
+      "name": "Skor Koşusu",
+      "hint": "Temizlenen her satır puan verir. Hedefe ulaş."
+    },
+    {
+      "id": 7,
+      "name": "Isınma Turu",
+      "hint": "Başlangıç satırlarını temizle, sonra skora devam."
+    },
+    {
+      "id": 8,
+      "name": "Toparlanma",
+      "hint": "Tahtayı temizle: boşluğu uzun parçayla doldur."
+    },
+    {
+      "id": 9,
+      "name": "Çifte Fayda",
+      "hint": "İki satırı birden temizlemek, iki tekilden daha çok skor verir."
+    },
+    {
+      "id": 10,
+      "name": "Bomba Patlat",
+      "hint": "Her parça 3x3 alanı silen bir bomba. Bloğu uçur!"
+    },
+    {
+      "id": 11,
+      "name": "Tetris Zamanı",
+      "hint": "Uzun bir kuyu ve uzun parça, dört satırı birden temizler."
+    },
+    {
+      "id": 12,
+      "name": "Güç Zamanı",
+      "hint": "Özel parçayı şarj etmek için 5 satır temizle. Sonra kullan."
+    },
+    {
+      "id": 13,
+      "name": "Taşla Tanışma",
+      "hint": "Gri taşlar asla kırılmaz. Satırları onların etrafında temizle."
+    },
+    {
+      "id": 14,
+      "name": "Derin Kuyu",
+      "hint": "Hiçbir şey kalmayana dek kareleri kuyuya bırak."
+    },
+    {
+      "id": 15,
+      "name": "Basamaklar",
+      "hint": "Tahtayı temizlemek için her boşluğu kancalarla doldur."
+    },
+    {
+      "id": 16,
+      "name": "Kocaman Gülümseme",
+      "hint": "Gülümsemenin kasesini doldurup tahtayı temizle."
+    },
+    {
+      "id": 17,
+      "name": "Skor Avcısı",
+      "hint": "Sakin kal, hedef skora ulaşmak için art arda temizle."
+    },
+    {
+      "id": 18,
+      "name": "Taş Duvarlar",
+      "hint": "Taşlar her temizlemeden sonra kalır, aralarına inşa et."
+    },
+    {
+      "id": 19,
+      "name": "Huni",
+      "hint": "Kareler boğaza, düz parçalar ağza gider."
+    },
+    {
+      "id": 20,
+      "name": "Lazer Şeridi",
+      "hint": "Şarjlı parçalar bir satırı yakar; bir kez çevirirsen sütunu."
+    },
+    {
+      "id": 21,
+      "name": "Taş Kupa",
+      "hint": "Tüm normal karoları temizle. Gri taşlar kalabilir."
+    },
+    {
+      "id": 22,
+      "name": "Şarj Zinciri",
+      "hint": "Özel parçalar temizlemeyi hızlandırır. Çubuğu doldurmaya devam et."
+    },
+    {
+      "id": 23,
+      "name": "Patlama Kulesi",
+      "hint": "Bir parçayı şarj et, kuleyi 12 hücre kadar patlat."
+    },
+    {
+      "id": 24,
+      "name": "Çit Direkleri",
+      "hint": "Direkler arasındaki boşlukları doldur ve temizlemeye devam et."
+    },
+    {
+      "id": 25,
+      "name": "İkiz Boşluk",
+      "hint": "Kareler boşluklara oturur, düz parçalar gerisini kapatır."
+    },
+    {
+      "id": 26,
+      "name": "Merdiven Lazeri",
+      "hint": "Merdiven satırlarını lazerle yak. Lazerle 12 karo temizle."
+    },
+    {
+      "id": 27,
+      "name": "Delik Doldurucu",
+      "hint": "Şarjlı parçalar yığının altındaki delikleri yamar. 4 satır temizle."
+    },
+    {
+      "id": 28,
+      "name": "Parçalarını Say",
+      "hint": "Sadece 22 parçan var. 4 satır temizle."
+    },
+    {
+      "id": 29,
+      "name": "L Harfi",
+      "hint": "Uzun L'nin etrafında çalış. Hızlanmak için parçaları şarj et."
+    },
+    {
+      "id": 30,
+      "name": "Kuyu",
+      "hint": "Yeni: sadece Tetris. Dört satırı doldur, I'yı kuyuya bırak."
+    },
+    {
+      "id": 31,
+      "name": "Damalı Yama",
+      "hint": "Yama parçaları delikleri doldurur. 6 satır temizle."
+    },
+    {
+      "id": 32,
+      "name": "Piramit Patlatma",
+      "hint": "Piramidi patlatmak için şarjlı parçalar kullan: 20 hücre."
+    },
+    {
+      "id": 33,
+      "name": "Zamana Karşı",
+      "hint": "Saatte 100 saniye var. 5 satır temizle."
+    },
+    {
+      "id": 34,
+      "name": "Yak ve Diz",
+      "hint": "Kuyuyu doldur, fırsat buldukça lazer at. 6 satır temizle."
+    },
+    {
+      "id": 35,
+      "name": "Sade Yığın",
+      "hint": "24 parça. Kuyuyu kullan, hiçbir şey harcama. 6 satır temizle."
+    },
+    {
+      "id": 36,
+      "name": "Skor Sprinti",
+      "hint": "1800 skor için 24 parça. Üçlüler en çok kazandırır."
+    },
+    {
+      "id": 37,
+      "name": "Temiz Sayfa",
+      "hint": "Tahtayı 26 parçada boşalt. Merdiveni doldur."
+    },
+    {
+      "id": 38,
+      "name": "Hızlı Skor",
+      "hint": "2400 skor için 100 saniye. İkililer için yığ."
+    },
+    {
+      "id": 39,
+      "name": "Dar Bütçe",
+      "hint": "30 parça, 8 satır, artan hız. Pay yok."
+    },
+    {
+      "id": 40,
+      "name": "İkiz Kuleler",
+      "hint": "Hiçbir şey kalmayana dek iki kuleye de bomba at."
+    },
+    {
+      "id": 41,
+      "name": "Çubuk ve Kutu",
+      "hint": "Yeni: sadece I ve O parçaları. O çift sayıda boşluk ister."
+    },
+    {
+      "id": 42,
+      "name": "Delikli Peynir",
+      "hint": "Bir yama parçası delikleri kapatır. 6 satır temizle."
+    },
+    {
+      "id": 43,
+      "name": "Hızlı Başlangıç",
+      "hint": "Yeni: sabit hızlı. Önceden planla, erken bırak."
+    },
+    {
+      "id": 44,
+      "name": "Çukurlu Yol",
+      "hint": "Üç kapalı delik. Yamala, sonra 8 satır temizle."
+    },
+    {
+      "id": 45,
+      "name": "Altılı Paket",
+      "hint": "Yama altı deliği birden doldurur. 10 satır temizle."
+    },
+    {
+      "id": 46,
+      "name": "Şimşek",
+      "hint": "Hız 11. Yığını alçak ve düz tut."
+    },
+    {
+      "id": 47,
+      "name": "Skor Atağı",
+      "hint": "Hız 12. Büyük skor için çoklu satır temizle."
+    },
+    {
+      "id": 48,
+      "name": "Altın Atağı",
+      "hint": "75 saniyede tüm altınları kaz."
+    },
+    {
+      "id": 49,
+      "name": "Satır Baskını",
+      "hint": "120 saniyede sekiz satır. Durma."
+    },
+    {
+      "id": 50,
+      "name": "Sütun Nişancısı",
+      "hint": "Döndürülmüş I'yı sütunun üstüne park et: lazer sütunu siler."
+    },
+    {
+      "id": 51,
+      "name": "Yama Ustası",
+      "hint": "Sekiz delik, yama başına altı. 12 satır temizle."
+    },
+    {
+      "id": 52,
+      "name": "Yükselen Dalga",
+      "hint": "Yeni: her 6 parçada bir çöp satırı yükselir."
+    },
+    {
+      "id": 53,
+      "name": "Kanca Atışı",
+      "hint": "Sadece J, L ve O. Kancaları eşleştirip düz satır yap."
+    },
+    {
+      "id": 54,
+      "name": "Işıklar Söndü",
+      "hint": "Yeni: hayalet parça yok. Bırakışı kendin tahmin et."
+    },
+    {
+      "id": 55,
+      "name": "Lekesiz",
+      "hint": "Tahtayı hızlıca temizle. Geride hiçbir şey bırakma."
+    },
+    {
+      "id": 56,
+      "name": "Kırmızı Çizgi",
+      "hint": "En yüksek hız 15. Kısa ve acımasız. Sakin kal."
+    },
+    {
+      "id": 57,
+      "name": "Son Geri Sayım",
+      "hint": "110 saniyede 12 satır. Hızlı bırak, daha hızlı düşün."
+    },
+    {
+      "id": 58,
+      "name": "Sürünen",
+      "hint": "S, Z, I ve O. Zikzaklar için yüzeyi düz tut."
+    },
+    {
+      "id": 59,
+      "name": "Sol Kuyu",
+      "hint": "Sol sütunu boş tut ve dört satır temizle."
+    },
+    {
+      "id": 60,
+      "name": "Çifte Tetris",
+      "hint": "İki Tetris. İlkinden sonra kuyuyu yeniden kur."
+    },
+    {
+      "id": 61,
+      "name": "Savak",
+      "hint": "Çöp seni gömmeden satırları temizle."
+    },
+    {
+      "id": 62,
+      "name": "Kör Bırakış",
+      "hint": "Hayalet parça yok. Bırakmadan önce sütun yüksekliklerine bak."
+    },
+    {
+      "id": 63,
+      "name": "Çalkantılı Sular",
+      "hint": "Her çöp satırındaki boşluğu bul ve kullan."
+    },
+    {
+      "id": 64,
+      "name": "Hisle Oyna",
+      "hint": "Hayalet parça yok. Birkaç satırı birden temizleyerek skor yap."
+    },
+    {
+      "id": 65,
+      "name": "T Vakti",
+      "hint": "Sadece T ve I. T parçaları çukurları ve basamakları doldurur."
+    },
+    {
+      "id": 66,
+      "name": "Baskı",
+      "hint": "Yükselen satırları geri itmek için büyük skor yap."
+    },
+    {
+      "id": 67,
+      "name": "İlk Parıltı",
+      "hint": "Altın karolar gömülü. Kazanmak için satırlarını temizle."
+    },
+    {
+      "id": 68,
+      "name": "İkiz Kuyular",
+      "hint": "Temizlemek için 2 geniş iki boşluğu da O parçalarıyla doldur."
+    },
+    {
+      "id": 69,
+      "name": "Ters Akıntı",
+      "hint": "Hızlı ve yükselen. Ortayı temiz tut."
+    },
+    {
+      "id": 70,
+      "name": "Sığınak Yıkıcı",
+      "hint": "Çelik duvarlar yerinde kalır. Sığınaktaki tuğlaları bombala."
+    },
+    {
+      "id": 71,
+      "name": "Sonrakinin Sisi",
+      "hint": "Sıradaki parça artık gizli. Gördüğünle plan yap."
+    },
+    {
+      "id": 72,
+      "name": "Gölge Süpürme",
+      "hint": "Hayalet parça yok. Kalan karoları dikkatle temizle."
+    },
+    {
+      "id": 73,
+      "name": "Karanlık Baskın",
+      "hint": "Hayalet parça yok, hız yüksek. Gözlerine güven."
+    },
+    {
+      "id": 74,
+      "name": "Çifte Vuruş",
+      "hint": "İki altın karo farklı derinliklerde. İkisine de kaz."
+    },
+    {
+      "id": 75,
+      "name": "Demir Kasa",
+      "hint": "Altın, sabit # blokların arasında saklı. Etraflarını temizle."
+    },
+    {
+      "id": 76,
+      "name": "Parça Bütçesi",
+      "hint": "Sınırlı parçayla sekiz satır."
+    },
+    {
+      "id": 77,
+      "name": "İkiz Bacalar",
+      "hint": "İki baca üç altın karoyu besliyor. Akıllıca doldur."
+    },
+    {
+      "id": 78,
+      "name": "Kör Skor",
+      "hint": "Önizleme olmadan 2000 skor yap. Çoklu satır daha çok kazandırır."
+    },
+    {
+      "id": 79,
+      "name": "Düz Tut",
+      "hint": "Önizleme yok, o yüzden düz kal ve yüzeyi açık tut."
+    },
+    {
+      "id": 80,
+      "name": "Lazer Finali",
+      "hint": "Her boşluk kapalı. Lazerler delip geçer: 32 yok et."
+    },
+    {
+      "id": 81,
+      "name": "Kör Süpürme",
+      "hint": "Tüm tahtayı önizleme olmadan temizle. O'yu kullan."
+    },
+    {
+      "id": 82,
+      "name": "Ana Damar",
+      "hint": "Derin bir yığın dört altın karoyu saklıyor. Hızlı kaz."
+    },
+    {
+      "id": 83,
+      "name": "Zincir Başlangıcı",
+      "hint": "Geniş bacayı O bloklarıyla doldur. Üst üste 3 temizle."
+    },
+    {
+      "id": 84,
+      "name": "Tek Sıra",
+      "hint": "I ve L parçalarını bacaya bırak. Zinciri sürdür."
+    },
+    {
+      "id": 85,
+      "name": "Karanlık Altın",
+      "hint": "Hayalet parça olmadan altın kaz."
+    },
+    {
+      "id": 86,
+      "name": "Hızlı ve Az",
+      "hint": "Sadece 45 parçayla yüksek hızda 10 satır temizle."
+    },
+    {
+      "id": 87,
+      "name": "Kör Satırlar",
+      "hint": "Sekiz satır, önizleme yok. Sağ sütunu açık tut."
+    },
+    {
+      "id": 88,
+      "name": "Bomba Kazısı",
+      "hint": "Bombalar taşı delip altına ulaşır."
+    },
+    {
+      "id": 89,
+      "name": "Sisli Satırlar",
+      "hint": "Sıradaki parça gizliyken on iki satır."
+    },
+    {
+      "id": 90,
+      "name": "Büyük Smaç",
+      "hint": "Hızlı üç Tetris. Kuyuyu temiz tut."
+    },
+    {
+      "id": 91,
+      "name": "Gök Gürültüsü",
+      "hint": "Her parça bir satır temizlemeli. Bacayı sırayla doldur."
+    },
+    {
+      "id": 92,
+      "name": "Yükselen ve Az",
+      "hint": "Çöp yükselirken sadece üç parça türüyle 12 satır temizle."
+    },
+    {
+      "id": 93,
+      "name": "Karanlıkta Altın Avı",
+      "hint": "Gizli sıradaki parça, bir sayaç ve bulunacak dört altın karo."
+    },
+    {
+      "id": 94,
+      "name": "Lazerli Arayıcı",
+      "hint": "Lazerler satır ve sütun keser. Hayalet parça yardımı olmadan altına ulaş."
+    },
+    {
+      "id": 95,
+      "name": "Geniş Çağlayan",
+      "hint": "Geniş baca her parçayı alır. 4 temizlemeyi zincirle."
+    },
+    {
+      "id": 96,
+      "name": "Büyük Zincir",
+      "hint": "5 temizlemeyi zincirle. Alttaki satırlar birer boşluk uzakta."
+    },
+    {
+      "id": 97,
+      "name": "Kör Zincir",
+      "hint": "Sıradaki parça gizliyken hızla 4 temizlemeyi zincirle."
+    },
+    {
+      "id": 98,
+      "name": "Yıkım",
+      "hint": "Bombalar ve sayaç tahtayı temizler. Sabit # bloklar kalır."
+    },
+    {
+      "id": 99,
+      "name": "Son Kasa",
+      "hint": "Altın, çöp, hayalet parça yok, sıradaki yok. Yetenekleri şarj et ve kaz."
+    },
+    {
+      "id": 100,
+      "name": "Büyük Patlama",
+      "hint": "Tek büyük piramit, sonsuz bomba. Tepeden yemeye başla."
+    }
+  ]
+}
