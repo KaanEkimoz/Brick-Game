@@ -45,7 +45,6 @@ namespace Levels
         private static readonly Color IntroDim = new Color(0f, 0f, 0.05f, 0.75f);
         private static readonly Vector2 IntroPanelSize = new Vector2(800f, 340f);
         private static readonly Vector2 WinPanelSize = new Vector2(880f, 700f);
-        private static readonly Vector2 ConfirmPanelSize = new Vector2(800f, 620f);
         private static readonly Vector2 WinButtonSize = new Vector2(640f, 150f);
         private static readonly Vector2 WinRuleSize = new Vector2(520f, 4f);
         private static readonly Color WinTitleTop = new Color(1f, 0.97f, 0.72f, 1f);
@@ -491,16 +490,16 @@ namespace Levels
             rect.offsetMax = Vector2.zero;
             dim.GetComponent<Image>().color = IntroDim;
 
-            RectTransform panel = CreatePanel(dim.transform, ConfirmPanelSize);
+            RectTransform panel = CreatePanel(dim.transform, WinPanelSize);
             TextMeshProUGUI heading = CreatePlainText(panel, Scene.ConfirmDialog.MainMenuTitle, 66f, Accent);
-            Place(heading.rectTransform, new Vector2(0f, 215f), new Vector2(740f, 90f));
+            Place(heading.rectTransform, new Vector2(0f, 235f), new Vector2(740f, 90f));
             TextMeshProUGUI message = CreatePlainText(panel, Scene.ConfirmDialog.MainMenuMessage, 40f, Color.white);
-            Place(message.rectTransform, new Vector2(0f, 125f), new Vector2(740f, 70f));
+            Place(message.rectTransform, new Vector2(0f, 145f), new Vector2(740f, 70f));
 
             Button yes = CreateMenuStyleButton(panel, Scene.ConfirmDialog.MainMenuYes, _session.ReturnToMenu);
-            Place((RectTransform)yes.transform, new Vector2(0f, -30f), WinButtonSize);
+            Place((RectTransform)yes.transform, new Vector2(0f, -40f), WinButtonSize);
             Button no = CreateMenuStyleButton(panel, Scene.ConfirmDialog.NoText, () => Destroy(dim));
-            Place((RectTransform)no.transform, new Vector2(0f, -180f), WinButtonSize);
+            Place((RectTransform)no.transform, new Vector2(0f, -190f), WinButtonSize);
         }
 
         // Same glowing button as the main menu's Play.
