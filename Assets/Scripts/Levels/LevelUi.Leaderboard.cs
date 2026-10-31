@@ -21,15 +21,15 @@ namespace Levels
         private const float LeaderboardRowsY = 225f;
         private const float LeaderboardRowHeight = 66f;
         private const float LeaderboardBackY = -560f;
-        private const float PeriodFontSize = 30f;
+        private const float PeriodFontSize = 25f;
         private const float PeriodLineHeight = 5f;
         private const float PeriodLineOffset = 36f;
-        private const float PeriodSpacing = 250f;
+        private const float PeriodSpacing = 265f;
 
         private static readonly Vector2 LeaderboardPanelSize = new Vector2(880f, 1480f);
         private static readonly Vector2 ToggleSize = new Vector2(740f, 130f);
         private static readonly Vector2 ToggleOptionSize = new Vector2(370f, 130f);
-        private static readonly Vector2 PeriodTabSize = new Vector2(240f, 70f);
+        private static readonly Vector2 PeriodTabSize = new Vector2(265f, 70f);
         private static readonly Vector2 PeriodLineSize = new Vector2(190f, PeriodLineHeight);
         private static readonly Vector2 LeaderboardRowSize = new Vector2(720f, 62f);
         private static readonly Color ToggleTrackColor = new Color(0.02f, 0.08f, 0.32f, 0.9f);
