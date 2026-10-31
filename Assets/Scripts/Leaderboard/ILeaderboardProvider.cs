@@ -31,7 +31,8 @@ namespace Leaderboard
         void SignIn(bool interactive, Action<bool> done);
 
         /// <param name="monthlyScore">The monthly board's stamped score, or negative to skip it.</param>
-        void Submit(LeaderboardBoard board, long score, long monthlyScore, Action done);
+        /// <param name="done">Receives whether every board accepted the score.</param>
+        void Submit(LeaderboardBoard board, long score, long monthlyScore, Action<bool> done);
         void LoadTop(LeaderboardBoard board, LeaderboardPeriod period, int count, Action<List<LeaderboardRow>> done);
     }
 }

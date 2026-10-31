@@ -31,6 +31,7 @@ namespace Gameplay
             PieceMovement.OnPieceMovement += Refresh;
             PieceRotation.OnPieceRotation += Refresh;
             PiecesController.OnGameOver += Hide;
+            Levels.LevelSession.OnLevelWon += HandleLevelWon;
         }
 
         private void OnDisable()
@@ -40,6 +41,7 @@ namespace Gameplay
             PieceMovement.OnPieceMovement -= Refresh;
             PieceRotation.OnPieceRotation -= Refresh;
             PiecesController.OnGameOver -= Hide;
+            Levels.LevelSession.OnLevelWon -= HandleLevelWon;
         }
 
         private void HandlePieceChanged()
@@ -48,6 +50,11 @@ namespace Gameplay
                 ? PiecesController.CurPiece.GetComponent<AbilityMarker>()
                 : null;
             Refresh();
+        }
+
+        private void HandleLevelWon(Levels.LevelDefinition level)
+        {
+            Hide();
         }
 
         private void Hide()
@@ -133,6 +140,11 @@ namespace Gameplay
                 case AbilityType.Bomb:
                     min = landing - Vector2Int.one;
                     max = landing + Vector2Int.one;
+                    break;
+                case AbilityType.Dynamite:
+                    Vector2Int otherLanding = landing + (PieceController.Tiles[1].coordinates - PieceController.Tiles[0].coordinates);
+                    min = Vector2Int.Min(landing, otherLanding) - Vector2Int.one;
+                    max = Vector2Int.Max(landing, otherLanding) + Vector2Int.one;
                     break;
                 case AbilityType.Laser when _marker.TryGetComponent(out LaserOrientation laser) && !laser.IsHorizontal:
                     min = new Vector2Int(landing.x, 0);

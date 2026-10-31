@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Extras;
 using Localization;
 using TMPro;
@@ -73,6 +74,7 @@ namespace Levels
         private LevelSession _session;
         private Button _classicButton;
         private Button _extendedButton;
+        private readonly List<ParticleSystem> _frozenEffects = new List<ParticleSystem>();
 
         private void Awake()
         {
@@ -86,6 +88,8 @@ namespace Levels
             BuildLeaderboardButton();
             BuildGameOverLeaderboard();
             gameObject.AddComponent<Leaderboard.LeaderboardSubmitter>();
+            gameObject.AddComponent<LevelsScoreHud>();
+            gameObject.AddComponent<Gameplay.BonusCollectibles>();
             BuildObjectiveLine();
         }
 
@@ -234,8 +238,8 @@ namespace Levels
 
             _objectiveText.gameObject.SetActive(true);
             string text = DescribeObjective(level);
-            if (level.pieceLimit > 0) text += $"\nPieces left: {Mathf.Max(0, level.pieceLimit - _session.PiecesUsed)}";
-            if (level.timeLimit > 0) text += $"\nTime: {Mathf.Max(0, _session.TimeLeftSeconds)}";
+            if (level.pieceLimit > 0) text += "\n" + Loc.F("Pieces left: {0}", Mathf.Max(0, level.pieceLimit - _session.PiecesUsed));
+            if (level.timeLimit > 0) text += "\n" + Loc.F("Time: {0}", Mathf.Max(0, _session.TimeLeftSeconds));
             _objectiveText.text = text;
         }
 
@@ -256,7 +260,7 @@ namespace Levels
                 case "Tetrises": return Objective("Tetrises: {0}/{1}", value, level.target);
                 case "Combo": return Objective("Combo: {0}/{1}", value, level.target);
                 case "Gold": return Objective("Gold left: {0}", value, level.target);
-                default: return $"Tiles left: {value}";
+                default: return Loc.F("Tiles left: {0}", value);
             }
         }
 
@@ -404,12 +408,21 @@ namespace Levels
         {
             CloseScreen();
             _classicButton.onClick.Invoke();
+            ShowTutorial();
         }
 
         private void StartExtended()
         {
             CloseScreen();
             _extendedButton.onClick.Invoke();
+            ShowTutorial();
+        }
+
+        // Skipped while the Continue prompt is waiting for an answer.
+        private static void ShowTutorial()
+        {
+            if (InGame.PiecesController.CurPiece != null)
+                FindAnyObjectByType<Tutorial.TutorialController>(FindObjectsInactive.Include)?.ShowForCurrentMode();
         }
 
         private void StartLevels()
@@ -495,6 +508,7 @@ namespace Levels
 
             CloseScreen();
             _session.SetIntroHold(false);
+            ShowTutorial();
         }
 
         private static string DescribeGoal(LevelDefinition level)
@@ -523,10 +537,11 @@ namespace Levels
             screen.GetComponent<Image>().color = Color.clear;
 
             FindAnyObjectByType<TetrisCelebrationEffect>(FindObjectsInactive.Include)?.Celebrate();
+            RunEffectsThroughFreeze();
             if (SFXToggle.IsSfxEnabled) GetComponent<AudioSource>().PlayOneShot(Resources.Load<AudioClip>(WinSoundPath));
 
             TextMeshProUGUI banner = CreateWinTitle(screen, 96f);
-            Place(banner.rectTransform, Vector2.zero, new Vector2(1060f, 180f));
+            Place(banner.rectTransform, Vector2.zero, new Vector2(1060f, 300f));
 
             float elapsed = 0f;
             while (elapsed < WinCelebrationSeconds)
@@ -540,7 +555,33 @@ namespace Levels
                 yield return null;
             }
 
+            ClearFrozenEffects();
             ShowWin(level);
+        }
+
+        // The win freezes game time, so the last clear's particles would hang until the next
+        // level unfreezes them. Let them finish on real time during the celebration.
+        private void RunEffectsThroughFreeze()
+        {
+            foreach (ParticleSystem effect in FindObjectsByType<ParticleSystem>(FindObjectsSortMode.None))
+            {
+                ParticleSystem.MainModule main = effect.main;
+                if (main.useUnscaledTime) continue; // the confetti already runs on real time
+                main.useUnscaledTime = true;
+                _frozenEffects.Add(effect);
+            }
+        }
+
+        private void ClearFrozenEffects()
+        {
+            foreach (ParticleSystem effect in _frozenEffects)
+            {
+                if (effect == null) continue;
+                ParticleSystem.MainModule main = effect.main;
+                main.useUnscaledTime = false;
+                effect.Clear(true);
+            }
+            _frozenEffects.Clear();
         }
 
         private void ShowWin(LevelDefinition level)
@@ -549,8 +590,8 @@ namespace Levels
             screen.GetComponent<Image>().color = IntroDim;
 
             RectTransform panel = CreatePanel(screen, WinPanelSize);
-            TextMeshProUGUI heading = CreateWinTitle(panel, 76f);
-            Place(heading.rectTransform, new Vector2(0f, 255f), new Vector2(720f, 100f));
+            TextMeshProUGUI heading = CreateWinTitle(panel, 62f);
+            Place(heading.rectTransform, new Vector2(0f, 268f), new Vector2(720f, 160f));
 
             GameObject rule = new GameObject("Rule", typeof(RectTransform), typeof(Image));
             rule.transform.SetParent(panel, false);
@@ -575,7 +616,7 @@ namespace Levels
 
         private TextMeshProUGUI CreateWinTitle(Transform parent, float size)
         {
-            TextMeshProUGUI label = CreateHeading(parent, Loc.Caps(WinTitleText), size);
+            TextMeshProUGUI label = CreateHeading(parent, Loc.Caps(WinTitleText).Replace(' ', '\n'), size);
             label.color = Color.white;
             label.enableVertexGradient = true;
             label.colorGradient = new VertexGradient(WinTitleTop, WinTitleTop, WinTitleBottom, WinTitleBottom);

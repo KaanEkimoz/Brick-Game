@@ -38,7 +38,7 @@
     {
       "id": 8,
       "name": "Toparlanma",
-      "hint": "Tahtayı temizle: boşluğu uzun parçayla doldur."
+      "hint": "Üç uzun parçayı boşluğa dik yerleştir, tahtayı temizle."
     },
     {
       "id": 9,
@@ -48,12 +48,12 @@
     {
       "id": 10,
       "name": "Bomba Patlat",
-      "hint": "Her parça 3x3 alanı silen bir bomba. Bloğu uçur!"
+      "hint": "Her parça 3x3 silen tek karelik bomba. 6 bomban var!"
     },
     {
       "id": 11,
       "name": "Tetris Zamanı",
-      "hint": "Uzun bir kuyu ve uzun parça, dört satırı birden temizler."
+      "hint": "Dördüncü satırı ekle, uzun parça dördünü birden temizlesin."
     },
     {
       "id": 12,
@@ -98,7 +98,7 @@
     {
       "id": 20,
       "name": "Lazer Şeridi",
-      "hint": "Şarjlı parçalar bir satırı yakar; bir kez çevirirsen sütunu."
+      "hint": "Bir satırı vur ya da bir kez çevirip sütunu vur. 8 parça."
     },
     {
       "id": 21,
@@ -133,7 +133,7 @@
     {
       "id": 27,
       "name": "Delik Doldurucu",
-      "hint": "Şarjlı parçalar yığının altındaki delikleri yamar. 4 satır temizle."
+      "hint": "Her 2. parça yığının altındaki delikleri yamar. 4 satır temizle."
     },
     {
       "id": 28,
@@ -143,12 +143,12 @@
     {
       "id": 29,
       "name": "L Harfi",
-      "hint": "Uzun L'nin etrafında çalış. Hızlanmak için parçaları şarj et."
+      "hint": "Uzun L'nin çevresinde çalış. Parça doldur, 15 kare vur."
     },
     {
       "id": 30,
       "name": "Kuyu",
-      "hint": "Yeni: sadece Tetris. Dört satırı doldur, I'yı kuyuya bırak."
+      "hint": "Yeni: Sadece Tetris. Dördüncü satırı yap, I'yı kuyuya at."
     },
     {
       "id": 31,
@@ -168,7 +168,7 @@
     {
       "id": 34,
       "name": "Yak ve Diz",
-      "hint": "Kuyuyu doldur, fırsat buldukça lazer at. 6 satır temizle."
+      "hint": "Kuyu zikzak yapıyor. Lazerle aç ve 6 satır temizle."
     },
     {
       "id": 35,
@@ -178,27 +178,27 @@
     {
       "id": 36,
       "name": "Skor Sprinti",
-      "hint": "1800 skor için 24 parça. Üçlüler en çok kazandırır."
+      "hint": "24 parçayla 2150 puan. En çok üçlüler kazandırır."
     },
     {
       "id": 37,
       "name": "Temiz Sayfa",
-      "hint": "Tahtayı 26 parçada boşalt. Merdiveni doldur."
+      "hint": "Tahtayı 30 parçada boşalt. Merdiveni doldur."
     },
     {
       "id": 38,
       "name": "Hızlı Skor",
-      "hint": "2400 skor için 100 saniye. İkililer için yığ."
+      "hint": "2800 puan için 100 saniye. İkililer için diz."
     },
     {
       "id": 39,
       "name": "Dar Bütçe",
-      "hint": "30 parça, 8 satır, artan hız. Pay yok."
+      "hint": "30 parça, 8 satır. Hata payı yok."
     },
     {
       "id": 40,
       "name": "İkiz Kuleler",
-      "hint": "Hiçbir şey kalmayana dek iki kuleye de bomba at."
+      "hint": "12 bomban bitmeden iki kuleyi de yerle bir et."
     },
     {
       "id": 41,
@@ -208,12 +208,12 @@
     {
       "id": 42,
       "name": "Delikli Peynir",
-      "hint": "Bir yama parçası delikleri kapatır. 6 satır temizle."
+      "hint": "Yama parçası altı delik tıkar. Toplam 10 delik doldur."
     },
     {
       "id": 43,
       "name": "Hızlı Başlangıç",
-      "hint": "Yeni: sabit hızlı. Önceden planla, erken bırak."
+      "hint": "Tempo artıyor. Önceden planla, erken bırak."
     },
     {
       "id": 44,
@@ -223,22 +223,22 @@
     {
       "id": 45,
       "name": "Altılı Paket",
-      "hint": "Yama altı deliği birden doldurur. 10 satır temizle."
+      "hint": "Yama altı deliği birden doldurur. Sonra tahtayı temizle."
     },
     {
       "id": 46,
       "name": "Şimşek",
-      "hint": "Hız 11. Yığını alçak ve düz tut."
+      "hint": "Bu hızda yığını alçak ve düz tut."
     },
     {
       "id": 47,
       "name": "Skor Atağı",
-      "hint": "Hız 12. Büyük skor için çoklu satır temizle."
+      "hint": "Çok puan için aynı anda birkaç satır temizle."
     },
     {
       "id": 48,
-      "name": "Altın Atağı",
-      "hint": "75 saniyede tüm altınları kaz."
+      "name": "İlk Parıltı",
+      "hint": "Yeni: altın kareler! Kazanmak için altınlı satırları temizle."
     },
     {
       "id": 49,
@@ -248,7 +248,7 @@
     {
       "id": 50,
       "name": "Sütun Nişancısı",
-      "hint": "Döndürülmüş I'yı sütunun üstüne park et: lazer sütunu siler."
+      "hint": "Sütuna dik bir I koy: lazer sütunu siler. 10 parça."
     },
     {
       "id": 51,
@@ -278,7 +278,7 @@
     {
       "id": 56,
       "name": "Kırmızı Çizgi",
-      "hint": "En yüksek hız 15. Kısa ve acımasız. Sakin kal."
+      "hint": "Şimdiye kadarki en hızlı koşu. Kısa ve sert. Sakin kal."
     },
     {
       "id": 57,
@@ -288,12 +288,12 @@
     {
       "id": 58,
       "name": "Sürünen",
-      "hint": "S, Z, I ve O. Zikzaklar için yüzeyi düz tut."
+      "hint": "Sadece S, Z, I ve O. Düz yüzeyler skoru yürütür."
     },
     {
       "id": 59,
       "name": "Sol Kuyu",
-      "hint": "Sol sütunu boş tut ve dört satır temizle."
+      "hint": "Sol sütunu açık tut. En çok uzun parçalar temizler."
     },
     {
       "id": 60,
@@ -303,17 +303,17 @@
     {
       "id": 61,
       "name": "Savak",
-      "hint": "Çöp seni gömmeden satırları temizle."
+      "hint": "Taşlar çöple birlikte yükselir. Çevrelerinde satır temizle."
     },
     {
       "id": 62,
       "name": "Kör Bırakış",
-      "hint": "Hayalet parça yok. Bırakmadan önce sütun yüksekliklerine bak."
+      "hint": "Hayalet yok. Sütun yüksekliklerine bak, altını çıkar."
     },
     {
       "id": 63,
       "name": "Çalkantılı Sular",
-      "hint": "Her çöp satırındaki boşluğu bul ve kullan."
+      "hint": "Her 3. parça lazer. Yükselen satırları vur: 30 kare."
     },
     {
       "id": 64,
@@ -332,8 +332,8 @@
     },
     {
       "id": 67,
-      "name": "İlk Parıltı",
-      "hint": "Altın karolar gömülü. Kazanmak için satırlarını temizle."
+      "name": "Altın Telaşı",
+      "hint": "75 saniyede tüm altını çıkar."
     },
     {
       "id": 68,
@@ -343,12 +343,12 @@
     {
       "id": 69,
       "name": "Ters Akıntı",
-      "hint": "Hızlı ve yükselen. Ortayı temiz tut."
+      "hint": "Çöp altını yukarı iter. Sular yükselmeden çıkar."
     },
     {
       "id": 70,
       "name": "Sığınak Yıkıcı",
-      "hint": "Çelik duvarlar yerinde kalır. Sığınaktaki tuğlaları bombala."
+      "hint": "Çelik duvarlar yerinde kalır. 10 bombayla tuğlaları patlat."
     },
     {
       "id": 71,
@@ -363,22 +363,22 @@
     {
       "id": 73,
       "name": "Karanlık Baskın",
-      "hint": "Hayalet parça yok, hız yüksek. Gözlerine güven."
+      "hint": "Hayalet yok, süre 100 saniye. Gözüne güven."
     },
     {
       "id": 74,
       "name": "Çifte Vuruş",
-      "hint": "İki altın karo farklı derinliklerde. İkisine de kaz."
+      "hint": "İki altın farklı derinlikte. Geniş boşluğu doldur."
     },
     {
       "id": 75,
       "name": "Demir Kasa",
-      "hint": "Altın, sabit # blokların arasında saklı. Etraflarını temizle."
+      "hint": "Altın gri taşların altında saklı. Altlarındaki satırları temizle."
     },
     {
       "id": 76,
       "name": "Parça Bütçesi",
-      "hint": "Sınırlı parçayla sekiz satır."
+      "hint": "Sınırlı parçayla 6000 puan."
     },
     {
       "id": 77,
@@ -388,7 +388,7 @@
     {
       "id": 78,
       "name": "Kör Skor",
-      "hint": "Önizleme olmadan 2000 skor yap. Çoklu satır daha çok kazandırır."
+      "hint": "Önizleme olmadan 5200 puan yap. Çoklu satırlar daha çok kazandırır."
     },
     {
       "id": 79,
@@ -428,17 +428,17 @@
     {
       "id": 86,
       "name": "Hızlı ve Az",
-      "hint": "Sadece 45 parçayla yüksek hızda 10 satır temizle."
+      "hint": "Yüksek hızda sadece 45 parçayla 9800 puan yap."
     },
     {
       "id": 87,
       "name": "Kör Satırlar",
-      "hint": "Sekiz satır, önizleme yok. Sağ sütunu açık tut."
+      "hint": "Sekiz satır, önizleme yok. Çentikten başla."
     },
     {
       "id": 88,
       "name": "Bomba Kazısı",
-      "hint": "Bombalar taşı delip altına ulaşır."
+      "hint": "Her 4. parça bomba. Altına inene dek patlat."
     },
     {
       "id": 89,
@@ -448,7 +448,7 @@
     {
       "id": 90,
       "name": "Büyük Smaç",
-      "hint": "Hızlı üç Tetris. Kuyuyu temiz tut."
+      "hint": "66 parçada üç Tetris. Kuyuyu temiz tut."
     },
     {
       "id": 91,
@@ -458,7 +458,7 @@
     {
       "id": 92,
       "name": "Yükselen ve Az",
-      "hint": "Çöp yükselirken sadece üç parça türüyle 12 satır temizle."
+      "hint": "Çöp yükselirken üç parça türüyle 3 temizleme zincirle."
     },
     {
       "id": 93,
@@ -488,7 +488,7 @@
     {
       "id": 98,
       "name": "Yıkım",
-      "hint": "Bombalar ve sayaç tahtayı temizler. Sabit # bloklar kalır."
+      "hint": "Her 2. parça bomba. Hepsini temizle; gri taşlar kalır."
     },
     {
       "id": 99,
@@ -498,7 +498,7 @@
     {
       "id": 100,
       "name": "Büyük Patlama",
-      "hint": "Tek büyük piramit, sonsuz bomba. Tepeden yemeye başla."
+      "hint": "En hızlısı, hayalet yok, 15 bomba, 45 saniye. Hepsini indir."
     }
   ]
 }

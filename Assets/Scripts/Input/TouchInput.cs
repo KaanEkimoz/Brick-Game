@@ -96,6 +96,7 @@ namespace InputSystem
         private bool _hardDropFired;
         private bool _movedBeyondTapRadius;
         private Axis _axis;
+        private GameObject _touchPiece;
 
         private void Awake()
         {
@@ -187,6 +188,7 @@ namespace InputSystem
             _hardDropFired = false;
             _movedBeyondTapRadius = false;
             _axis = Axis.Undecided;
+            _touchPiece = PiecesController.CurPiece;
         }
 
         private void HandleMove(Touch t)
@@ -275,8 +277,10 @@ namespace InputSystem
 
             // Hard drop only on a touch that committed to the vertical axis — a horizontal or
             // undecided touch can never slam the piece, which is what kept producing side-drift.
+            // A soft-drop tick can lock the piece mid-flick; the flick must not slam the next one.
             bool wasFastDownSwipe =
                 _axis == Axis.Vertical &&
+                PiecesController.CurPiece == _touchPiece &&
                 duration <= _hardDropMaxDuration &&
                 verticalDistance >= _hardDropMinDistance &&
                 verticalVelocity >= _hardDropMinVelocity &&

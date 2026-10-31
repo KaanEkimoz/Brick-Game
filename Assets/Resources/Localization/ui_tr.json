@@ -359,6 +359,54 @@
   {
    "en": "Your rank: #{0}",
    "text": "Sıralaman: #{0}"
+  },
+  {
+   "en": "Pieces left: {0}",
+   "text": "Kalan parça: {0}"
+  },
+  {
+   "en": "Time: {0}",
+   "text": "Süre: {0}"
+  },
+  {
+   "en": "Tiles left: {0}",
+   "text": "Kalan blok: {0}"
+  },
+  {
+   "en": "Could not load the leaderboard",
+   "text": "Sıralama yüklenemedi"
+  },
+  {
+   "en": "The bomb comes as a single block\nand clears a 3x3 area",
+   "text": "Bomba tek blok olarak gelir\nve 3x3 alanı temizler"
+  },
+  {
+   "en": "Laser sits on one block of a piece\nRotate to fire a row or column",
+   "text": "Lazer parçanın bir bloğundadır\nDöndürerek satıra veya sütuna ateş et"
+  },
+  {
+   "en": "Patch sits on one block of a piece\nand fills holes in your stack",
+   "text": "Yama parçanın bir bloğundadır\nve yığındaki boşlukları doldurur"
+  },
+  {
+   "en": "Clear 5 lines to fill the ability bar\nand load a random ability",
+   "text": "5 satır temizleyip yetenek çubuğunu\ndoldur, rastgele yetenek yükle"
+  },
+  {
+   "en": "Finish the goal above the board\nbefore your pieces or time run out",
+   "text": "Parçaların veya süren bitmeden\ntahtanın üstündeki hedefi tamamla"
+  },
+  {
+   "en": "Dynamite",
+   "text": "Dinamit"
+  },
+  {
+   "en": "Dynamite comes as a 1x2 piece\nand clears 3x4 along its direction",
+   "text": "Dinamit 1x2 parça olarak gelir ve\nyönüne göre 3x4 alanı temizler"
+  },
+  {
+   "en": "Land a piece on a fruit\nfor bonus points before it fades",
+   "text": "Meyve kaybolmadan üstüne parça\nkoy, bonus puan kazan"
   }
  ]
 }

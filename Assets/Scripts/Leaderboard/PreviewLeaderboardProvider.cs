@@ -15,10 +15,10 @@ namespace Leaderboard
             done(true);
         }
 
-        public void Submit(LeaderboardBoard board, long score, long monthlyScore, Action done)
+        public void Submit(LeaderboardBoard board, long score, long monthlyScore, Action<bool> done)
         {
             UnityEngine.Debug.Log($"[Leaderboard] Preview submit: {board} {score} {monthlyScore}");
-            done();
+            done(true);
         }
 
         public void LoadTop(LeaderboardBoard board, LeaderboardPeriod period, int count, Action<List<LeaderboardRow>> done)

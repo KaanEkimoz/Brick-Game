@@ -10,6 +10,7 @@ namespace Leaderboard
         private const int MonthlyLoadCount = 25; // room for scores from a device with a wrong date
 
         private static ILeaderboardProvider _provider;
+        private static bool _signInDeclined;
 
         private static ILeaderboardProvider Provider
         {
@@ -25,17 +26,42 @@ namespace Leaderboard
             }
         }
 
+        public static bool IsSignedIn => Provider.IsSignedIn;
+
         public static LeaderboardBoard CurrentBoard => GameMode.IsExtended ? LeaderboardBoard.Extended : LeaderboardBoard.Classic;
 
         /// <summary>Signs in without any prompt, so a player who declined is not asked again.</summary>
         public static void SignInSilently()
         {
-            Provider.SignIn(false, signedIn => { });
+            Provider.SignIn(false, signedIn =>
+            {
+                if (signedIn) SendAllPending();
+            });
+        }
+
+        /// <summary>Lets the next load ask for sign-in again. Called when the player opens the
+        /// board, so switching tabs does not repeat a prompt they declined.</summary>
+        public static void AllowSignInPrompt()
+        {
+            _signInDeclined = false;
         }
 
         public static void Submit(LeaderboardBoard board, long score, Action done)
         {
-            if (!Provider.IsSignedIn)
+            PendingScores.Add(board, score, DateTime.UtcNow);
+            SendPending(board, done);
+        }
+
+        private static void SendAllPending()
+        {
+            foreach (LeaderboardBoard board in Enum.GetValues(typeof(LeaderboardBoard)))
+                SendPending(board, () => { });
+        }
+
+        // Without the server's date the score stays queued for the next attempt.
+        private static void SendPending(LeaderboardBoard board, Action done)
+        {
+            if (!Provider.IsSignedIn || !PendingScores.TryGet(board, out long score, out DateTime earned))
             {
                 done();
                 return;
@@ -43,8 +69,20 @@ namespace Leaderboard
 
             LeaderboardClock.Fetch(utcNow =>
             {
-                long monthlyScore = utcNow.HasValue ? LeaderboardSchedule.StampMonth(score, utcNow.Value) : -1;
-                Provider.Submit(board, score, monthlyScore, done);
+                if (!utcNow.HasValue)
+                {
+                    done();
+                    return;
+                }
+
+                // A score earned in an earlier month no longer belongs on the monthly board.
+                bool sameMonth = earned.Year == utcNow.Value.Year && earned.Month == utcNow.Value.Month;
+                long monthlyScore = sameMonth ? LeaderboardSchedule.StampMonth(score, utcNow.Value) : -1;
+                Provider.Submit(board, score, monthlyScore, accepted =>
+                {
+                    if (accepted) PendingScores.Clear(board, score);
+                    done();
+                });
             });
         }
 
@@ -57,9 +95,20 @@ namespace Leaderboard
                 return;
             }
 
+            if (_signInDeclined)
+            {
+                done(null);
+                return;
+            }
+
             Provider.SignIn(true, signedIn =>
             {
-                if (signedIn) LoadSignedIn(board, period, count, done);
+                _signInDeclined = !signedIn;
+                if (signedIn)
+                {
+                    SendAllPending();
+                    LoadSignedIn(board, period, count, done);
+                }
                 else done(null);
             });
         }

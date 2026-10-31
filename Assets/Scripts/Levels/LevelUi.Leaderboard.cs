@@ -40,7 +40,7 @@ namespace Levels
 
         private void BuildLeaderboardButton()
         {
-            CreateMenuIcon("B_LeaderboardIcon", LeaderboardIconPath, 2, () => ShowLeaderboard(LeaderboardBoard.Classic));
+            CreateMenuIcon("B_LeaderboardIcon", LeaderboardIconPath, 2, () => OpenLeaderboard(LeaderboardBoard.Classic));
         }
 
         private void BuildGameOverLeaderboard()
@@ -51,9 +51,15 @@ namespace Levels
                 if (button.transform.parent.name != GameOverPanelName) continue;
 
                 gameObject.AddComponent<GameOverLeaderboard>()
-                    .Build(button, () => ShowLeaderboard(LeaderboardService.CurrentBoard));
+                    .Build(button, () => OpenLeaderboard(LeaderboardService.CurrentBoard));
                 return;
             }
+        }
+
+        private void OpenLeaderboard(LeaderboardBoard board)
+        {
+            LeaderboardService.AllowSignInPrompt();
+            ShowLeaderboard(board);
         }
 
         private void ShowLeaderboard(LeaderboardBoard board, LeaderboardPeriod period = LeaderboardPeriod.AllTime)
@@ -149,7 +155,7 @@ namespace Levels
         {
             if (rows == null)
             {
-                status.text = Loc.T("Sign in to Play Games to see the leaderboard");
+                status.text = Loc.T(LeaderboardService.IsSignedIn ? "Could not load the leaderboard" : "Sign in to Play Games to see the leaderboard");
                 return;
             }
             if (rows.Count == 0)

@@ -12,19 +12,21 @@ namespace Piece
         private void OnEnable()
         {
             PieceSpawner.OnPieceSpawned += UpdateGhostTiles;
+            PieceSpawner.OnPieceCharged += UpdateGhostTiles;
             PieceMovement.OnPieceMovement += UpdateGhostTiles;
             PieceRotation.OnPieceRotation += UpdateGhostTiles;
         }
         private void OnDisable()
         {
             PieceSpawner.OnPieceSpawned -= UpdateGhostTiles;
+            PieceSpawner.OnPieceCharged -= UpdateGhostTiles;
             PieceMovement.OnPieceMovement -= UpdateGhostTiles;
             PieceRotation.OnPieceRotation -= UpdateGhostTiles;
         }
         private void UpdateGhostTiles()
         {
             // No active piece tiles, or a level hides the ghost: park the ghost tiles off-screen.
-            if (Hidden || PieceController.Tiles == null || PieceController.Tiles.Length < ghostTiles.Length)
+            if (Hidden || PieceController.Tiles == null || PieceController.Tiles.Length == 0)
             {
                 foreach (var gt in ghostTiles)
                     gt.UpdatePosition(new Vector2Int(-100, -100));
@@ -33,7 +35,8 @@ namespace Piece
 
             for (int i = 1; i <= ghostTiles.Length; i++)
             {
-                TileController tile = PieceController.Tiles[i - 1];
+                // A single-tile bomb stacks all the ghost tiles on its one cell.
+                TileController tile = PieceController.Tiles[Mathf.Min(i - 1, PieceController.Tiles.Length - 1)];
                 // Read the tile's cell coordinate directly instead of casting its world
                 // transform.position to int. Now that BoardController.WorldOrigin is a
                 // non-zero (and non-integer) offset, the old int-cast turned the world

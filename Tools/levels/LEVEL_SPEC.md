@@ -38,10 +38,20 @@ as `{ "levels": [ ... ] }`. Every field below is required on every level (JsonUt
 
 ## Abilities
 
-- Bomb: destroys a 3x3 around the charged tile. Laser: the charged tile's row, or column after
-  rotating once. Patch: fills the 6 lowest covered holes. `bar`: clearing 5 lines charges one
-  random ability.
-- `AbilityCells` counts cells destroyed by Bomb or Laser and cells filled by Patch.
+- Bomb: a charged piece shrinks to a single 1x1 tile. It lands, destroys the 3x3 around itself
+  (fixed tiles survive), destroys itself, and the three columns it touched settle. With
+  `abilityEvery: 1` and `bomb` every piece is one tile, so the piece bag does not matter, the board
+  can never grow, and the level needs a `pieceLimit` or `timeLimit` to be losable.
+- Laser: the charged tile's row, or column after rotating once. The other tiles of the piece stay,
+  except that an `I` always sits in the line it fires along. So `laser` with `abilityEvery: 1` and
+  `pieces: "I"` can never grow either and needs a limit too.
+- Patch: fills the 6 lowest covered holes. `bar`: clearing 5 lines charges one random ability.
+- Dynamite: appears only through the `bar` charge in Extended, as a 1x2 piece that clears 3x4 along its direction. No level mode charges it.
+- `AbilityCells` counts cells destroyed by Bomb or Laser, the bomb's own tile included, and cells
+  filled by Patch.
+- A fixed tile does not fall, so tiles above it hang when the rows below clear. A `#` in the middle
+  of a stack leaves that column out of step with the rest. Keep `#` in full-height columns or on
+  top of the stack.
 
 ## Scoring (for `Score` targets), d = dropLevel
 
@@ -51,7 +61,12 @@ as `{ "levels": [ ... ] }`. Every field below is required on every level (JsonUt
 
 Every 10th level (10, 20 ... 100) is a fun level: bomb only, laser only or Tetris only. No other
 level has every piece charged or a `Tetrises` objective. The rest are mixed by difficulty, and each
-mechanic keeps its own intro level first. The table lists the mechanics, not the final level numbers.
+mechanic keeps its own intro level first: the first Gold level is the Gold intro, with a hint that
+starts `New:`. The table lists the mechanics, not the final level numbers.
+
+`dropLevel` rises steadily from 1 at level 1 to 15 at level 100, roughly `1 + (id - 1) x 14 / 99`.
+Neighbouring non-fun levels differ by at most 3. Fun levels may sit a step below the curve.
+`Score` targets scale with `dropLevel`, since the score does. Hints never quote a speed.
 
 ## Tiers
 
@@ -67,7 +82,7 @@ mechanic keeps its own intro level first. The table lists the mechanics, not the
 | 36-40 | Patch | `abilityMode: patch`, holed boards, `Lines` |
 | 41-45 | Piece limit | `pieceLimit` |
 | 46-50 | Time limit | `timeLimit` |
-| 51-55 | Fixed high speed | `dropLevel` 10-15 |
+| 51-55 | High speed | `dropLevel` from the curve above |
 | 56-60 | Limited pieces | `pieces` subset |
 | 61-65 | No ghost | `hideGhost` |
 | 66-70 | Rising garbage | `garbageEvery` |
@@ -83,12 +98,22 @@ Each tier opens easy and ends harder. Levels must stay fair on a phone.
 
 ## Fairness rules (the validator enforces these)
 
-Run `python3 Tools/levels/validate_levels.py <file>` until it prints OK.
+Run `python3 Tools/levels/validate_levels.py` until it prints OK. With no arguments it checks all
+level files; the rules that compare levels only see the files passed in.
 
 - No row starts full. Prefilled stack is at most 14 rows.
 - Every empty cell inside the stack must connect to the top through empty cells, unless the
   level has `patch`, `bomb`, `laser` or `mixed` abilities.
 - `pieceLimit`, when set, must allow for the goal: at least 3 pieces per line needed plus 4.
+  Levels with `abilityEvery: 1` are exempt, because abilities do the clearing there.
 - `Lines` target at most 40, `Tetrises` at most 5, `Combo` at most 8.
 - `timeLimit` at least 30.
 - `noLineClears` requires a piece-charging `abilityMode`.
+- No level is won in fewer than 3 pieces (brute force over straight drops, any piece order).
+- A level where every piece destroys itself has a `pieceLimit` or `timeLimit`.
+- A level where every piece is a bomb is searched for a win within its `pieceLimit`.
+- No two levels share a layout. Mirrors count as the same, and so do layouts that differ only in
+  tile kind.
+- `dropLevel` moves by at most 3 between non-fun neighbours.
+- The first Gold level is the Gold intro, and every 10th level follows the fun rule.
+- At most 40 of the 100 levels use the `Lines` objective.

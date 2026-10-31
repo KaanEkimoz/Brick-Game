@@ -3,11 +3,14 @@ using UnityEngine;
 public class BGMusicToggle : MonoBehaviour
 {
     private const string PREFS_KEY = "BackgroundMusicEnabled";
+    // Fixed level, 40% below the scene's 0.28. The master slider can only scale it down.
+    private const float MusicVolume = 0.168f;
     [SerializeField] private bool bgMusicEnabled = true;
     private AudioSource bgMusicSource;
     void Start()
     {
         bgMusicSource = GetComponent<AudioSource>();
+        bgMusicSource.volume = MusicVolume;
 
         // Load background music enabled state from player prefs
         bgMusicEnabled = PlayerPrefs.GetInt(PREFS_KEY, 1) == 1;

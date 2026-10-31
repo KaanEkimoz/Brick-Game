@@ -40,6 +40,7 @@ dependencies {
 // Kept outside the resolver blocks, which the External Dependency Manager rewrites.
 configurations.all {
     exclude group: 'com.unity3d.ads-mediation', module: 'adquality-sdk' // missing from maven
+    resolutionStrategy.force 'androidx.fragment:fragment:1.2.5' // play-services-base pulls 1.1.0, which Play flags as outdated
 }
 
 // Android Resolver Exclusions Start

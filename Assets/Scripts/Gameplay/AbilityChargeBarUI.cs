@@ -69,6 +69,7 @@ namespace Gameplay
             {
                 AbilityType.Bomb => _bombSprite,
                 AbilityType.Laser => _laserSprite,
+                AbilityType.Dynamite => DynamiteArt.Whole(),
                 _ => _armedIcon.sprite,
             };
         }

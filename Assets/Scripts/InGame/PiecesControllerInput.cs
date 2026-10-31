@@ -7,7 +7,7 @@ namespace InGame
     public partial class PiecesController
     {
         // Convenience alias so the tutorial-gate calls below read naturally.
-        private static bool Allow(TutorialController.TutorialGesture g) => !PauseTheGame.IsPaused && !Levels.LevelSession.RoundOver && TutorialController.IsGestureAllowed(g);
+        private bool Allow(TutorialController.TutorialGesture g) => !_gameOver && !PauseTheGame.IsPaused && !Levels.LevelSession.RoundOver && TutorialController.IsGestureAllowed(g);
 
 
         private void Update()
@@ -45,6 +45,7 @@ namespace InGame
             if (Input.GetKeyDown(KeyCode.B)) DebugForceAbility(Gameplay.AbilityType.Bomb);
             if (Input.GetKeyDown(KeyCode.H)) DebugForceAbility(Gameplay.AbilityType.Laser);
             if (Input.GetKeyDown(KeyCode.P)) DebugForceAbility(Gameplay.AbilityType.Patch);
+            if (Input.GetKeyDown(KeyCode.Y)) DebugForceAbility(Gameplay.AbilityType.Dynamite);
             if (Input.GetKeyDown(KeyCode.F) && Gameplay.AbilityCharger.Instance != null)
                 Gameplay.AbilityCharger.Instance.DebugForceFill(Gameplay.AbilityType.Bomb);
             if (Input.GetKeyDown(KeyCode.T)) Board.BoardController.OnTetrisCleared?.Invoke();

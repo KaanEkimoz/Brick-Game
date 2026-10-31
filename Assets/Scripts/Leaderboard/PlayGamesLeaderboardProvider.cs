@@ -25,21 +25,21 @@ namespace Leaderboard
             else PlayGamesPlatform.Instance.Authenticate(finished);
         }
 
-        public void Submit(LeaderboardBoard board, long score, long monthlyScore, Action done)
+        public void Submit(LeaderboardBoard board, long score, long monthlyScore, Action<bool> done)
         {
-            Report(score, BoardId(board, LeaderboardPeriod.AllTime), () =>
+            Report(score, BoardId(board, LeaderboardPeriod.AllTime), allTime =>
             {
-                if (monthlyScore < 0) done();
-                else Report(monthlyScore, BoardId(board, LeaderboardPeriod.Monthly), done);
+                if (monthlyScore < 0) done(allTime);
+                else Report(monthlyScore, BoardId(board, LeaderboardPeriod.Monthly), monthly => done(allTime && monthly));
             });
         }
 
-        private static void Report(long score, string boardId, Action done)
+        private static void Report(long score, string boardId, Action<bool> done)
         {
             PlayGamesPlatform.Instance.ReportScore(score, boardId, success =>
             {
                 if (!success) Debug.LogWarning("[Leaderboard] Score was not accepted.");
-                done();
+                done(success);
             });
         }
 

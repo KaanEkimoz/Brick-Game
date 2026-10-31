@@ -359,6 +359,54 @@
   {
    "en": "Your rank: #{0}",
    "text": "Tu puesto: #{0}"
+  },
+  {
+   "en": "Pieces left: {0}",
+   "text": "Piezas restantes: {0}"
+  },
+  {
+   "en": "Time: {0}",
+   "text": "Tiempo: {0}"
+  },
+  {
+   "en": "Tiles left: {0}",
+   "text": "Bloques restantes: {0}"
+  },
+  {
+   "en": "Could not load the leaderboard",
+   "text": "No se pudo cargar la clasificación"
+  },
+  {
+   "en": "The bomb comes as a single block\nand clears a 3x3 area",
+   "text": "La bomba llega como un solo bloque\ny limpia un área de 3x3"
+  },
+  {
+   "en": "Laser sits on one block of a piece\nRotate to fire a row or column",
+   "text": "El láser va en un bloque de la pieza\nGira para disparar a fila o columna"
+  },
+  {
+   "en": "Patch sits on one block of a piece\nand fills holes in your stack",
+   "text": "El parche va en un bloque de la pieza\ny rellena los huecos de tu pila"
+  },
+  {
+   "en": "Clear 5 lines to fill the ability bar\nand load a random ability",
+   "text": "Limpia 5 líneas para llenar la barra\ny cargar una habilidad al azar"
+  },
+  {
+   "en": "Finish the goal above the board\nbefore your pieces or time run out",
+   "text": "Cumple el objetivo sobre el tablero\nantes de quedarte sin piezas o tiempo"
+  },
+  {
+   "en": "Dynamite",
+   "text": "Dinamita"
+  },
+  {
+   "en": "Dynamite comes as a 1x2 piece\nand clears 3x4 along its direction",
+   "text": "La dinamita es una pieza de 1x2 y\nlimpia 3x4 según su dirección"
+  },
+  {
+   "en": "Land a piece on a fruit\nfor bonus points before it fades",
+   "text": "Coloca una pieza sobre la fruta antes\nde que desaparezca y gana puntos"
   }
  ]
 }

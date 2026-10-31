@@ -59,14 +59,12 @@ namespace Extras
         }
         private void Start()
         {
+            score = 0;
             LoadHighScore();
-            _runStartHighScore = highScore;
-            _highScoreBeatenFired = _runStartHighScore == 0;
             // If the player has never set a high score, every run is technically a
             // "new best" from the first line clear — skip the banner in that case
             // (the latch is pre-fired). The banner exists to mark crossing an EXISTING
             // bar, not the first run of a fresh install.
-            score = 0;
             UpdateScoreText();
         }
         private void ClearedLineScore(int consecutiveLineClears)
@@ -129,6 +127,13 @@ namespace Extras
         {
             highScore = PlayerPrefs.GetInt(HighScoreKey);
             UpdateHighScoreText();
+            // The mode is picked after Start, so the banner must not keep the old mode's record.
+            if (score <= 0) ArmHighScoreBanner();
+        }
+        private void ArmHighScoreBanner()
+        {
+            _runStartHighScore = highScore;
+            _highScoreBeatenFired = _runStartHighScore == 0;
         }
         public void ResetScore()
         {
@@ -146,12 +151,15 @@ namespace Extras
         }
 
         /// <summary>Restores the score from a save file and refreshes the UI + high score.</summary>
-        public void LoadScore(int value)
+        /// <param name="trusted">False for a save that failed its signature, which must not set a record.</param>
+        public void LoadScore(int value, bool trusted)
         {
             score = value;
             UpdateScoreText();
-            if (score > highScore)
+            if (trusted && score > highScore)
                 SaveHighScore();
+            ArmHighScoreBanner();
+            _highScoreBeatenFired |= score >= highScore;
         }
     }
 }

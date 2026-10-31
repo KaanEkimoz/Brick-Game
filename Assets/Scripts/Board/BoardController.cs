@@ -117,10 +117,17 @@ namespace Board
         /// <summary>Clears every occupied cell inside a box centred on (cx, cy) with the given radius, then lets each affected column settle under gravity. Returns the number of cells destroyed.</summary>
         public int ClearBoxCells(int cx, int cy, int radius)
         {
+            Vector2Int center = new Vector2Int(cx, cy);
+            return ClearRectCells(center - Vector2Int.one * radius, center + Vector2Int.one * radius);
+        }
+
+        /// <summary>Clears every tile in the inclusive area, then settles its columns. Returns the number destroyed.</summary>
+        public int ClearRectCells(Vector2Int min, Vector2Int max)
+        {
             int count = 0;
-            for (int y = cy - radius; y <= cy + radius; y++)
+            for (int y = min.y; y <= max.y; y++)
             {
-                for (int x = cx - radius; x <= cx + radius; x++)
+                for (int x = min.x; x <= max.x; x++)
                 {
                     if (x < 0 || x >= gridSizeX || y < 0 || y >= gridSizeY) continue;
                     if (DestroyTileAt(x, y)) count++;
@@ -128,7 +135,7 @@ namespace Board
             }
             if (count > 0)
             {
-                for (int x = cx - radius; x <= cx + radius; x++)
+                for (int x = min.x; x <= max.x; x++)
                 {
                     if (x >= 0 && x < gridSizeX) CompactColumn(x);
                 }

@@ -70,6 +70,7 @@ namespace InGame
         private void UpdateTiles(PieceType newType, PieceController pieceController)
         {
             PieceType curType = newType;
+            pieceController.GetComponent<PieceRotation>().curType = curType;
             _tiles = PieceController.Tiles;
             _tiles[0].UpdatePosition(spawnPosition);
 
@@ -151,17 +152,23 @@ namespace InGame
             GameObject curPiece = Instantiate(piecePrefab, transform);
             InitializeCurPiece(curPiece);
 
-            _curPieceType = _nextPieceType;
-            _nextPieceType = PieceBag.Next();
+            bool abilityDue = GameMode.IsExtended
+                && AbilityCharger.Instance != null
+                && AbilityCharger.Instance.IsReady;
+
+            // A bomb or dynamite arrives on its own, so the previewed piece stays next in line.
+            if (!abilityDue || !ArrivesAlone(AbilityCharger.Instance.Pending.Value))
+            {
+                _curPieceType = _nextPieceType;
+                _nextPieceType = PieceBag.Next();
+            }
 
             OnNextPieceChanged?.Invoke(_nextPieceType);
             UpdateTiles(_curPieceType, PiecesController.CurPiece.GetComponent<PieceController>());
 
             // Full bar: load the ability onto one random tile of this tetromino, so the player
-            // aims it through placement and rotation. The bag and the preview stay untouched.
-            if (GameMode.IsExtended
-                && AbilityCharger.Instance != null
-                && AbilityCharger.Instance.IsReady)
+            // aims it through placement and rotation. A bomb shrinks the piece to that one tile.
+            if (abilityDue)
             {
                 ChargeCurrentPiece(AbilityCharger.Instance.ConsumePending(),
                     Random.Range(0, PieceController.Tiles.Length));
@@ -175,6 +182,17 @@ namespace InGame
         public void ChargeCurrentPiece(AbilityType ability, int tileIndex)
         {
             GameObject piece = PiecesController.CurPiece;
+            if (ability == AbilityType.Dynamite)
+            {
+                ChargeDynamite(piece);
+                return;
+            }
+            if (ability == AbilityType.Bomb)
+            {
+                KeepFirstTiles(piece.GetComponent<PieceController>(), 1);
+                tileIndex = 0;
+            }
+
             AbilityMarker marker = piece.GetComponent<AbilityMarker>();
             if (marker == null) marker = piece.AddComponent<AbilityMarker>();
             marker.SetAbility(ability);
@@ -193,6 +211,38 @@ namespace InGame
             if (ability == AbilityType.Laser)
                 piece.AddComponent<LaserOrientation>().BindVisual(tileRenderer);
 
+            OnPieceCharged?.Invoke();
+        }
+
+        private static bool ArrivesAlone(AbilityType ability) => ability == AbilityType.Bomb || ability == AbilityType.Dynamite;
+
+        /// <summary>Shrinks the falling piece to its first tiles.</summary>
+        private static void KeepFirstTiles(PieceController pieceController, int count)
+        {
+            TileController[] tiles = PieceController.Tiles;
+            for (int i = count; i < tiles.Length; i++)
+                Destroy(tiles[i].gameObject);
+
+            Array.Resize(ref tiles, count);
+            pieceController.tiles = tiles;
+            PieceController.Tiles = tiles;
+        }
+
+        // Standing 1x2 piece: the first tile is the bottom half, the second the top half.
+        private void ChargeDynamite(GameObject piece)
+        {
+            KeepFirstTiles(piece.GetComponent<PieceController>(), 2);
+            TileController[] tiles = PieceController.Tiles;
+            tiles[1].UpdatePosition(tiles[0].coordinates + Vector2Int.up);
+            piece.GetComponent<PieceRotation>().curType = PieceType.Bomb;
+
+            float tileWidth = tiles[0].GetComponent<SpriteRenderer>().bounds.size.x;
+            tiles[0].GetComponent<SpriteRenderer>().sprite = DynamiteArt.Half(false, tileWidth);
+            tiles[1].GetComponent<SpriteRenderer>().sprite = DynamiteArt.Half(true, tileWidth);
+
+            AbilityMarker marker = piece.AddComponent<AbilityMarker>();
+            marker.SetAbility(AbilityType.Dynamite);
+            piece.AddComponent<DynamiteOrientation>();
             OnPieceCharged?.Invoke();
         }
 
@@ -218,7 +268,7 @@ namespace InGame
 
         // === Persistence hooks ===
 
-        /// <summary>Type of the falling piece. PieceRotation.curType stays at its prefab value, so the save system reads this instead.</summary>
+        /// <summary>Type of the falling piece, read by the save system.</summary>
         public PieceType CurrentPieceType => _curPieceType;
 
         /// <summary>Upcoming piece type. Used by the save system to persist the preview state.</summary>

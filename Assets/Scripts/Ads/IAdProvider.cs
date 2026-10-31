@@ -29,7 +29,19 @@ namespace Ekimoz.Ads
         /// <summary>Fired when a banner load attempt fails, so the host can schedule a retry.</summary>
         event Action OnBannerLoadFailed;
 
+        /// <summary>Fired when the SDK fails to start, so the host can schedule a retry.</summary>
+        event Action OnInitializeFailed;
+
+        /// <summary>Fired when an interstitial load fails, so the host can schedule a retry.</summary>
+        event Action OnInterstitialLoadFailed;
+
         void Initialize(AdConfig config);
+
+        /// <summary>Re-attempt SDK startup after a failure.</summary>
+        void RetryInitialize();
+
+        /// <summary>Passes the player's personalized-ads answer to the SDK. Call before Initialize.</summary>
+        void SetConsent(bool consent);
 
         void LoadInterstitial();
         void ShowInterstitial();

@@ -31,6 +31,11 @@ namespace Ekimoz.Ads
         private int _bannerRetryCount;
         private const int MaxBannerRetries = 6;
 
+        // Interstitial and SDK startup failures keep retrying, slowly, for the whole session.
+        private const float MaxRetryDelay = 120f;
+        private int _interstitialRetryCount;
+        private int _initRetryCount;
+
         /// <summary>True when the player bought Remove Ads. No ads of any kind are shown.</summary>
         public bool AdsRemoved { get; private set; }
 
@@ -63,13 +68,32 @@ namespace Ekimoz.Ads
                 return;
             }
 
+            StartProvider();
+        }
+
+        private void StartProvider()
+        {
+            if (_provider != null) return;
+
             // The one place a concrete network is chosen.
             _provider = new LevelPlayProvider();
+            _provider.SetConsent(false); // ads are never personalized
+            _provider.OnInitialized += () => _initRetryCount = 0;
+            _provider.OnInitializeFailed += () => StartCoroutine(RetryAfterDelay(++_initRetryCount, () => _provider.RetryInitialize()));
+            _provider.OnInterstitialLoadFailed += () => StartCoroutine(RetryAfterDelay(++_interstitialRetryCount, () => _provider.LoadInterstitial()));
+            _provider.OnInterstitialClosed += () => _interstitialRetryCount = 0;
             _provider.OnInterstitialClosed += () => OnInterstitialClosed?.Invoke();
             _provider.OnRewardedClosed += earned => OnRewardedClosed?.Invoke(earned);
             _provider.OnBannerLoaded += HandleBannerLoaded;
             _provider.OnBannerLoadFailed += HandleBannerLoadFailed;
             _provider.Initialize(_config);
+        }
+
+        // 5, 10, 20, 40, 80, 120, 120...
+        private IEnumerator RetryAfterDelay(int attempt, Action retry)
+        {
+            yield return new WaitForSecondsRealtime(Mathf.Min(MaxRetryDelay, 5f * Mathf.Pow(2f, attempt - 1)));
+            if (!AdsRemoved) retry();
         }
 
         private void HandleBannerLoaded()
@@ -115,6 +139,10 @@ namespace Ekimoz.Ads
                 if (_bannerRetry != null) { StopCoroutine(_bannerRetry); _bannerRetry = null; }
                 _provider?.SuppressAds();
                 Debug.Log("[Ads] Remove Ads applied — all ads suppressed.");
+            }
+            else
+            {
+                StartProvider();
             }
         }
 

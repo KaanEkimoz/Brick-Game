@@ -67,11 +67,11 @@ namespace Extras
             {
                 if (sr == null) yield break;
                 sr.sprite = white;
-                yield return new WaitForSeconds(_flashDuration);
+                yield return new WaitForSecondsRealtime(_flashDuration); // a level win freezes game time
                 if (sr == null) yield break;
                 sr.sprite = original;
                 if (i < _blinkCount - 1)
-                    yield return new WaitForSeconds(_gapDuration);
+                    yield return new WaitForSecondsRealtime(_gapDuration);
             }
         }
     }
