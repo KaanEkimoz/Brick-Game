@@ -146,7 +146,7 @@
   },
   {
    "en": "High Score",
-   "text": "En Yüksek Skor"
+   "text": "Yüksek Skor"
   },
   {
    "en": "Lines",
@@ -162,7 +162,7 @@
   },
   {
    "en": "High Score: {0}",
-   "text": "En Yüksek Skor: {0}"
+   "text": "Yüksek Skor: {0}"
   },
   {
    "en": "Level {0}",
