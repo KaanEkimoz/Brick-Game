@@ -140,6 +140,7 @@ namespace Persistence
         private void HandlePieceSpawnedAutosave()
         {
             if (_restoring) return; // the spawn that restores from save must not overwrite itself
+            if (GameMode.IsLevels) return;
             if (_pieceSpawner == null || _boardController == null) return;
 
             // Skip the autosave while the run still has zero meaningful progress.
@@ -210,6 +211,7 @@ namespace Persistence
 
         private void HandleGameOverClearSave()
         {
+            if (GameMode.IsLevels) return;
             GameSaveStorage.Delete();
         }
 

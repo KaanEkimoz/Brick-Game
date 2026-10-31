@@ -189,6 +189,13 @@ namespace InGame
 
             OnGameOver?.Invoke();
         }
+        /// <summary>Stops play without a game over, for a level that was won.</summary>
+        public void EndRound()
+        {
+            _gameOver = true;
+            softDropIsHolding = false;
+            StopDropCurPiece();
+        }
         /// <summary>
         /// Moves the current piece controlled by the player.
         /// </summary>

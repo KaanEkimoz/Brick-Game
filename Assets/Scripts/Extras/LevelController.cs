@@ -12,6 +12,12 @@ namespace Extras
 
         public static Action OnLevelIncreased;
 
+        /// <summary>When above zero, locks the fall speed for a Levels run.</summary>
+        public static int FixedSpeedLevel;
+
+        /// <summary>When above zero, shown in the HUD instead of the speed level.</summary>
+        public static int DisplayLevel;
+
         /// <summary>True only while LoadLevel is broadcasting OnLevelIncreased. Lets listeners
         /// distinguish a real level-up (banner-worthy) from a save restore (no banner).</summary>
         public static bool IsRestoring { get; private set; }
@@ -29,7 +35,7 @@ namespace Extras
         }
         private void CalculateLevel(int totalClearedLines)
         {
-            if(CurrentLevel == maxLevel)
+            if(CurrentLevel == maxLevel || FixedSpeedLevel > 0)
                 return;
 
             // Clamp BEFORE broadcasting. Previously the event fired with the raw (un-clamped)
@@ -42,11 +48,11 @@ namespace Extras
         }
         private void UpdateLevelText()
         {
-            levelText.text = "Level\n" + CurrentLevel;
+            levelText.text = "Level\n" + (DisplayLevel > 0 ? DisplayLevel : CurrentLevel);
         }
         public void ResetLevel()
         {
-            CurrentLevel = 1;
+            CurrentLevel = FixedSpeedLevel > 0 ? FixedSpeedLevel : 1;
             UpdateLevelText();
             // Without this invoke, PiecesController.UpdateDropTimeAccordingTheLevel
             // never re-runs and the gravity coroutine stays at the previous run's

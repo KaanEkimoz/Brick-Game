@@ -12,7 +12,10 @@ namespace Extras
         private const string ClassicHighScoreKey = "highScore";
         private const string ExtendedHighScoreKey = "highScore_Extended";
 
-        private static string HighScoreKey => GameMode.IsExtended ? ExtendedHighScoreKey : ClassicHighScoreKey;
+        private const string LevelsHighScoreKey = "highScore_Levels";
+
+        private static string HighScoreKey => GameMode.IsLevels ? LevelsHighScoreKey
+            : GameMode.IsExtended ? ExtendedHighScoreKey : ClassicHighScoreKey;
 
         /// <summary>Reads the high score for the currently selected GameMode (Classic vs Extended)
         /// directly from PlayerPrefs. Use this from screens that show the high score outside of
