@@ -21,6 +21,7 @@ namespace Levels
         private const float LeaderboardRowsY = 225f;
         private const float LeaderboardRowHeight = 66f;
         private const float LeaderboardBackY = -560f;
+        private const float ToggleOptionOffset = 148f; // half of the visible track, inside its glow
         private const float PeriodFontSize = 25f;
         private const float PeriodLineHeight = 5f;
         private const float PeriodLineOffset = 36f;
@@ -99,8 +100,8 @@ namespace Levels
             image.color = ToggleTrackColor;
             Place((RectTransform)track.transform, new Vector2(0f, LeaderboardToggleY), ToggleSize);
 
-            CreateToggleOption(track.transform, LeaderboardBoard.Classic, "Classic", -ToggleOptionSize.x * 0.5f, board, period);
-            CreateToggleOption(track.transform, LeaderboardBoard.Extended, "Extended", ToggleOptionSize.x * 0.5f, board, period);
+            CreateToggleOption(track.transform, LeaderboardBoard.Classic, "Classic", -ToggleOptionOffset, board, period);
+            CreateToggleOption(track.transform, LeaderboardBoard.Extended, "Extended", ToggleOptionOffset, board, period);
         }
 
         private void CreateToggleOption(Transform track, LeaderboardBoard option, string label, float x, LeaderboardBoard selected, LeaderboardPeriod period)
