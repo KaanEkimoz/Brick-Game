@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Extras;
 using Localization;
 using TMPro;
@@ -73,6 +74,7 @@ namespace Levels
         private LevelSession _session;
         private Button _classicButton;
         private Button _extendedButton;
+        private readonly List<ParticleSystem> _frozenEffects = new List<ParticleSystem>();
 
         private void Awake()
         {
@@ -523,11 +525,12 @@ namespace Levels
             Transform screen = OpenScreen();
             screen.GetComponent<Image>().color = Color.clear;
 
+            RunEffectsThroughFreeze();
             FindAnyObjectByType<TetrisCelebrationEffect>(FindObjectsInactive.Include)?.Celebrate();
             if (SFXToggle.IsSfxEnabled) GetComponent<AudioSource>().PlayOneShot(Resources.Load<AudioClip>(WinSoundPath));
 
             TextMeshProUGUI banner = CreateWinTitle(screen, 96f);
-            Place(banner.rectTransform, Vector2.zero, new Vector2(1060f, 180f));
+            Place(banner.rectTransform, Vector2.zero, new Vector2(1060f, 300f));
 
             float elapsed = 0f;
             while (elapsed < WinCelebrationSeconds)
@@ -541,7 +544,33 @@ namespace Levels
                 yield return null;
             }
 
+            ClearFrozenEffects();
             ShowWin(level);
+        }
+
+        // The win freezes game time, so the last clear's particles would hang until the next
+        // level unfreezes them. Let them finish on real time during the celebration.
+        private void RunEffectsThroughFreeze()
+        {
+            foreach (ParticleSystem effect in FindObjectsByType<ParticleSystem>(FindObjectsSortMode.None))
+            {
+                ParticleSystem.MainModule main = effect.main;
+                if (main.playOnAwake || main.useUnscaledTime) continue;
+                main.useUnscaledTime = true;
+                _frozenEffects.Add(effect);
+            }
+        }
+
+        private void ClearFrozenEffects()
+        {
+            foreach (ParticleSystem effect in _frozenEffects)
+            {
+                if (effect == null) continue;
+                ParticleSystem.MainModule main = effect.main;
+                main.useUnscaledTime = false;
+                effect.Clear(true);
+            }
+            _frozenEffects.Clear();
         }
 
         private void ShowWin(LevelDefinition level)
@@ -550,8 +579,8 @@ namespace Levels
             screen.GetComponent<Image>().color = IntroDim;
 
             RectTransform panel = CreatePanel(screen, WinPanelSize);
-            TextMeshProUGUI heading = CreateWinTitle(panel, 76f);
-            Place(heading.rectTransform, new Vector2(0f, 255f), new Vector2(720f, 100f));
+            TextMeshProUGUI heading = CreateWinTitle(panel, 62f);
+            Place(heading.rectTransform, new Vector2(0f, 268f), new Vector2(720f, 160f));
 
             GameObject rule = new GameObject("Rule", typeof(RectTransform), typeof(Image));
             rule.transform.SetParent(panel, false);
@@ -576,7 +605,7 @@ namespace Levels
 
         private TextMeshProUGUI CreateWinTitle(Transform parent, float size)
         {
-            TextMeshProUGUI label = CreateHeading(parent, Loc.Caps(WinTitleText), size);
+            TextMeshProUGUI label = CreateHeading(parent, Loc.Caps(WinTitleText).Replace(' ', '\n'), size);
             label.color = Color.white;
             label.enableVertexGradient = true;
             label.colorGradient = new VertexGradient(WinTitleTop, WinTitleTop, WinTitleBottom, WinTitleBottom);
