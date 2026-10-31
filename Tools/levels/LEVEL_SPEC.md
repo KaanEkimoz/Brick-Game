@@ -47,6 +47,12 @@ as `{ "levels": [ ... ] }`. Every field below is required on every level (JsonUt
 
 1/2/3/4 lines = 40/100/300/1200 x (d+1). Ability = 5 x cells x (d+1).
 
+## Order
+
+Every 10th level (10, 20 ... 100) is a fun level: bomb only, laser only or Tetris only. No other
+level has every piece charged or a `Tetrises` objective. The rest are mixed by difficulty, and each
+mechanic keeps its own intro level first. The table lists the mechanics, not the final level numbers.
+
 ## Tiers
 
 | Levels | New mechanic | Required setup |
