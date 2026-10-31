@@ -17,6 +17,10 @@ namespace Levels
         private const string ExtendedButtonName = "B_PlayExtended";
         private const string MenuButtonText = "Play";
         private const string ModeImageFolder = "ModeSelect/";
+        private const string WinSoundPath = "LevelAudio/level_win";
+        private const float WinCelebrationSeconds = 2f;
+        private const float WinPopSeconds = 0.3f;
+        private const float WinPopScale = 1.25f;
         private const int CanvasOrder = 100;
         private const float DividerThickness = 0.007f;
         private const float IntroMinHoldSeconds = 3f;
@@ -40,6 +44,7 @@ namespace Levels
 
         private Transform _canvas;
         private TMP_FontAsset _font;
+        private TMP_FontAsset _plainFont;
         private TextMeshProUGUI _objectiveText;
         private GameObject _screen;
         private LevelSession _session;
@@ -50,6 +55,7 @@ namespace Levels
         {
             _session = GetComponent<LevelSession>();
             _font = FindAnyObjectByType<ScoreController>(FindObjectsInactive.Include)?.scoreText.font;
+            _plainFont = PlainFont.Asset;
             BuildCanvas();
             BuildMenuButton();
             BuildObjectiveLine();
@@ -58,13 +64,13 @@ namespace Levels
         private void OnEnable()
         {
             LevelSession.OnProgressChanged += RefreshObjective;
-            LevelSession.OnLevelWon += ShowWin;
+            LevelSession.OnLevelWon += CelebrateWin;
         }
 
         private void OnDisable()
         {
             LevelSession.OnProgressChanged -= RefreshObjective;
-            LevelSession.OnLevelWon -= ShowWin;
+            LevelSession.OnLevelWon -= CelebrateWin;
         }
 
         // The objective line sits on a canvas above the pause and game over menus.
@@ -225,7 +231,7 @@ namespace Levels
             titleText.outlineColor = Color.black;
             PlaceAt(titleText.rectTransform, anchor, new Vector2(0f, 24f), new Vector2(1000f, 120f));
 
-            TextMeshProUGUI subtitleText = CreateText(screen, subtitle, 40f, Color.white);
+            TextMeshProUGUI subtitleText = CreatePlainText(screen, subtitle, 44f, Color.white);
             subtitleText.outlineWidth = 0.25f;
             subtitleText.outlineColor = Color.black;
             PlaceAt(subtitleText.rectTransform, anchor, new Vector2(0f, -58f), new Vector2(1000f, 60f));
@@ -281,11 +287,11 @@ namespace Levels
             RectTransform panel = (RectTransform)go.transform;
             Place(panel, Vector2.zero, IntroPanelSize);
 
-            TextMeshProUGUI title = CreateText(panel, $"Level {level.id}", 44f, Accent);
+            TextMeshProUGUI title = CreatePlainText(panel, $"Level {level.id}", 46f, Accent);
             Place(title.rectTransform, new Vector2(0f, 110f), new Vector2(740f, 70f));
-            TextMeshProUGUI goal = CreateText(panel, DescribeGoal(level), 42f, Color.white);
+            TextMeshProUGUI goal = CreatePlainText(panel, DescribeGoal(level), 50f, Color.white);
             Place(goal.rectTransform, new Vector2(0f, 30f), new Vector2(740f, 70f));
-            TextMeshProUGUI hint = CreateText(panel, level.hint, 28f, Color.white);
+            TextMeshProUGUI hint = CreatePlainText(panel, level.hint, 36f, Color.white);
             Place(hint.rectTransform, new Vector2(0f, -80f), new Vector2(720f, 120f));
             return panel;
         }
@@ -337,6 +343,37 @@ namespace Levels
             }
         }
 
+        private void CelebrateWin(LevelDefinition level)
+        {
+            StartCoroutine(PlayWinCelebration(level));
+        }
+
+        private IEnumerator PlayWinCelebration(LevelDefinition level)
+        {
+            FindAnyObjectByType<TetrisCelebrationEffect>(FindObjectsInactive.Include)?.Celebrate();
+            if (SFXToggle.IsSfxEnabled) GetComponent<AudioSource>().PlayOneShot(Resources.Load<AudioClip>(WinSoundPath));
+
+            TextMeshProUGUI banner = CreateText(_canvas, "Level complete!", 76f, Accent);
+            banner.outlineWidth = 0.25f;
+            banner.outlineColor = Color.black;
+            Place(banner.rectTransform, Vector2.zero, new Vector2(1060f, 180f));
+
+            float elapsed = 0f;
+            while (elapsed < WinCelebrationSeconds)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                float pop = Mathf.Clamp01(elapsed / WinPopSeconds);
+                float scale = pop < 0.7f
+                    ? Mathf.Lerp(0f, WinPopScale, pop / 0.7f)
+                    : Mathf.Lerp(WinPopScale, 1f, (pop - 0.7f) / 0.3f);
+                banner.transform.localScale = Vector3.one * scale;
+                yield return null;
+            }
+
+            Destroy(banner.gameObject);
+            ShowWin(level);
+        }
+
         private void ShowWin(LevelDefinition level)
         {
             Transform screen = OpenScreen();
@@ -355,11 +392,11 @@ namespace Levels
 
         private void AddDialogText(Transform screen, string heading, string title, string body)
         {
-            TextMeshProUGUI headingText = CreateText(screen, heading, 56f, Accent);
+            TextMeshProUGUI headingText = CreatePlainText(screen, heading, 64f, Accent);
             Place(headingText.rectTransform, new Vector2(0f, 330f), new Vector2(980f, 120f));
-            TextMeshProUGUI titleText = CreateText(screen, title, 46f, Color.white);
+            TextMeshProUGUI titleText = CreatePlainText(screen, title, 50f, Color.white);
             Place(titleText.rectTransform, new Vector2(0f, 200f), new Vector2(980f, 100f));
-            TextMeshProUGUI bodyText = CreateText(screen, body, 34f, Color.white);
+            TextMeshProUGUI bodyText = CreatePlainText(screen, body, 40f, Color.white);
             Place(bodyText.rectTransform, new Vector2(0f, 40f), new Vector2(900f, 190f));
         }
 
@@ -391,13 +428,21 @@ namespace Levels
             Button button = go.GetComponent<Button>();
             button.onClick.AddListener(() => onClick());
 
-            TextMeshProUGUI text = CreateText(go.transform, label, 40f, Color.white);
+            TextMeshProUGUI text = CreatePlainText(go.transform, label, 44f, Color.white);
             RectTransform rect = text.rectTransform;
             rect.anchorMin = Vector2.zero;
             rect.anchorMax = Vector2.one;
             rect.offsetMin = Vector2.zero;
             rect.offsetMax = Vector2.zero;
             return button;
+        }
+
+        // Panels and buttons use the plain font; the in-game HUD keeps the game's own.
+        private TextMeshProUGUI CreatePlainText(Transform parent, string text, float size, Color color)
+        {
+            TextMeshProUGUI label = CreateText(parent, text, size, color);
+            if (_plainFont != null) label.font = _plainFont;
+            return label;
         }
 
         private TextMeshProUGUI CreateText(Transform parent, string text, float size, Color color)

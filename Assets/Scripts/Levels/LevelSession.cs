@@ -67,6 +67,7 @@ namespace Levels
         {
             if (Instance != null) return;
             GameObject go = new GameObject("LevelRuntime");
+            go.AddComponent<AudioSource>();
             go.AddComponent<LevelSession>();
             go.AddComponent<LevelUi>();
         }

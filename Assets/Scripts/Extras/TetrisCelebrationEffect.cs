@@ -34,6 +34,9 @@ namespace Extras
             BoardController.OnTetrisCleared -= Play;
         }
 
+        /// <summary>Plays the confetti and shake for a level win.</summary>
+        public void Celebrate() => Play();
+
         private void Start()
         {
             FitToCameraViewport();

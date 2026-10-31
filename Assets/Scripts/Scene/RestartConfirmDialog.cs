@@ -63,7 +63,7 @@ namespace Scene
             GameObject go = new GameObject("Text", typeof(RectTransform));
             go.transform.SetParent(_root.transform, false);
             TextMeshProUGUI label = go.AddComponent<TextMeshProUGUI>();
-            label.font = style.font;
+            label.font = Levels.PlainFont.Asset;
             label.fontSize = fontSize;
             label.color = style.color;
             label.alignment = TextAlignmentOptions.Center;
@@ -79,6 +79,7 @@ namespace Scene
             PlaceCentered((RectTransform)button.transform, position, new Vector2(360f, 64f));
 
             TMP_Text label = button.GetComponentInChildren<TMP_Text>(true);
+            label.font = Levels.PlainFont.Asset;
             label.text = text;
             label.fontSize = ButtonFontSize;
             label.rectTransform.anchoredPosition = Vector2.zero;
