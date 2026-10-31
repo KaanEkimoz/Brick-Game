@@ -1,11 +1,12 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Extras
 {
     /// <summary>
-    /// Spawns a "+N" popup right over the score TextMeshProUGUI each time
+    /// Spawns a "+N" popup just above the score TextMeshProUGUI each time
     /// ScoreController reports a positive score gain. Borrows the score text's
     /// font so the popup matches the HUD, then pops in, rises, and fades out.
     /// </summary>
@@ -46,12 +47,14 @@ namespace Extras
 
             RectTransform srt = _scoreText.rectTransform;
             RectTransform rt = go.AddComponent<RectTransform>();
+            // The score sits in a layout group, which would make room for the popup.
+            go.AddComponent<LayoutElement>().ignoreLayout = true;
             rt.anchorMin = srt.anchorMin;
             rt.anchorMax = srt.anchorMax;
             rt.pivot = srt.pivot;
             rt.sizeDelta = srt.sizeDelta;
 
-            Vector2 startPos = srt.anchoredPosition + new Vector2(Random.Range(-_randomX, _randomX), 0f);
+            Vector2 startPos = srt.anchoredPosition + new Vector2(Random.Range(-_randomX, _randomX), srt.rect.height * 0.5f);
             rt.anchoredPosition = startPos;
             rt.localRotation = Quaternion.identity;
             rt.localScale = Vector3.one;
