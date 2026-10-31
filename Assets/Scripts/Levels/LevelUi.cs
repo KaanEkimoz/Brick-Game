@@ -43,6 +43,10 @@ namespace Levels
         private static readonly Color IntroDim = new Color(0f, 0f, 0.05f, 0.75f);
         private static readonly Vector2 IntroPanelSize = new Vector2(800f, 340f);
         private static readonly Vector2 WinPanelSize = new Vector2(880f, 780f);
+        private static readonly Color LevelsAccent = new Color(1f, 0.84f, 0.25f, 1f);
+        private static readonly Color ExtendedAccent = new Color(1f, 0.45f, 0.9f, 1f);
+        private static readonly Color BadgeColor = new Color(0.01f, 0.03f, 0.14f, 0.88f);
+        private static readonly Vector2 BadgePadding = new Vector2(64f, 22f);
         private static readonly Color MenuButtonTextColor = new Color(0.08f, 0.3f, 0.8f, 1f);
         private static readonly Color ModeImageTint = new Color(0.68f, 0.68f, 0.74f, 1f);
 
@@ -182,9 +186,9 @@ namespace Levels
             CreateDivider(screen, upper);
             CreateDivider(screen, lower);
 
-            CreateModeLabel(screen, "Classic", "Endless blocks", new Vector2(0.5f, 0.84f));
-            CreateModeLabel(screen, "Levels", $"Level {NextLevel().id}", new Vector2(0.5f, 0.51f));
-            CreateModeLabel(screen, "Extended", "Bombs and lasers", new Vector2(0.5f, 0.2f));
+            CreateModeLabel(screen, "Classic", "Endless blocks", new Vector2(0.5f, 0.84f), Accent);
+            CreateModeLabel(screen, "Levels", $"Level {NextLevel().id}", new Vector2(0.5f, 0.51f), LevelsAccent);
+            CreateModeLabel(screen, "Extended", "Bombs and lasers", new Vector2(0.5f, 0.2f), ExtendedAccent);
 
             Button back = CreateButton(screen, "Back", CloseScreen);
             RectTransform backRect = (RectTransform)back.transform;
@@ -228,17 +232,37 @@ namespace Levels
             return slice;
         }
 
-        private void CreateModeLabel(Transform screen, string title, string subtitle, Vector2 anchor)
+        private void CreateModeLabel(Transform screen, string title, string subtitle, Vector2 anchor, Color accent)
         {
             TextMeshProUGUI titleText = CreateText(screen, title, 118f, Color.white);
             titleText.outlineWidth = 0.25f;
             titleText.outlineColor = Color.black;
             PlaceAt(titleText.rectTransform, anchor, new Vector2(0f, 36f), new Vector2(1060f, 160f));
 
-            TextMeshProUGUI subtitleText = CreatePlainText(screen, subtitle, 58f, Color.white);
-            subtitleText.outlineWidth = 0.25f;
-            subtitleText.outlineColor = Color.black;
-            PlaceAt(subtitleText.rectTransform, anchor, new Vector2(0f, -76f), new Vector2(1000f, 80f));
+            CreateModeBadge(screen, subtitle, anchor, accent);
+        }
+
+        // Neon tag under a mode title, so the text stays readable over the busy art.
+        private void CreateModeBadge(Transform screen, string text, Vector2 anchor, Color accent)
+        {
+            GameObject go = new GameObject("Badge", typeof(RectTransform), typeof(Image), typeof(Outline));
+            go.transform.SetParent(screen, false);
+            Image badge = go.GetComponent<Image>();
+            badge.color = BadgeColor;
+            badge.raycastTarget = false;
+            Outline border = go.GetComponent<Outline>();
+            border.effectColor = accent;
+            border.effectDistance = new Vector2(3f, 3f);
+
+            TextMeshProUGUI label = CreatePlainText(go.transform, text.ToUpperInvariant(), 44f, accent);
+            label.fontStyle = FontStyles.Bold;
+            label.characterSpacing = 8f;
+            label.textWrappingMode = TextWrappingModes.NoWrap;
+
+            Vector2 textSize = label.GetPreferredValues();
+            Vector2 size = new Vector2(textSize.x + BadgePadding.x, textSize.y + BadgePadding.y);
+            PlaceAt(badge.rectTransform, anchor, new Vector2(0f, -86f), size);
+            Place(label.rectTransform, Vector2.zero, size);
         }
 
         private void StartClassic()
