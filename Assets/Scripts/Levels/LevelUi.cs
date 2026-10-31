@@ -18,6 +18,7 @@ namespace Levels
         private const string MenuButtonText = "Play";
         private const string ModeImageFolder = "ModeSelect/";
         private const string WinSoundPath = "LevelAudio/level_win";
+        private const float MenuButtonFontSize = 58f;
         private const float WinCelebrationSeconds = 2f;
         private const float WinPopSeconds = 0.3f;
         private const float WinPopScale = 1.25f;
@@ -41,6 +42,8 @@ namespace Levels
         private static readonly Color Accent = new Color(0.2f, 0.95f, 1f, 1f);
         private static readonly Color IntroDim = new Color(0f, 0f, 0.05f, 0.75f);
         private static readonly Vector2 IntroPanelSize = new Vector2(800f, 340f);
+        private static readonly Vector2 WinPanelSize = new Vector2(880f, 780f);
+        private static readonly Color ModeImageTint = new Color(0.68f, 0.68f, 0.74f, 1f);
 
         private Transform _canvas;
         private TMP_FontAsset _font;
@@ -192,7 +195,7 @@ namespace Levels
 
         private void CreateModeSlice(Transform screen, string image, Vector2[] corners, Action onClick)
         {
-            DiagonalSlice slice = CreateSlice(screen, Resources.Load<Texture2D>(ModeImageFolder + image), corners, Color.white);
+            DiagonalSlice slice = CreateSlice(screen, Resources.Load<Texture2D>(ModeImageFolder + image), corners, ModeImageTint);
             Button button = slice.gameObject.AddComponent<Button>();
             button.targetGraphic = slice;
             button.onClick.AddListener(() => onClick());
@@ -226,15 +229,15 @@ namespace Levels
 
         private void CreateModeLabel(Transform screen, string title, string subtitle, Vector2 anchor)
         {
-            TextMeshProUGUI titleText = CreateText(screen, title, 84f, Color.white);
+            TextMeshProUGUI titleText = CreateText(screen, title, 118f, Color.white);
             titleText.outlineWidth = 0.25f;
             titleText.outlineColor = Color.black;
-            PlaceAt(titleText.rectTransform, anchor, new Vector2(0f, 24f), new Vector2(1000f, 120f));
+            PlaceAt(titleText.rectTransform, anchor, new Vector2(0f, 36f), new Vector2(1060f, 160f));
 
-            TextMeshProUGUI subtitleText = CreatePlainText(screen, subtitle, 44f, Color.white);
+            TextMeshProUGUI subtitleText = CreatePlainText(screen, subtitle, 58f, Color.white);
             subtitleText.outlineWidth = 0.25f;
             subtitleText.outlineColor = Color.black;
-            PlaceAt(subtitleText.rectTransform, anchor, new Vector2(0f, -58f), new Vector2(1000f, 60f));
+            PlaceAt(subtitleText.rectTransform, anchor, new Vector2(0f, -76f), new Vector2(1000f, 80f));
         }
 
         private void StartClassic()
@@ -278,14 +281,7 @@ namespace Levels
 
         private RectTransform BuildIntroPanel(Transform screen, LevelDefinition level)
         {
-            GameObject go = new GameObject("IntroPanel", typeof(RectTransform), typeof(Image), typeof(Outline));
-            go.transform.SetParent(screen, false);
-            go.GetComponent<Image>().color = PanelBlue;
-            Outline border = go.GetComponent<Outline>();
-            border.effectColor = Accent;
-            border.effectDistance = new Vector2(3f, 3f);
-            RectTransform panel = (RectTransform)go.transform;
-            Place(panel, Vector2.zero, IntroPanelSize);
+            RectTransform panel = CreatePanel(screen, IntroPanelSize);
 
             TextMeshProUGUI title = CreatePlainText(panel, $"Level {level.id}", 46f, Accent);
             Place(title.rectTransform, new Vector2(0f, 110f), new Vector2(740f, 70f));
@@ -293,6 +289,19 @@ namespace Levels
             Place(goal.rectTransform, new Vector2(0f, 30f), new Vector2(740f, 70f));
             TextMeshProUGUI hint = CreatePlainText(panel, level.hint, 36f, Color.white);
             Place(hint.rectTransform, new Vector2(0f, -80f), new Vector2(720f, 120f));
+            return panel;
+        }
+
+        private static RectTransform CreatePanel(Transform parent, Vector2 size)
+        {
+            GameObject go = new GameObject("Panel", typeof(RectTransform), typeof(Image), typeof(Outline));
+            go.transform.SetParent(parent, false);
+            go.GetComponent<Image>().color = PanelBlue;
+            Outline border = go.GetComponent<Outline>();
+            border.effectColor = Accent;
+            border.effectDistance = new Vector2(3f, 3f);
+            RectTransform panel = (RectTransform)go.transform;
+            Place(panel, Vector2.zero, size);
             return panel;
         }
 
@@ -377,27 +386,51 @@ namespace Levels
         private void ShowWin(LevelDefinition level)
         {
             Transform screen = OpenScreen();
-            AddDialogText(screen, "Level complete!", level.name, $"Score: {ScoreController.score}");
+            screen.GetComponent<Image>().color = IntroDim;
+
+            RectTransform panel = CreatePanel(screen, WinPanelSize);
+            TextMeshProUGUI heading = CreatePlainText(panel, "Level complete!", 66f, Accent);
+            Place(heading.rectTransform, new Vector2(0f, 270f), new Vector2(820f, 100f));
+            TextMeshProUGUI title = CreatePlainText(panel, level.name, 48f, Color.white);
+            Place(title.rectTransform, new Vector2(0f, 170f), new Vector2(820f, 80f));
+            TextMeshProUGUI score = CreatePlainText(panel, $"Score: {ScoreController.score}", 42f, Color.white);
+            Place(score.rectTransform, new Vector2(0f, 90f), new Vector2(820f, 70f));
 
             LevelDefinition next = LevelCatalog.Get(level.id + 1);
             if (next != null)
             {
-                Button nextButton = CreateButton(screen, "Next level", () => ShowIntro(next));
-                Place((RectTransform)nextButton.transform, new Vector2(0f, -160f), new Vector2(520f, 110f));
+                Button nextButton = CreateMenuStyleButton(panel, "Next", () => ShowIntro(next));
+                Place((RectTransform)nextButton.transform, new Vector2(0f, -60f), new Vector2(620f, 150f));
             }
 
-            Button menu = CreateButton(screen, "Main menu", _session.ReturnToMenu);
-            Place((RectTransform)menu.transform, new Vector2(0f, -300f), new Vector2(520f, 96f));
+            Button menu = CreateMenuStyleButton(panel, "Menu", _session.ReturnToMenu);
+            Place((RectTransform)menu.transform, new Vector2(0f, -240f), new Vector2(520f, 120f));
         }
 
-        private void AddDialogText(Transform screen, string heading, string title, string body)
+        // Same glowing button as the main menu's Play.
+        private Button CreateMenuStyleButton(Transform parent, string label, Action onClick)
         {
-            TextMeshProUGUI headingText = CreatePlainText(screen, heading, 64f, Accent);
-            Place(headingText.rectTransform, new Vector2(0f, 330f), new Vector2(980f, 120f));
-            TextMeshProUGUI titleText = CreatePlainText(screen, title, 50f, Color.white);
-            Place(titleText.rectTransform, new Vector2(0f, 200f), new Vector2(980f, 100f));
-            TextMeshProUGUI bodyText = CreatePlainText(screen, body, 40f, Color.white);
-            Place(bodyText.rectTransform, new Vector2(0f, 40f), new Vector2(900f, 190f));
+            if (_classicButton == null) return CreateButton(parent, label, onClick);
+
+            Button button = Instantiate(_classicButton, parent);
+            button.gameObject.SetActive(true);
+            button.transform.localScale = Vector3.one;
+            button.onClick = new Button.ButtonClickedEvent();
+            button.onClick.AddListener(() => onClick());
+
+            TMP_Text text = button.GetComponentInChildren<TMP_Text>(true);
+            if (text != null)
+            {
+                text.text = label;
+                text.enableAutoSizing = false;
+                text.fontSize = MenuButtonFontSize;
+                text.alignment = TextAlignmentOptions.Center;
+                text.rectTransform.anchorMin = Vector2.zero;
+                text.rectTransform.anchorMax = Vector2.one;
+                text.rectTransform.offsetMin = Vector2.zero;
+                text.rectTransform.offsetMax = Vector2.zero;
+            }
+            return button;
         }
 
         private Transform OpenScreen()
