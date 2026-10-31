@@ -17,7 +17,7 @@ namespace Leaderboard
         private const float ButtonFontSize = 16f;
         private const float RankFontSize = 26f;
         private const float RestartFontSize = 24f;
-        private const float RankY = -100f;
+        private const float RankY = -152f;
         private static readonly Vector2 RankSize = new Vector2(540f, 60f);
 
         private GameObject _button;
