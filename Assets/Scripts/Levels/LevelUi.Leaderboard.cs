@@ -11,9 +11,9 @@ namespace Levels
     {
         private const string LeaderboardIconPath = "Icons/icon_leaderboard_neon";
         private const int LeaderboardRowCount = 10;
-        private const float LeaderboardTop = 655f;
-        private const float LeaderboardTabsY = 500f;
-        private const float LeaderboardRowsY = 385f;
+        private const float LeaderboardTop = 610f;
+        private const float LeaderboardTabsY = 480f;
+        private const float LeaderboardRowsY = 370f;
         private const float LeaderboardRowHeight = 78f;
         private const float LeaderboardBackY = -560f;
 
