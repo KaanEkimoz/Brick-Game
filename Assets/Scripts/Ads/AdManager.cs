@@ -21,9 +21,6 @@ namespace Ekimoz.Ads
         /// </summary>
         public const string AdsRemovedPrefKey = "ads_removed";
 
-        /// <summary>The player's personalized-ads answer. Ads wait until it exists.</summary>
-        private const string ConsentPrefKey = "ads_consent";
-
         [SerializeField] private AdConfig _config;
 
         private IAdProvider _provider;
@@ -41,9 +38,6 @@ namespace Ekimoz.Ads
 
         /// <summary>True when the player bought Remove Ads. No ads of any kind are shown.</summary>
         public bool AdsRemoved { get; private set; }
-
-        /// <summary>True until the player answers the personalized-ads question.</summary>
-        public bool NeedsConsent => !AdsRemoved && !PlayerPrefs.HasKey(ConsentPrefKey);
 
         public bool IsInitialized => _provider != null && _provider.IsInitialized;
         public bool IsInterstitialReady => _provider != null && _provider.IsInterstitialReady;
@@ -74,14 +68,6 @@ namespace Ekimoz.Ads
                 return;
             }
 
-            if (!NeedsConsent) StartProvider();
-        }
-
-        /// <summary>Stores the player's answer and starts ads.</summary>
-        public void SetConsent(bool consent)
-        {
-            PlayerPrefs.SetInt(ConsentPrefKey, consent ? 1 : 0);
-            PlayerPrefs.Save();
             StartProvider();
         }
 
@@ -91,7 +77,7 @@ namespace Ekimoz.Ads
 
             // The one place a concrete network is chosen.
             _provider = new LevelPlayProvider();
-            _provider.SetConsent(PlayerPrefs.GetInt(ConsentPrefKey, 0) == 1);
+            _provider.SetConsent(false); // ads are never personalized
             _provider.OnInitialized += () => _initRetryCount = 0;
             _provider.OnInitializeFailed += () => StartCoroutine(RetryAfterDelay(++_initRetryCount, () => _provider.RetryInitialize()));
             _provider.OnInterstitialLoadFailed += () => StartCoroutine(RetryAfterDelay(++_interstitialRetryCount, () => _provider.LoadInterstitial()));
@@ -154,7 +140,7 @@ namespace Ekimoz.Ads
                 _provider?.SuppressAds();
                 Debug.Log("[Ads] Remove Ads applied — all ads suppressed.");
             }
-            else if (!NeedsConsent)
+            else
             {
                 StartProvider();
             }
