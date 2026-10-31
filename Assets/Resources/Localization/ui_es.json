@@ -323,6 +323,10 @@
   {
    "en": "Fills the {0} lowest holes",
    "text": "Rellena los {0} huecos más bajos"
+  },
+  {
+   "en": "Language: {0}",
+   "text": "Idioma: {0}"
   }
  ]
 }

@@ -58,7 +58,7 @@
   },
   {
    "en": "Restore Purchases",
-   "text": "Satın Alımları Geri Yükle"
+   "text": "Satın Alımları Yükle"
   },
   {
    "en": "Remove Ads",
@@ -323,6 +323,10 @@
   {
    "en": "Fills the {0} lowest holes",
    "text": "En alttaki {0} boşluğu doldurur"
+  },
+  {
+   "en": "Language: {0}",
+   "text": "Dil: {0}"
   }
  ]
 }

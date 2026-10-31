@@ -14,9 +14,9 @@ namespace Localization
     {
         private const string BackButtonName = "B_Back";
         private const string SettingsPanelName = "SettingsPanel";
-        private const string RestorePurchasesName = "B_RestorePurchases";
         private const float BackButtonDrop = 18f; // makes room for the language button
         private const float LanguageButtonGap = 10f;
+        private const float LanguageFontScale = 0.5f;
         private static readonly Vector2 LanguageButtonSize = new Vector2(320f, 38f);
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
@@ -64,7 +64,8 @@ namespace Localization
                 + Vector2.up * (back.sizeDelta.y * 0.5f + LanguageButtonSize.y * 0.5f + LanguageButtonGap);
 
             TMP_Text label = button.GetComponentInChildren<TMP_Text>(true);
-            label.text = Loc.Upper(Loc.NativeName(Loc.Current));
+            label.text = Loc.Upper(Loc.F("Language: {0}", Loc.NativeName(Loc.Current)));
+            label.fontSize *= LanguageFontScale;
         }
 
         // Reloading rebuilds every screen in the new language; this button is only in the menu.
