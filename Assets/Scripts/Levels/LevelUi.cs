@@ -360,10 +360,14 @@ namespace Levels
 
         private IEnumerator PlayWinCelebration(LevelDefinition level)
         {
+            // A clear layer keeps the pause button from opening during the celebration.
+            Transform screen = OpenScreen();
+            screen.GetComponent<Image>().color = Color.clear;
+
             FindAnyObjectByType<TetrisCelebrationEffect>(FindObjectsInactive.Include)?.Celebrate();
             if (SFXToggle.IsSfxEnabled) GetComponent<AudioSource>().PlayOneShot(Resources.Load<AudioClip>(WinSoundPath));
 
-            TextMeshProUGUI banner = CreateText(_canvas, "Level complete!", 76f, Accent);
+            TextMeshProUGUI banner = CreateText(screen, "Level complete!", 76f, Accent);
             banner.outlineWidth = 0.25f;
             banner.outlineColor = Color.black;
             Place(banner.rectTransform, Vector2.zero, new Vector2(1060f, 180f));
@@ -380,7 +384,6 @@ namespace Levels
                 yield return null;
             }
 
-            Destroy(banner.gameObject);
             ShowWin(level);
         }
 

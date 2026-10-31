@@ -175,6 +175,7 @@ namespace Levels
         /// <summary>Returns to the main menu.</summary>
         public void ReturnToMenu()
         {
+            Time.timeScale = 1f;
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
 
@@ -225,6 +226,7 @@ namespace Levels
         private void Win()
         {
             RoundOver = true;
+            Time.timeScale = 0f; // frozen until the next level starts or the player leaves
             _pieces.EndRound();
             LevelProgress.MarkCompleted(Current.id);
             OnLevelWon?.Invoke(Current);
