@@ -18,6 +18,7 @@ namespace Levels
         private const string MenuButtonText = "Play";
         private const string ModeImageFolder = "ModeSelect/";
         private const string WinSoundPath = "LevelAudio/level_win";
+        private const string WinTitleText = "LEVEL CLEARED!";
         private const float MenuButtonFontSize = 58f;
         private const float WinCelebrationSeconds = 2f;
         private const float WinPopSeconds = 0.3f;
@@ -43,7 +44,13 @@ namespace Levels
         private static readonly Color Accent = new Color(0.2f, 0.95f, 1f, 1f);
         private static readonly Color IntroDim = new Color(0f, 0f, 0.05f, 0.75f);
         private static readonly Vector2 IntroPanelSize = new Vector2(800f, 340f);
-        private static readonly Vector2 WinPanelSize = new Vector2(880f, 780f);
+        private static readonly Vector2 WinPanelSize = new Vector2(880f, 700f);
+        private static readonly Vector2 ConfirmPanelSize = new Vector2(800f, 620f);
+        private static readonly Vector2 WinButtonSize = new Vector2(640f, 150f);
+        private static readonly Vector2 WinRuleSize = new Vector2(520f, 4f);
+        private static readonly Color WinTitleTop = new Color(1f, 0.97f, 0.72f, 1f);
+        private static readonly Color WinTitleBottom = new Color(1f, 0.7f, 0.1f, 1f);
+        private static readonly Color WinTitleOutline = new Color(0.03f, 0.08f, 0.3f, 1f);
         private static readonly Color LevelsAccent = new Color(1f, 0.84f, 0.25f, 1f);
         private static readonly Color ExtendedAccent = new Color(1f, 0.45f, 0.9f, 1f);
         private static readonly Color BadgeColor = new Color(0.01f, 0.03f, 0.14f, 0.88f);
@@ -414,9 +421,7 @@ namespace Levels
             FindAnyObjectByType<TetrisCelebrationEffect>(FindObjectsInactive.Include)?.Celebrate();
             if (SFXToggle.IsSfxEnabled) GetComponent<AudioSource>().PlayOneShot(Resources.Load<AudioClip>(WinSoundPath));
 
-            TextMeshProUGUI banner = CreateText(screen, "Level complete!", 76f, Accent);
-            banner.outlineWidth = 0.25f;
-            banner.outlineColor = Color.black;
+            TextMeshProUGUI banner = CreateWinTitle(screen, 96f);
             Place(banner.rectTransform, Vector2.zero, new Vector2(1060f, 180f));
 
             float elapsed = 0f;
@@ -440,22 +445,62 @@ namespace Levels
             screen.GetComponent<Image>().color = IntroDim;
 
             RectTransform panel = CreatePanel(screen, WinPanelSize);
-            TextMeshProUGUI heading = CreatePlainText(panel, "Level complete!", 66f, Accent);
-            Place(heading.rectTransform, new Vector2(0f, 270f), new Vector2(820f, 100f));
-            TextMeshProUGUI title = CreatePlainText(panel, level.name, 48f, Color.white);
-            Place(title.rectTransform, new Vector2(0f, 170f), new Vector2(820f, 80f));
-            TextMeshProUGUI score = CreatePlainText(panel, $"Score: {ScoreController.score}", 42f, Color.white);
-            Place(score.rectTransform, new Vector2(0f, 90f), new Vector2(820f, 70f));
+            TextMeshProUGUI heading = CreateWinTitle(panel, 76f);
+            Place(heading.rectTransform, new Vector2(0f, 245f), new Vector2(840f, 100f));
+
+            GameObject rule = new GameObject("Rule", typeof(RectTransform), typeof(Image));
+            rule.transform.SetParent(panel, false);
+            rule.GetComponent<Image>().color = LevelsAccent;
+            Place((RectTransform)rule.transform, new Vector2(0f, 180f), WinRuleSize);
+
+            TextMeshProUGUI title = CreatePlainText(panel, $"Level {level.id}  \u00b7  {level.name}", 46f, Color.white);
+            Place(title.rectTransform, new Vector2(0f, 120f), new Vector2(820f, 70f));
+            TextMeshProUGUI score = CreatePlainText(panel, $"Score: {ScoreController.score}", 40f, Color.white);
+            Place(score.rectTransform, new Vector2(0f, 55f), new Vector2(820f, 60f));
 
             LevelDefinition next = LevelCatalog.Get(level.id + 1);
             if (next != null)
             {
                 Button nextButton = CreateMenuStyleButton(panel, "Next", () => ShowIntro(next));
-                Place((RectTransform)nextButton.transform, new Vector2(0f, -60f), new Vector2(620f, 150f));
+                Place((RectTransform)nextButton.transform, new Vector2(0f, -75f), WinButtonSize);
             }
 
-            Button menu = CreateMenuStyleButton(panel, "Menu", _session.ReturnToMenu);
-            Place((RectTransform)menu.transform, new Vector2(0f, -240f), new Vector2(520f, 120f));
+            Button menu = CreateMenuStyleButton(panel, "Menu", () => ShowMenuConfirm(screen));
+            Place((RectTransform)menu.transform, new Vector2(0f, next != null ? -225f : -150f), WinButtonSize);
+        }
+
+        private TextMeshProUGUI CreateWinTitle(Transform parent, float size)
+        {
+            TextMeshProUGUI label = CreatePlainText(parent, WinTitleText, size, Color.white);
+            label.fontStyle = FontStyles.Bold;
+            label.enableVertexGradient = true;
+            label.colorGradient = new VertexGradient(WinTitleTop, WinTitleTop, WinTitleBottom, WinTitleBottom);
+            label.outlineWidth = 0.2f;
+            label.outlineColor = WinTitleOutline;
+            return label;
+        }
+
+        private void ShowMenuConfirm(Transform screen)
+        {
+            GameObject dim = new GameObject("MenuConfirm", typeof(RectTransform), typeof(Image));
+            dim.transform.SetParent(screen, false);
+            RectTransform rect = (RectTransform)dim.transform;
+            rect.anchorMin = Vector2.zero;
+            rect.anchorMax = Vector2.one;
+            rect.offsetMin = Vector2.zero;
+            rect.offsetMax = Vector2.zero;
+            dim.GetComponent<Image>().color = IntroDim;
+
+            RectTransform panel = CreatePanel(dim.transform, ConfirmPanelSize);
+            TextMeshProUGUI heading = CreatePlainText(panel, Scene.ConfirmDialog.MainMenuTitle, 66f, Accent);
+            Place(heading.rectTransform, new Vector2(0f, 215f), new Vector2(740f, 90f));
+            TextMeshProUGUI message = CreatePlainText(panel, Scene.ConfirmDialog.MainMenuMessage, 40f, Color.white);
+            Place(message.rectTransform, new Vector2(0f, 125f), new Vector2(740f, 70f));
+
+            Button yes = CreateMenuStyleButton(panel, Scene.ConfirmDialog.MainMenuYes, _session.ReturnToMenu);
+            Place((RectTransform)yes.transform, new Vector2(0f, -30f), WinButtonSize);
+            Button no = CreateMenuStyleButton(panel, Scene.ConfirmDialog.NoText, () => Destroy(dim));
+            Place((RectTransform)no.transform, new Vector2(0f, -180f), WinButtonSize);
         }
 
         // Same glowing button as the main menu's Play.

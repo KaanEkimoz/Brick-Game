@@ -7,7 +7,10 @@ using UnityEngine.UI;
 public class PauseTheGame : MonoBehaviour
 {
     private const string PauseMenuPath = "PauseMenu";
+    private const string GameOverMenuPath = "GameOverMenu";
     private const string RestartButtonPath = "PauseMenu/PausePanel/B_Restart";
+    private const string PauseMainMenuButtonPath = "PauseMenu/PausePanel/B_MainMenu";
+    private const string GameOverMainMenuButtonPath = "GameOverMenu/GOM_Panel/B_MainMenu";
     private const string ResumeButtonPath = "PauseMenu/PausePanel/B_Resume";
 
     /// <summary>True from the pause press until play restarts, including the resume countdown.
@@ -27,8 +30,17 @@ public class PauseTheGame : MonoBehaviour
         _countdown = gameObject.AddComponent<ResumeCountdown>();
         _countdown.Build(canvas, resumeButton.GetComponentInChildren<TMP_Text>(true).font);
 
-        gameObject.AddComponent<RestartConfirmDialog>()
-            .Build(canvas.Find(PauseMenuPath), restartButton, resumeButton);
+        Transform pauseMenu = canvas.Find(PauseMenuPath);
+        gameObject.AddComponent<ConfirmDialog>()
+            .Build(pauseMenu, restartButton, resumeButton, "Restart?", "Your current game will be lost", "Yes, restart");
+        GuardMainMenu(pauseMenu, canvas.Find(PauseMainMenuButtonPath), resumeButton);
+        GuardMainMenu(canvas.Find(GameOverMenuPath), canvas.Find(GameOverMainMenuButtonPath), resumeButton);
+    }
+
+    private void GuardMainMenu(Transform menu, Transform mainMenuButton, Button cancelTemplate)
+    {
+        gameObject.AddComponent<ConfirmDialog>().Build(menu, mainMenuButton.GetComponent<Button>(), cancelTemplate,
+            ConfirmDialog.MainMenuTitle, ConfirmDialog.MainMenuMessage, ConfirmDialog.MainMenuYes);
     }
 
     public void PauseGame()

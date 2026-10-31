@@ -5,39 +5,40 @@ using UnityEngine.UI;
 namespace Scene
 {
     /// <summary>
-    /// Asks for confirmation before the pause menu's Restart button runs. The button's existing
-    /// click chain moves behind the dialog's Yes button, so the scene wiring stays the single
-    /// definition of what Restart does. The dialog reuses the pause menu's buttons for its look.
+    /// Asks for confirmation before a menu button runs. The button's existing click chain moves
+    /// behind the dialog's Yes button, so the scene wiring stays the single definition of what
+    /// the button does. The dialog reuses the menu's own buttons for its look.
     /// </summary>
-    public class RestartConfirmDialog : MonoBehaviour
+    public class ConfirmDialog : MonoBehaviour
     {
-        private const string TitleText = "Restart?";
-        private const string MessageText = "Your current game will be lost";
-        private const string YesText = "Yes, restart";
-        private const string NoText = "Cancel";
+        public const string MainMenuTitle = "Main Menu?";
+        public const string MainMenuMessage = "Are you sure you want to leave?";
+        public const string MainMenuYes = "Yes";
+        public const string NoText = "Cancel";
+
         private const float ButtonFontSize = 26f;
         private static readonly Color BackdropColor = new Color(0f, 0f, 0.08f, 0.92f);
 
         private GameObject _root;
 
-        /// <summary>Builds the hidden dialog inside the pause menu and hooks the Restart button.</summary>
-        public void Build(Transform pauseMenu, Button restartButton, Button cancelTemplate)
+        /// <summary>Builds the hidden dialog inside the menu and hooks the guarded button.</summary>
+        public void Build(Transform menu, Button guardedButton, Button cancelTemplate, string title, string message, string yesText)
         {
-            _root = CreateBackdrop(pauseMenu);
+            _root = CreateBackdrop(menu);
 
             TMP_Text buttonLabel = cancelTemplate.GetComponentInChildren<TMP_Text>(true);
-            CreateText(TitleText, buttonLabel, 44f, new Vector2(0f, 150f));
-            CreateText(MessageText, buttonLabel, 20f, new Vector2(0f, 90f));
+            CreateText(title, buttonLabel, 44f, new Vector2(0f, 150f));
+            CreateText(message, buttonLabel, 20f, new Vector2(0f, 90f));
 
-            Button.ButtonClickedEvent restartChain = restartButton.onClick;
-            restartButton.onClick = new Button.ButtonClickedEvent();
-            restartButton.onClick.AddListener(() => _root.SetActive(true));
+            Button.ButtonClickedEvent guardedChain = guardedButton.onClick;
+            guardedButton.onClick = new Button.ButtonClickedEvent();
+            guardedButton.onClick.AddListener(() => _root.SetActive(true));
 
-            Button yes = CreateButton(restartButton, YesText, new Vector2(0f, -10f));
+            Button yes = CreateButton(guardedButton, yesText, new Vector2(0f, -10f));
             yes.onClick.AddListener(() =>
             {
                 _root.SetActive(false);
-                restartChain.Invoke();
+                guardedChain.Invoke();
             });
 
             Button no = CreateButton(cancelTemplate, NoText, new Vector2(0f, -90f));
@@ -46,7 +47,7 @@ namespace Scene
 
         private static GameObject CreateBackdrop(Transform parent)
         {
-            GameObject go = new GameObject("RestartConfirm", typeof(RectTransform), typeof(Image));
+            GameObject go = new GameObject("ConfirmDialog", typeof(RectTransform), typeof(Image));
             go.transform.SetParent(parent, false);
             RectTransform rect = (RectTransform)go.transform;
             rect.anchorMin = Vector2.zero;
