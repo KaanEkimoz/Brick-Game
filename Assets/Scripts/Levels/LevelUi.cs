@@ -84,6 +84,7 @@ namespace Levels
             BuildMenuButton();
             BuildLanguageButton();
             BuildLeaderboardButton();
+            BuildGameOverLeaderboard();
             gameObject.AddComponent<Leaderboard.LeaderboardSubmitter>();
             BuildObjectiveLine();
         }

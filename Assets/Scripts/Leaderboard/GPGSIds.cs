@@ -26,6 +26,8 @@ public static class GPGSIds
 {
         public const string leaderboard_classic = "CgkIgY3R0rsKEAIQAQ"; // <GPGSID>
         public const string leaderboard_extended = "CgkIgY3R0rsKEAIQAg"; // <GPGSID>
+        public const string leaderboard_classic_monthly = "CgkIgY3R0rsKEAIQAw"; // <GPGSID>
+        public const string leaderboard_extended_monthly = "CgkIgY3R0rsKEAIQBA"; // <GPGSID>
 
 }
 

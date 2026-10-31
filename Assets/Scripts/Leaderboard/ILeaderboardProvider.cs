@@ -9,6 +9,13 @@ namespace Leaderboard
         Extended,
     }
 
+    public enum LeaderboardPeriod
+    {
+        AllTime,
+        Monthly,
+        Weekly,
+    }
+
     public struct LeaderboardRow
     {
         public long Rank;
@@ -22,7 +29,9 @@ namespace Leaderboard
     {
         bool IsSignedIn { get; }
         void SignIn(bool interactive, Action<bool> done);
-        void Submit(LeaderboardBoard board, long score);
-        void LoadTop(LeaderboardBoard board, int count, Action<List<LeaderboardRow>> done);
+
+        /// <param name="monthlyScore">The monthly board's stamped score, or negative to skip it.</param>
+        void Submit(LeaderboardBoard board, long score, long monthlyScore, Action done);
+        void LoadTop(LeaderboardBoard board, LeaderboardPeriod period, int count, Action<List<LeaderboardRow>> done);
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using Board;
 using Extras;
 using Gameplay;
@@ -10,6 +11,9 @@ namespace Leaderboard
     /// live goes out; the saved high score can be edited on the device and is never sent.</summary>
     public class LeaderboardSubmitter : MonoBehaviour
     {
+        /// <summary>Fires once the finished run's score has been sent or skipped.</summary>
+        public static Action OnRunSettled;
+
         private BoardController _board;
         private bool _gameEnded;
 
@@ -55,7 +59,9 @@ namespace Leaderboard
 
             int score = ScoreController.score;
             if (RunLedger.CanSubmit(score, _board.TotalClearedLines, GameMode.IsExtended))
-                LeaderboardService.Submit(LeaderboardService.CurrentBoard, score);
+                LeaderboardService.Submit(LeaderboardService.CurrentBoard, score, () => OnRunSettled?.Invoke());
+            else
+                OnRunSettled?.Invoke();
         }
     }
 }

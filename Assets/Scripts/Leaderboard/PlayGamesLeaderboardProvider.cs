@@ -25,18 +25,29 @@ namespace Leaderboard
             else PlayGamesPlatform.Instance.Authenticate(finished);
         }
 
-        public void Submit(LeaderboardBoard board, long score)
+        public void Submit(LeaderboardBoard board, long score, long monthlyScore, Action done)
         {
-            PlayGamesPlatform.Instance.ReportScore(score, BoardId(board), success =>
+            Report(score, BoardId(board, LeaderboardPeriod.AllTime), () =>
             {
-                if (!success) Debug.LogWarning("[Leaderboard] Score was not accepted.");
+                if (monthlyScore < 0) done();
+                else Report(monthlyScore, BoardId(board, LeaderboardPeriod.Monthly), done);
             });
         }
 
-        public void LoadTop(LeaderboardBoard board, int count, Action<List<LeaderboardRow>> done)
+        private static void Report(long score, string boardId, Action done)
         {
-            PlayGamesPlatform.Instance.LoadScores(BoardId(board), LeaderboardStart.TopScores, count,
-                LeaderboardCollection.Public, LeaderboardTimeSpan.AllTime, data =>
+            PlayGamesPlatform.Instance.ReportScore(score, boardId, success =>
+            {
+                if (!success) Debug.LogWarning("[Leaderboard] Score was not accepted.");
+                done();
+            });
+        }
+
+        public void LoadTop(LeaderboardBoard board, LeaderboardPeriod period, int count, Action<List<LeaderboardRow>> done)
+        {
+            LeaderboardTimeSpan span = period == LeaderboardPeriod.Weekly ? LeaderboardTimeSpan.Weekly : LeaderboardTimeSpan.AllTime;
+            PlayGamesPlatform.Instance.LoadScores(BoardId(board, period), LeaderboardStart.TopScores, count,
+                LeaderboardCollection.Public, span, data =>
                 {
                     if (!data.Valid)
                     {
@@ -78,8 +89,10 @@ namespace Leaderboard
             });
         }
 
-        private static string BoardId(LeaderboardBoard board)
+        private static string BoardId(LeaderboardBoard board, LeaderboardPeriod period)
         {
+            if (period == LeaderboardPeriod.Monthly)
+                return board == LeaderboardBoard.Extended ? GPGSIds.leaderboard_extended_monthly : GPGSIds.leaderboard_classic_monthly;
             return board == LeaderboardBoard.Extended ? GPGSIds.leaderboard_extended : GPGSIds.leaderboard_classic;
         }
     }

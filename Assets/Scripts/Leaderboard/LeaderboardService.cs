@@ -7,6 +7,8 @@ namespace Leaderboard
     /// <summary>Single entry point for the online leaderboards.</summary>
     public static class LeaderboardService
     {
+        private const int MonthlyLoadCount = 25; // room for scores from a device with a wrong date
+
         private static ILeaderboardProvider _provider;
 
         private static ILeaderboardProvider Provider
@@ -31,24 +33,70 @@ namespace Leaderboard
             Provider.SignIn(false, signedIn => { });
         }
 
-        public static void Submit(LeaderboardBoard board, long score)
+        public static void Submit(LeaderboardBoard board, long score, Action done)
         {
-            if (Provider.IsSignedIn) Provider.Submit(board, score);
+            if (!Provider.IsSignedIn)
+            {
+                done();
+                return;
+            }
+
+            LeaderboardClock.Fetch(utcNow =>
+            {
+                long monthlyScore = utcNow.HasValue ? LeaderboardSchedule.StampMonth(score, utcNow.Value) : -1;
+                Provider.Submit(board, score, monthlyScore, done);
+            });
         }
 
         /// <summary>Loads the top scores, asking the player to sign in first when needed.</summary>
-        public static void LoadTop(LeaderboardBoard board, int count, Action<List<LeaderboardRow>> done)
+        public static void LoadTop(LeaderboardBoard board, LeaderboardPeriod period, int count, Action<List<LeaderboardRow>> done)
         {
             if (Provider.IsSignedIn)
             {
-                Provider.LoadTop(board, count, done);
+                LoadSignedIn(board, period, count, done);
                 return;
             }
 
             Provider.SignIn(true, signedIn =>
             {
-                if (signedIn) Provider.LoadTop(board, count, done);
+                if (signedIn) LoadSignedIn(board, period, count, done);
                 else done(null);
+            });
+        }
+
+        /// <summary>The player's all-time rank on a board, or nothing when it is unknown.</summary>
+        public static void LoadPlayerRank(LeaderboardBoard board, Action<long?> done)
+        {
+            if (!Provider.IsSignedIn)
+            {
+                done(null);
+                return;
+            }
+
+            Provider.LoadTop(board, LeaderboardPeriod.AllTime, 1, rows =>
+            {
+                LeaderboardRow player = rows == null ? default : rows.Find(row => row.IsPlayer);
+                done(player.IsPlayer ? player.Rank : (long?)null);
+            });
+        }
+
+        private static void LoadSignedIn(LeaderboardBoard board, LeaderboardPeriod period, int count, Action<List<LeaderboardRow>> done)
+        {
+            if (period != LeaderboardPeriod.Monthly)
+            {
+                Provider.LoadTop(board, period, count, done);
+                return;
+            }
+
+            LeaderboardClock.Fetch(utcNow =>
+            {
+                if (!utcNow.HasValue)
+                {
+                    done(null);
+                    return;
+                }
+                Provider.LoadTop(board, period, MonthlyLoadCount, rows =>
+                    done(LeaderboardSchedule.ReadMonth(rows, utcNow.Value, count)));
             });
         }
     }

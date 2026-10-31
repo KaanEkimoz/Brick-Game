@@ -339,6 +339,26 @@
   {
    "en": "Sign in to Play Games to see the leaderboard",
    "text": "Liderlik tablosu için Play Games'e giriş yap"
+  },
+  {
+   "en": "All Time",
+   "text": "Tüm Zamanlar"
+  },
+  {
+   "en": "Monthly",
+   "text": "Aylık"
+  },
+  {
+   "en": "Weekly",
+   "text": "Haftalık"
+  },
+  {
+   "en": "Resets {0}",
+   "text": "Yenilenme: {0}"
+  },
+  {
+   "en": "Your rank: #{0}",
+   "text": "Sıralaman: #{0}"
   }
  ]
 }

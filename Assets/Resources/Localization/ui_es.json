@@ -339,6 +339,26 @@
   {
    "en": "Sign in to Play Games to see the leaderboard",
    "text": "Inicia sesión en Play Games para ver la clasificación"
+  },
+  {
+   "en": "All Time",
+   "text": "Histórico"
+  },
+  {
+   "en": "Monthly",
+   "text": "Mensual"
+  },
+  {
+   "en": "Weekly",
+   "text": "Semanal"
+  },
+  {
+   "en": "Resets {0}",
+   "text": "Se reinicia: {0}"
+  },
+  {
+   "en": "Your rank: #{0}",
+   "text": "Tu puesto: #{0}"
   }
  ]
 }
