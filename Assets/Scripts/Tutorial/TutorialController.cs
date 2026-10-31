@@ -46,6 +46,7 @@ namespace Tutorial
             public GameObject blinkTarget;
         }
 
+        private const float HintAboveBannerY = 195f;
         private const string ClassicSeenKey = "tutorial_classic_seen_v1";
         private const string ExtendedSeenKey = "tutorial_extended_seen_v1";
 
@@ -122,11 +123,16 @@ namespace Tutorial
 
         private void Awake()
         {
-            // Hide every tutorial-owned element until a Play button summons it. The Controller
-            // GameObject itself stays active so OnEnable / Start fire and the button hooks attach.
+            // Hide every tutorial-owned element until the mode screen summons it. The Controller
+            // GameObject itself stays active so OnEnable / Start fire.
             if (_overlayRoot != null) _overlayRoot.SetActive(false);
             if (_tutorialCard != null) _tutorialCard.SetActive(false);
-            if (_tapToContinueHint != null) _tapToContinueHint.SetActive(false);
+            if (_tapToContinueHint != null)
+            {
+                _tapToContinueHint.SetActive(false);
+                // The ad banner covers the bottom of the screen.
+                ((RectTransform)_tapToContinueHint.transform).anchoredPosition = new Vector2(0f, HintAboveBannerY);
+            }
             if (_skipButton != null) _skipButton.SetActive(false);
             foreach (var s in _coreSteps) if (s != null && s.panel != null) s.panel.SetActive(false);
             foreach (var s in _extendedSteps) if (s != null && s.panel != null) s.panel.SetActive(false);

@@ -359,6 +359,38 @@
   {
    "en": "Your rank: #{0}",
    "text": "Tu puesto: #{0}"
+  },
+  {
+   "en": "Pieces left: {0}",
+   "text": "Piezas restantes: {0}"
+  },
+  {
+   "en": "Time: {0}",
+   "text": "Tiempo: {0}"
+  },
+  {
+   "en": "Tiles left: {0}",
+   "text": "Bloques restantes: {0}"
+  },
+  {
+   "en": "Could not load the leaderboard",
+   "text": "No se pudo cargar la clasificación"
+  },
+  {
+   "en": "Ads",
+   "text": "Anuncios"
+  },
+  {
+   "en": "We show ads to keep the game free. Allow personalized ads?",
+   "text": "Mostramos anuncios para que el juego sea gratis. ¿Permites anuncios personalizados?"
+  },
+  {
+   "en": "Allow",
+   "text": "Permitir"
+  },
+  {
+   "en": "No Thanks",
+   "text": "No, gracias"
   }
  ]
 }

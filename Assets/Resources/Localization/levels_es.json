@@ -38,7 +38,7 @@
     {
       "id": 8,
       "name": "A ordenar",
-      "hint": "Limpia el tablero: tapa el hueco con una pieza larga."
+      "hint": "Pon tres piezas largas de pie en el hueco y limpia el tablero."
     },
     {
       "id": 9,
@@ -48,12 +48,12 @@
     {
       "id": 10,
       "name": "¡Bloque explosivo!",
-      "hint": "Cada pieza es una bomba que borra 3x3. ¡Vuela el bloque!"
+      "hint": "Cada pieza es una bomba de una casilla que borra 3x3. ¡6 bombas!"
     },
     {
       "id": 11,
       "name": "Hora del Tetris",
-      "hint": "Un pozo alto y una pieza larga limpian cuatro líneas a la vez."
+      "hint": "Añade una cuarta fila y una pieza larga limpiará cuatro a la vez."
     },
     {
       "id": 12,
@@ -98,7 +98,7 @@
     {
       "id": 20,
       "name": "Carril láser",
-      "hint": "Las piezas cargadas fulminan una línea; gira una vez para una columna."
+      "hint": "Dispara a una fila o gira una vez para una columna. 8 piezas."
     },
     {
       "id": 21,
@@ -133,7 +133,7 @@
     {
       "id": 27,
       "name": "Tapa huecos",
-      "hint": "Las piezas cargadas parchean los agujeros bajo la pila. Limpia 4 líneas."
+      "hint": "Cada 2.ª pieza tapa huecos bajo la pila. Limpia 4 líneas."
     },
     {
       "id": 28,
@@ -143,12 +143,12 @@
     {
       "id": 29,
       "name": "La letra L",
-      "hint": "Trabaja alrededor de la L alta. Carga piezas para ir más rápido."
+      "hint": "Rodea la L alta. Carga una pieza y alcanza 15 casillas."
     },
     {
       "id": 30,
       "name": "El pozo",
-      "hint": "Nuevo: solo Tetris. Llena cuatro líneas y suelta la I en el pozo."
+      "hint": "Nuevo: solo Tetris. Haz una cuarta fila y suelta la I en el pozo."
     },
     {
       "id": 31,
@@ -168,7 +168,7 @@
     {
       "id": 34,
       "name": "Láser y pila",
-      "hint": "Llena el pozo y usa el láser cuando puedas. Limpia 6 líneas."
+      "hint": "El pozo va en zigzag. Atraviésalo con láser y limpia 6 líneas."
     },
     {
       "id": 35,
@@ -178,27 +178,27 @@
     {
       "id": 36,
       "name": "Sprint de puntos",
-      "hint": "24 piezas para 1800 puntos. Los triples pagan mejor."
+      "hint": "24 piezas para 2150 puntos. Los triples pagan más."
     },
     {
       "id": 37,
       "name": "Barrido limpio",
-      "hint": "Vacía el tablero en 26 piezas. Llena la escalera."
+      "hint": "Vacía el tablero en 30 piezas. Rellena la escalera."
     },
     {
       "id": 38,
       "name": "Puntuación veloz",
-      "hint": "100 segundos para sumar 2400. Apila para dobles."
+      "hint": "100 segundos para 2800 puntos. Apila para hacer dobles."
     },
     {
       "id": 39,
       "name": "Presupuesto justo",
-      "hint": "30 piezas, 8 líneas, velocidad creciente. Sin margen."
+      "hint": "30 piezas, 8 líneas. Sin margen."
     },
     {
       "id": 40,
       "name": "Torres gemelas",
-      "hint": "Lanza bombas a ambas torres hasta que no quede nada."
+      "hint": "Arrasa las dos torres antes de gastar tus 12 bombas."
     },
     {
       "id": 41,
@@ -208,12 +208,12 @@
     {
       "id": 42,
       "name": "Queso suizo",
-      "hint": "Una pieza Parche tapa los agujeros. Limpia 6 líneas."
+      "hint": "Una pieza parche tapa seis huecos. Rellena 10 en total."
     },
     {
       "id": 43,
       "name": "Inicio rápido",
-      "hint": "Nuevo: velocidad fija y alta. Planea y suelta pronto."
+      "hint": "El ritmo sube. Planifica y suelta pronto."
     },
     {
       "id": 44,
@@ -223,22 +223,22 @@
     {
       "id": 45,
       "name": "Pack de seis",
-      "hint": "El Parche rellena seis agujeros a la vez. Limpia 10 líneas."
+      "hint": "El parche tapa seis huecos a la vez. Luego limpia el tablero."
     },
     {
       "id": 46,
       "name": "Relámpago",
-      "hint": "Velocidad 11. Mantén la pila baja y plana."
+      "hint": "A este ritmo mantén la pila baja y plana."
     },
     {
       "id": 47,
       "name": "Más puntos",
-      "hint": "Velocidad 12. Limpia varias líneas a la vez para puntuar."
+      "hint": "Limpia varias líneas a la vez para sumar mucho."
     },
     {
       "id": 48,
-      "name": "Fiebre del oro",
-      "hint": "Desentierra todo el oro en 75 segundos."
+      "name": "Primer destello",
+      "hint": "Nuevo: ¡casillas de oro! Limpia las filas con oro para ganar."
     },
     {
       "id": 49,
@@ -248,7 +248,7 @@
     {
       "id": 50,
       "name": "Francotirador",
-      "hint": "Deja una I girada sobre un pilar: el láser borra la columna."
+      "hint": "Pon una I de pie sobre un pilar: el láser borra la columna. 10 piezas."
     },
     {
       "id": 51,
@@ -278,7 +278,7 @@
     {
       "id": 56,
       "name": "Línea roja",
-      "hint": "Velocidad máxima 15. Corto y brutal. Mantén la calma."
+      "hint": "Tu carrera más rápida. Corta y brutal. Mantén la calma."
     },
     {
       "id": 57,
@@ -288,12 +288,12 @@
     {
       "id": 58,
       "name": "Serpenteo",
-      "hint": "S, Z, I y O. Mantén las superficies planas para los zigzags."
+      "hint": "Solo S, Z, I y O. Las superficies planas suman puntos."
     },
     {
       "id": 59,
       "name": "Pozo izquierdo",
-      "hint": "Deja libre la columna izquierda y limpia cuatro líneas."
+      "hint": "Deja libre la columna izquierda. Las largas limpian más."
     },
     {
       "id": 60,
@@ -303,17 +303,17 @@
     {
       "id": 61,
       "name": "Compuerta",
-      "hint": "Limpia líneas antes de que la basura te entierre."
+      "hint": "Las piedras suben con la basura. Limpia líneas a su alrededor."
     },
     {
       "id": 62,
       "name": "Caída a ciegas",
-      "hint": "Sin fantasma. Revisa la altura de las columnas antes de soltar."
+      "hint": "Sin fantasma. Mira las alturas y saca el oro."
     },
     {
       "id": 63,
       "name": "Aguas turbulentas",
-      "hint": "Encuentra el hueco en cada línea de basura y úsalo."
+      "hint": "Cada 3.ª pieza es un láser. Dispara a las filas: 30 casillas."
     },
     {
       "id": 64,
@@ -332,8 +332,8 @@
     },
     {
       "id": 67,
-      "name": "Primer destello",
-      "hint": "Hay fichas de oro enterradas. Limpia sus líneas para ganar."
+      "name": "Carrera de oro",
+      "hint": "Saca todo el oro en 75 segundos."
     },
     {
       "id": 68,
@@ -343,12 +343,12 @@
     {
       "id": 69,
       "name": "Resaca",
-      "hint": "Rápido y creciente. Mantén despejado el centro."
+      "hint": "La basura eleva el oro. Sácalo antes de que suba la marea."
     },
     {
       "id": 70,
       "name": "Rompe búnker",
-      "hint": "Los muros de acero no se mueven. Bombardea los ladrillos del búnker."
+      "hint": "El acero no se mueve. Vuela los ladrillos con 10 bombas."
     },
     {
       "id": 71,
@@ -363,22 +363,22 @@
     {
       "id": 73,
       "name": "Prisa oscura",
-      "hint": "Sin pieza fantasma y más velocidad. Confía en tus ojos."
+      "hint": "Sin fantasma y 100 segundos. Confía en tu vista."
     },
     {
       "id": 74,
       "name": "Doble golpe",
-      "hint": "Dos fichas de oro a distinta profundidad. Cava hasta ambas."
+      "hint": "Dos oros a distinta profundidad. Rellena el hueco ancho."
     },
     {
       "id": 75,
       "name": "Bóveda de hierro",
-      "hint": "El oro se esconde entre bloques fijos #. Limpia a su alrededor."
+      "hint": "El oro se esconde bajo piedras grises. Limpia las filas de abajo."
     },
     {
       "id": 76,
       "name": "Piezas contadas",
-      "hint": "Ocho líneas con un número limitado de piezas."
+      "hint": "6000 puntos con piezas limitadas."
     },
     {
       "id": 77,
@@ -388,7 +388,7 @@
     {
       "id": 78,
       "name": "Puntuación a ciegas",
-      "hint": "Suma 2000 sin vista previa. Limpiar varias líneas paga más."
+      "hint": "5200 puntos sin vista previa. Las jugadas múltiples pagan más."
     },
     {
       "id": 79,
@@ -428,17 +428,17 @@
     {
       "id": 86,
       "name": "Rápido y poco",
-      "hint": "Limpia 10 líneas a alta velocidad con solo 45 piezas."
+      "hint": "Consigue 9800 puntos a gran velocidad con solo 45 piezas."
     },
     {
       "id": 87,
       "name": "Líneas a ciegas",
-      "hint": "Ocho líneas, sin vista previa. Deja libre la columna derecha."
+      "hint": "Ocho líneas, sin vista previa. Empieza por la muesca."
     },
     {
       "id": 88,
       "name": "Excavación explosiva",
-      "hint": "Las bombas atraviesan la piedra hacia el oro."
+      "hint": "Cada 4.ª pieza es una bomba. Revienta hasta llegar al oro."
     },
     {
       "id": 89,
@@ -448,7 +448,7 @@
     {
       "id": 90,
       "name": "Gran remate",
-      "hint": "Tres Tetris a toda velocidad. Mantén el pozo limpio."
+      "hint": "Tres Tetris en 66 piezas. Mantén limpio el pozo."
     },
     {
       "id": 91,
@@ -458,7 +458,7 @@
     {
       "id": 92,
       "name": "Sube y poco",
-      "hint": "Limpia 12 líneas mientras sube la basura, con solo tres tipos de pieza."
+      "hint": "Encadena 3 limpiezas con basura y tres tipos de pieza."
     },
     {
       "id": 93,
@@ -488,7 +488,7 @@
     {
       "id": 98,
       "name": "Demolición",
-      "hint": "Bombas y reloj limpian el tablero. Los bloques fijos # se quedan."
+      "hint": "Cada 2.ª pieza es una bomba. Límpialo todo; las piedras quedan."
     },
     {
       "id": 99,
@@ -498,7 +498,7 @@
     {
       "id": 100,
       "name": "Gran explosión",
-      "hint": "Una gran pirámide, bombas infinitas. Cómela desde arriba."
+      "hint": "Máxima velocidad, sin fantasma, 15 bombas, 45 s. Derríbalo todo."
     }
   ]
 }
