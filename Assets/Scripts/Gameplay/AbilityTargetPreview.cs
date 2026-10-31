@@ -31,6 +31,7 @@ namespace Gameplay
             PieceMovement.OnPieceMovement += Refresh;
             PieceRotation.OnPieceRotation += Refresh;
             PiecesController.OnGameOver += Hide;
+            Levels.LevelSession.OnLevelWon += HandleLevelWon;
         }
 
         private void OnDisable()
@@ -40,6 +41,7 @@ namespace Gameplay
             PieceMovement.OnPieceMovement -= Refresh;
             PieceRotation.OnPieceRotation -= Refresh;
             PiecesController.OnGameOver -= Hide;
+            Levels.LevelSession.OnLevelWon -= HandleLevelWon;
         }
 
         private void HandlePieceChanged()
@@ -48,6 +50,11 @@ namespace Gameplay
                 ? PiecesController.CurPiece.GetComponent<AbilityMarker>()
                 : null;
             Refresh();
+        }
+
+        private void HandleLevelWon(Levels.LevelDefinition level)
+        {
+            Hide();
         }
 
         private void Hide()

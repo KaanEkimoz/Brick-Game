@@ -51,8 +51,10 @@ namespace Extras
 
             // LevelController fires on every line clear regardless of whether the level actually changed,
             // so gate here on an actual increase.
-            if (LevelController.CurrentLevel <= _lastLevel) return;
+            // A restart lowers the level, so the next run's level-ups must count from there.
+            bool leveledUp = LevelController.CurrentLevel > _lastLevel;
             _lastLevel = LevelController.CurrentLevel;
+            if (!leveledUp) return;
 
             if (_levelText != null)
             {

@@ -32,6 +32,8 @@ namespace Ekimoz.Ads
         public event Action<bool> OnRewardedClosed;
         public event Action OnBannerLoaded;
         public event Action OnBannerLoadFailed;
+        public event Action OnInitializeFailed;
+        public event Action OnInterstitialLoadFailed;
 
         public void Initialize(AdConfig config)
         {
@@ -48,6 +50,17 @@ namespace Ekimoz.Ads
             LevelPlay.OnInitSuccess += HandleInitSuccess;
             LevelPlay.OnInitFailed += HandleInitFailed;
             LevelPlay.Init(config.ActiveAppKey);
+        }
+
+        public void RetryInitialize()
+        {
+            if (!IsInitialized && _config != null && _config.HasValidKey)
+                LevelPlay.Init(_config.ActiveAppKey);
+        }
+
+        public void SetConsent(bool consent)
+        {
+            LevelPlay.SetConsent(consent);
         }
 
         private void HandleInitSuccess(LevelPlayConfiguration configuration)
@@ -73,6 +86,7 @@ namespace Ekimoz.Ads
         private void HandleInitFailed(LevelPlayInitError error)
         {
             Debug.LogWarning($"[Ads] LevelPlay init failed: {error}");
+            OnInitializeFailed?.Invoke();
         }
 
         // ---------------- Interstitial ----------------
@@ -84,6 +98,7 @@ namespace Ekimoz.Ads
             _interstitial = new LevelPlayInterstitialAd(_config.InterstitialAdUnitId);
             _interstitial.OnAdClosed += _ => { OnInterstitialClosed?.Invoke(); _interstitial.LoadAd(); };
             _interstitial.OnAdDisplayFailed += (_, __) => { OnInterstitialClosed?.Invoke(); _interstitial.LoadAd(); };
+            _interstitial.OnAdLoadFailed += _ => { if (!_suppressed) OnInterstitialLoadFailed?.Invoke(); };
             _interstitial.LoadAd();
         }
 

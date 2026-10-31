@@ -101,10 +101,6 @@ namespace Tutorial
             }
         }
 
-        [Tooltip("StartCanvas Play button names. The controller adds an OnClick listener at runtime so the tutorial fires after the existing listeners (GameMode set + StartGame).")]
-        [SerializeField] private string _classicPlayButtonName = "B_Play";
-        [SerializeField] private string _extendedPlayButtonName = "B_PlayExtended";
-
         private readonly List<TutorialStep> _activeSequence = new List<TutorialStep>();
         private int _index = -1;
 
@@ -197,7 +193,6 @@ namespace Tutorial
 
         private void Start()
         {
-            HookPlayButtons();
             HookSkipButton();
         }
 
@@ -214,24 +209,6 @@ namespace Tutorial
         {
             if (!_running) return;
             Finish(false); // skipped — no "completed" banner
-        }
-
-        private void HookPlayButtons()
-        {
-            HookButton(_classicPlayButtonName);
-            HookButton(_extendedPlayButtonName);
-        }
-
-        private void HookButton(string buttonName)
-        {
-            if (string.IsNullOrEmpty(buttonName)) return;
-            var go = GameObject.Find(buttonName);
-            if (go == null) return;
-            var btn = go.GetComponent<UnityEngine.UI.Button>();
-            if (btn == null) return;
-            // Unity invokes OnClick listeners in registration order, so this fires AFTER
-            // the inspector-bound listeners (which set GameMode.IsExtended + start the game).
-            btn.onClick.AddListener(ShowForCurrentMode);
         }
 
         /// <summary>Public entry: show the tutorial for whatever mode GameMode is currently in.</summary>

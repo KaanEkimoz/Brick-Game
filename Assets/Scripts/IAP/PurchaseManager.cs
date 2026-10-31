@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Ekimoz.Ads;
 using UnityEngine;
 
@@ -20,7 +21,10 @@ namespace Ekimoz.IAP
         [Tooltip("Verbose [IAP] logging. Turn off for release if noisy.")]
         [SerializeField] private bool _verboseLogging = true;
 
+        private const float MaxInitRetryDelay = 120f;
+
         private IPurchaseService _service;
+        private int _initRetryCount;
 
         /// <summary>True once Remove Ads is owned (purchased or restored).</summary>
         public bool RemoveAdsOwned { get; private set; }
@@ -85,15 +89,20 @@ namespace Ekimoz.IAP
         private void HandleInitialized()
         {
             // Store may report the product already owned (restore). Sync just in case.
-            if (_service.IsOwned(RemoveAdsProductId) && !RemoveAdsOwned)
+            bool owned = _service.IsOwned(RemoveAdsProductId);
+            if (owned && !RemoveAdsOwned)
                 ApplyRemoveAds();
+            // Only Google Play reports a refund here. iOS keeps its receipt until a restore.
+            else if (!owned && RemoveAdsOwned && Application.platform == RuntimePlatform.Android)
+                RevokeRemoveAds();
 
             OnReady?.Invoke();
         }
 
         private void HandleInitializeFailed(string reason)
         {
-            Debug.LogWarning($"[IAP] Billing init failed: {reason}. Remove Ads button should stay hidden/disabled.");
+            Debug.LogWarning($"[IAP] Billing init failed: {reason}. Retrying.");
+            StartCoroutine(RetryInitialize());
         }
 
         private void HandlePurchaseSucceeded(string productId)
@@ -108,7 +117,25 @@ namespace Ekimoz.IAP
                 OnPurchaseFailed?.Invoke(reason);
         }
 
+        // 5, 10, 20, 40, 80, 120, 120...
+        private IEnumerator RetryInitialize()
+        {
+            float delay = Mathf.Min(MaxInitRetryDelay, 5f * Mathf.Pow(2f, _initRetryCount));
+            _initRetryCount++;
+            yield return new WaitForSecondsRealtime(delay);
+            _service.Initialize(new[] { RemoveAdsProductId });
+        }
+
         // ---------------- Apply ----------------
+
+        private void RevokeRemoveAds()
+        {
+            RemoveAdsOwned = false;
+            PlayerPrefs.SetInt(AdManager.AdsRemovedPrefKey, 0);
+            PlayerPrefs.Save();
+            AdManager.Instance?.SetAdsRemoved(false);
+            OnRemoveAdsOwnedChanged?.Invoke(false);
+        }
 
         private void ApplyRemoveAds()
         {

@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using Gameplay;
 using UnityEngine;
@@ -21,6 +22,8 @@ namespace Persistence
         private const string LegacyFileName = "brickgame_save.json";
         private const string ClassicFileName = "brickgame_save_classic.json";
         private const string ExtendedFileName = "brickgame_save_extended.json";
+
+        private const string TempSuffix = ".tmp";
 
         private static bool _legacyChecked;
 
@@ -54,16 +57,35 @@ namespace Persistence
             catch (IOException e) { Debug.LogWarning($"GameSaveStorage: legacy save delete failed. {e.Message}"); }
         }
 
-        public static bool HasSave() => File.Exists(FilePath);
+        public static bool HasSave()
+        {
+            RecoverInterruptedSave();
+            return File.Exists(FilePath);
+        }
+
+        // A kill between the delete and the move in Save leaves only the finished temp file.
+        private static void RecoverInterruptedSave()
+        {
+            string path = FilePath;
+            string temp = path + TempSuffix;
+            if (File.Exists(path) || !File.Exists(temp)) return;
+
+            try { File.Move(temp, path); }
+            catch (IOException e) { Debug.LogWarning($"GameSaveStorage: save recovery failed. {e.Message}"); }
+        }
 
         public static void Save(GameSaveData data)
         {
             try
             {
-                string json = JsonUtility.ToJson(data);
-                File.WriteAllText(FilePath, json);
+                // Written aside first, so a kill mid-write cannot damage the existing save.
+                string path = FilePath;
+                string temp = path + TempSuffix;
+                File.WriteAllText(temp, JsonUtility.ToJson(data));
+                if (File.Exists(path)) File.Delete(path);
+                File.Move(temp, path);
             }
-            catch (IOException e)
+            catch (Exception e) when (e is IOException || e is UnauthorizedAccessException)
             {
                 Debug.LogError($"GameSaveStorage: failed to write save file. {e.Message}");
             }
@@ -71,21 +93,25 @@ namespace Persistence
 
         public static GameSaveData Load()
         {
-            if (!File.Exists(FilePath))
+            if (!HasSave())
                 return null;
 
             try
             {
                 string json = File.ReadAllText(FilePath);
                 GameSaveData data = JsonUtility.FromJson<GameSaveData>(json);
-                // Apply forward migrations so older v1 saves load cleanly under the v2 schema.
-                return SaveMigrator.Migrate(data);
+                if (data != null)
+                    // Apply forward migrations so older v1 saves load cleanly under the v2 schema.
+                    return SaveMigrator.Migrate(data);
             }
-            catch (IOException e)
+            catch (Exception e)
             {
                 Debug.LogError($"GameSaveStorage: failed to read save file. {e.Message}");
-                return null;
             }
+
+            // An unreadable file would fail the same way on every launch.
+            Delete();
+            return null;
         }
 
         public static void Delete()

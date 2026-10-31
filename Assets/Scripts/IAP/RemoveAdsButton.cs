@@ -83,6 +83,9 @@ namespace Ekimoz.IAP
 
             if (owned) return;
 
+            // Stays greyed out until the store can actually take the purchase.
+            _button.interactable = pm != null && pm.IsInitialized;
+
             if (_label != null)
             {
                 string price = pm?.RemoveAdsPrice;

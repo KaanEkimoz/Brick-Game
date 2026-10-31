@@ -10,12 +10,14 @@ public class PauseTheGame : MonoBehaviour
     private const string PauseMainMenuButtonPath = "PauseMenu/PausePanel/B_MainMenu";
     private const string GameOverMainMenuButtonPath = "GameOverMenu/GOM_Panel/B_MainMenu";
     private const string ResumeButtonPath = "PauseMenu/PausePanel/B_Resume";
+    private const string PauseButtonName = "B_Pause";
 
     /// <summary>True from the pause press until play restarts, including the resume countdown.
     /// Touch input runs on unscaled time, so gameplay input checks this instead of timeScale.</summary>
     public static bool IsPaused { get; private set; }
 
     private ResumeCountdown _countdown;
+    private Button _pauseButton;
 
     private void Awake()
     {
@@ -24,6 +26,8 @@ public class PauseTheGame : MonoBehaviour
         Transform canvas = transform.parent;
         Button restartButton = canvas.Find(RestartButtonPath).GetComponent<Button>();
         Button resumeButton = canvas.Find(ResumeButtonPath).GetComponent<Button>();
+        foreach (Button button in canvas.GetComponentsInChildren<Button>(true))
+            if (button.name == PauseButtonName) _pauseButton = button;
 
         _countdown = gameObject.AddComponent<ResumeCountdown>();
         _countdown.Build(canvas, resumeButton.GetComponentInChildren<TMP_Text>(true).font);
@@ -57,6 +61,18 @@ public class PauseTheGame : MonoBehaviour
     public void ResumeWithCountdown()
     {
         _countdown.Play(ResumeGame);
+    }
+
+    // Leaving the app mid-run opens the pause menu, so play waits for the resume countdown.
+    private void OnApplicationPause(bool paused)
+    {
+        if (!paused) return;
+
+        PlayerPrefs.Save();
+        InGame.PiecesController pieces = InGame.PiecesController.Instance;
+        if (IsPaused || pieces == null || !pieces.IsRunActive || Levels.LevelSession.RoundOver) return;
+        if (Tutorial.TutorialController.IsActive || !_pauseButton.gameObject.activeInHierarchy) return;
+        _pauseButton.onClick.Invoke();
     }
 
     // Returning from the background must not thaw a paused game.

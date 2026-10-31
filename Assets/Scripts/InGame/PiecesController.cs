@@ -23,6 +23,9 @@ namespace InGame
         private PieceRotation _curPieceRotation;
         private Coroutine _dropCurPiece;
 
+        /// <summary>True while a piece is in play, so a run can be interrupted.</summary>
+        public bool IsRunActive => CurPiece != null && !_gameOver;
+
         public static Action OnGameOver;
         /// <summary>Fired each time the player drives the piece down (keyboard MoveDown or held soft-drop). Not fired for the automatic gravity tick.</summary>
         public static Action OnSoftDrop;
@@ -235,6 +238,10 @@ namespace InGame
             //   • softDropIsHolding — if the player's finger is still on the screen
             //     when GameOver fires, the hold flag stays true through restart and
             //     a stale coroutine could keep dragging the next piece down.
+            //   • The save and score — the next spawn autosaves before ResetScore runs, which
+            //     would bring the abandoned score back through Continue.
+            if (!Gameplay.GameMode.IsLevels) Persistence.GameSaveStorage.Delete();
+            ScoreController.score = 0;
             PieceBag.Reset();
             Gameplay.AbilityCharger.Instance?.ResetCharge();
             PieceSpawner.Instance?.ResetBufferedAbility();

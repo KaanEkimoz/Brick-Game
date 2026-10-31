@@ -23,6 +23,7 @@ namespace Levels
         private const string ModeImageFolder = "ModeSelect/";
         private const string WinSoundPath = "LevelAudio/level_win";
         private const string WinTitleText = "LEVEL CLEARED!";
+        private const string AdConsentMessage = "We show ads to keep the game free. Allow personalized ads?";
         private const string LanguageKey = "Language";
         private const float MenuButtonFontSize = 58f;
         private const float WinCelebrationSeconds = 2f;
@@ -90,6 +91,35 @@ namespace Levels
             gameObject.AddComponent<Leaderboard.LeaderboardSubmitter>();
             gameObject.AddComponent<LevelsScoreHud>();
             BuildObjectiveLine();
+        }
+
+        private void Start()
+        {
+            if (Ekimoz.Ads.AdManager.Instance != null && Ekimoz.Ads.AdManager.Instance.NeedsConsent)
+                ShowAdConsent();
+        }
+
+        private void ShowAdConsent()
+        {
+            Transform screen = OpenScreen();
+            screen.GetComponent<Image>().color = IntroDim;
+
+            RectTransform panel = CreatePanel(screen, WinPanelSize);
+            TextMeshProUGUI heading = CreateHeading(panel, Loc.Caps("Ads"), 66f);
+            Place(heading.rectTransform, new Vector2(0f, 245f), new Vector2(720f, 90f));
+            TextMeshProUGUI message = CreatePlainText(panel, Loc.T(AdConsentMessage), 40f, Color.white);
+            Place(message.rectTransform, new Vector2(0f, 100f), new Vector2(740f, 170f));
+
+            Button allow = CreateMenuStyleButton(panel, "Allow", () => AnswerAdConsent(true));
+            Place((RectTransform)allow.transform, new Vector2(0f, -75f), WinButtonSize);
+            Button decline = CreateMenuStyleButton(panel, "No Thanks", () => AnswerAdConsent(false));
+            Place((RectTransform)decline.transform, new Vector2(0f, -225f), WinButtonSize);
+        }
+
+        private void AnswerAdConsent(bool consent)
+        {
+            CloseScreen();
+            Ekimoz.Ads.AdManager.Instance.SetConsent(consent);
         }
 
         private void OnEnable()
@@ -237,8 +267,8 @@ namespace Levels
 
             _objectiveText.gameObject.SetActive(true);
             string text = DescribeObjective(level);
-            if (level.pieceLimit > 0) text += $"\nPieces left: {Mathf.Max(0, level.pieceLimit - _session.PiecesUsed)}";
-            if (level.timeLimit > 0) text += $"\nTime: {Mathf.Max(0, _session.TimeLeftSeconds)}";
+            if (level.pieceLimit > 0) text += "\n" + Loc.F("Pieces left: {0}", Mathf.Max(0, level.pieceLimit - _session.PiecesUsed));
+            if (level.timeLimit > 0) text += "\n" + Loc.F("Time: {0}", Mathf.Max(0, _session.TimeLeftSeconds));
             _objectiveText.text = text;
         }
 
@@ -259,7 +289,7 @@ namespace Levels
                 case "Tetrises": return Objective("Tetrises: {0}/{1}", value, level.target);
                 case "Combo": return Objective("Combo: {0}/{1}", value, level.target);
                 case "Gold": return Objective("Gold left: {0}", value, level.target);
-                default: return $"Tiles left: {value}";
+                default: return Loc.F("Tiles left: {0}", value);
             }
         }
 
@@ -407,12 +437,21 @@ namespace Levels
         {
             CloseScreen();
             _classicButton.onClick.Invoke();
+            ShowTutorial();
         }
 
         private void StartExtended()
         {
             CloseScreen();
             _extendedButton.onClick.Invoke();
+            ShowTutorial();
+        }
+
+        // Skipped while the Continue prompt is waiting for an answer.
+        private static void ShowTutorial()
+        {
+            if (InGame.PiecesController.CurPiece != null)
+                FindAnyObjectByType<Tutorial.TutorialController>(FindObjectsInactive.Include)?.ShowForCurrentMode();
         }
 
         private void StartLevels()

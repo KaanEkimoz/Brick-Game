@@ -12,7 +12,6 @@ namespace Piece
         public PieceType curType;
         public Vector2Int[,] JLSTZ_OFFSET_DATA { get; private set; }
         public Vector2Int[,] I_OFFSET_DATA { get; private set; }
-        public Vector2Int[,] O_OFFSET_DATA { get; private set; }
 
         private PieceMovement _pieceMovement;
 
@@ -75,12 +74,6 @@ namespace Piece
             I_OFFSET_DATA[4, 2] = new Vector2Int(-2, 0);
             I_OFFSET_DATA[4, 3] = new Vector2Int(0, 2);
 
-            O_OFFSET_DATA = new Vector2Int[1, 4];
-            O_OFFSET_DATA[0, 0] = Vector2Int.zero;
-            O_OFFSET_DATA[0, 1] = Vector2Int.down;
-            O_OFFSET_DATA[0, 2] = new Vector2Int(-1, -1);
-            O_OFFSET_DATA[0, 3] = Vector2Int.left;
-
             _pieceMovement = GetComponent<PieceMovement>();
         }
         /// <summary>
@@ -92,7 +85,7 @@ namespace Piece
         public void RotatePiece(bool clockwise, bool shouldOffset)
         {
             // A single tile has nothing to rotate, and the wall-kick tests could shift it.
-            if (PieceController.Tiles == null || PieceController.Tiles.Length <= 1)
+            if (PieceController.Tiles == null || PieceController.Tiles.Length <= 1 || curType == PieceType.O)
                 return;
 
             int oldRotationIndex = RotationIndex;
@@ -134,11 +127,7 @@ namespace Piece
         {
             Vector2Int[,] curOffsetData;
         
-            if(curType == PieceType.O)
-            {
-                curOffsetData = O_OFFSET_DATA;
-            }
-            else if(curType == PieceType.I)
+            if(curType == PieceType.I)
             {
                 curOffsetData = I_OFFSET_DATA;
             }

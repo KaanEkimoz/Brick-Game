@@ -70,6 +70,7 @@ namespace InGame
         private void UpdateTiles(PieceType newType, PieceController pieceController)
         {
             PieceType curType = newType;
+            pieceController.GetComponent<PieceRotation>().curType = curType;
             _tiles = PieceController.Tiles;
             _tiles[0].UpdatePosition(spawnPosition);
 
@@ -241,7 +242,7 @@ namespace InGame
 
         // === Persistence hooks ===
 
-        /// <summary>Type of the falling piece. PieceRotation.curType stays at its prefab value, so the save system reads this instead.</summary>
+        /// <summary>Type of the falling piece, read by the save system.</summary>
         public PieceType CurrentPieceType => _curPieceType;
 
         /// <summary>Upcoming piece type. Used by the save system to persist the preview state.</summary>

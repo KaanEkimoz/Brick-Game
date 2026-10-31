@@ -116,7 +116,11 @@ namespace Persistence
 
             GameSaveData data = GameSaveStorage.Load();
             if (data == null)
+            {
+                if (_piecesController != null)
+                    _piecesController.StartGame();
                 return;
+            }
 
             RestoreFromData(data);
         }
@@ -233,9 +237,10 @@ namespace Persistence
                 }
 
                 // 2) Restore counters (UI + drop-speed).
+                bool signed = SaveSignature.IsValid(data);
                 if (_scoreController != null)
-                    _scoreController.LoadScore(data.score);
-                Leaderboard.RunLedger.Restore(data.score, data.runSeconds, data.ranked && SaveSignature.IsValid(data));
+                    _scoreController.LoadScore(data.score, signed);
+                Leaderboard.RunLedger.Restore(data.score, data.runSeconds, data.ranked && signed);
 
                 if (_levelController != null)
                     _levelController.LoadLevel(data.currentLevel);
