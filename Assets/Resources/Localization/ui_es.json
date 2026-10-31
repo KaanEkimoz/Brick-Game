@@ -205,8 +205,8 @@
    "text": "Menú"
   },
   {
-   "en": "Yes",
-   "text": "Sí"
+   "en": "Confirm",
+   "text": "Confirmar"
   },
   {
    "en": "Cancel",
@@ -227,10 +227,6 @@
   {
    "en": "Your current game will be lost",
    "text": "Perderás la partida actual"
-  },
-  {
-   "en": "Yes, restart",
-   "text": "Sí, reiniciar"
   },
   {
    "en": "Clear lines: {0}/{1}",

@@ -29,7 +29,7 @@ public class PauseTheGame : MonoBehaviour
         _countdown.Build(canvas, resumeButton.GetComponentInChildren<TMP_Text>(true).font);
 
         gameObject.AddComponent<ConfirmDialog>()
-            .Build(restartButton, resumeButton, "Restart?", "Your current game will be lost", "Yes, restart");
+            .Build(restartButton, resumeButton, "Restart?", "Your current game will be lost", ConfirmDialog.ConfirmText);
         GuardMainMenu(canvas.Find(PauseMainMenuButtonPath), resumeButton);
         GuardMainMenu(canvas.Find(GameOverMainMenuButtonPath), resumeButton);
     }
@@ -37,7 +37,7 @@ public class PauseTheGame : MonoBehaviour
     private void GuardMainMenu(Transform mainMenuButton, Button cancelTemplate)
     {
         gameObject.AddComponent<ConfirmDialog>().Build(mainMenuButton.GetComponent<Button>(), cancelTemplate,
-            ConfirmDialog.MainMenuTitle, ConfirmDialog.MainMenuMessage, ConfirmDialog.MainMenuYes);
+            ConfirmDialog.MainMenuTitle, ConfirmDialog.MainMenuMessage, ConfirmDialog.ConfirmText);
     }
 
     public void PauseGame()

@@ -205,8 +205,8 @@
    "text": "Menü"
   },
   {
-   "en": "Yes",
-   "text": "Evet"
+   "en": "Confirm",
+   "text": "Onayla"
   },
   {
    "en": "Cancel",
@@ -227,10 +227,6 @@
   {
    "en": "Your current game will be lost",
    "text": "Mevcut oyunun kaybolacak"
-  },
-  {
-   "en": "Yes, restart",
-   "text": "Evet, başlat"
   },
   {
    "en": "Clear lines: {0}/{1}",

@@ -592,7 +592,7 @@ namespace Levels
             TextMeshProUGUI message = CreatePlainText(panel, Loc.T(Scene.ConfirmDialog.MainMenuMessage), 40f, Color.white);
             Place(message.rectTransform, new Vector2(0f, 145f), new Vector2(740f, 70f));
 
-            Button yes = CreateMenuStyleButton(panel, Scene.ConfirmDialog.MainMenuYes, _session.ReturnToMenu);
+            Button yes = CreateMenuStyleButton(panel, Scene.ConfirmDialog.ConfirmText, _session.ReturnToMenu);
             Place((RectTransform)yes.transform, new Vector2(0f, -40f), WinButtonSize);
             Button no = CreateMenuStyleButton(panel, Scene.ConfirmDialog.NoText, () => Destroy(dim));
             Place((RectTransform)no.transform, new Vector2(0f, -190f), WinButtonSize);

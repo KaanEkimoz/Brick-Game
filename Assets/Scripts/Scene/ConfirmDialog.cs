@@ -13,7 +13,7 @@ namespace Scene
     {
         public const string MainMenuTitle = "Main Menu?";
         public const string MainMenuMessage = "Are you sure you want to leave?";
-        public const string MainMenuYes = "Yes";
+        public const string ConfirmText = "Confirm";
         public const string NoText = "Cancel";
 
         private const float TitleFontSize = 50f;
