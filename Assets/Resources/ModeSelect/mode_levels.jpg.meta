@@ -4,6 +4,7 @@ TextureImporter:
   serializedVersion: 13
   mipmaps:
     enableMipMap: 0
+  nPOTScale: 0
   textureType: 0
   wrapU: 1
   wrapV: 1

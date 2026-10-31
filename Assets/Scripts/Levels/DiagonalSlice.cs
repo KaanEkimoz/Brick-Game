@@ -8,6 +8,7 @@ namespace Levels
     /// cover the area without stretching, or with a plain color when no texture is set. Touches
     /// outside the area pass through, so slanted buttons can sit side by side.
     /// </summary>
+    [RequireComponent(typeof(CanvasRenderer))]
     public class DiagonalSlice : MaskableGraphic, ICanvasRaycastFilter
     {
         private Texture _texture;
