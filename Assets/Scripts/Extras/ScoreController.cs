@@ -22,6 +22,9 @@ namespace Extras
         /// the live ScoreController instance, e.g. the Game Over panel.</summary>
         public static int GetCurrentHighScore() => PlayerPrefs.GetInt(HighScoreKey);
 
+        public static int ClassicHighScore => PlayerPrefs.GetInt(ClassicHighScoreKey);
+        public static int ExtendedHighScore => PlayerPrefs.GetInt(ExtendedHighScoreKey);
+
         /// <summary>Fires after a positive score gain lands (delta, new total). Popup effect hooks here.</summary>
         public static Action<int, int> OnScoreAdded;
 

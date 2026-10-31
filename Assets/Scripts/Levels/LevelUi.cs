@@ -193,9 +193,13 @@ namespace Levels
             CreateDivider(screen, upper);
             CreateDivider(screen, lower);
 
-            CreateModeLabel(screen, "Classic", "Endless blocks", new Vector2(0.5f, 0.84f), Accent);
+            Vector2 classicAnchor = new Vector2(0.5f, 0.84f);
+            Vector2 extendedAnchor = new Vector2(0.5f, 0.2f);
+            CreateModeLabel(screen, "Classic", "Endless blocks", classicAnchor, Accent);
             CreateModeLabel(screen, "Levels", $"Level {NextLevel().id}", new Vector2(0.5f, 0.51f), LevelsAccent);
-            CreateModeLabel(screen, "Extended", "Bombs and lasers", new Vector2(0.5f, 0.2f), ExtendedAccent);
+            CreateModeLabel(screen, "Extended", "Bombs and lasers", extendedAnchor, ExtendedAccent);
+            CreateHighScoreLabel(screen, ScoreController.ClassicHighScore, classicAnchor);
+            CreateHighScoreLabel(screen, ScoreController.ExtendedHighScore, extendedAnchor);
 
             CreateBackIcon(screen);
         }
@@ -292,6 +296,18 @@ namespace Levels
             Vector2 size = new Vector2(textSize.x + BadgePadding.x, textSize.y + BadgePadding.y);
             PlaceAt(badge.rectTransform, anchor, new Vector2(0f, -86f), size);
             Place(label.rectTransform, Vector2.zero, size);
+        }
+
+        // Shown only once the mode has a saved score.
+        private void CreateHighScoreLabel(Transform screen, int highScore, Vector2 anchor)
+        {
+            if (highScore <= 0) return;
+
+            TextMeshProUGUI label = CreatePlainText(screen, $"High Score: {highScore}", 42f, Color.white);
+            label.fontStyle = FontStyles.Bold;
+            label.outlineWidth = 0.2f;
+            label.outlineColor = Color.black;
+            PlaceAt(label.rectTransform, anchor, new Vector2(0f, -166f), new Vector2(1000f, 64f));
         }
 
         private void StartClassic()
