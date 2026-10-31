@@ -76,7 +76,7 @@ namespace Extras
             float t = 0f;
             while (t < _duration)
             {
-                t += Time.deltaTime;
+                t += Time.unscaledDeltaTime;
                 float n = Mathf.Clamp01(t / _duration);
 
                 // Scale: 0.3 → peak in first 25%, peak → 1 in the remaining 75%
