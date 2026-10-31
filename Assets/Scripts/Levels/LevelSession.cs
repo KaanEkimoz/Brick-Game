@@ -164,6 +164,13 @@ namespace Levels
             OnProgressChanged?.Invoke();
         }
 
+        /// <summary>Freezes the prepared board while the level intro plays.</summary>
+        public void SetIntroHold(bool held)
+        {
+            RoundOver = held;
+            Time.timeScale = held ? 0f : 1f;
+        }
+
         /// <summary>Returns to the main menu.</summary>
         public void ReturnToMenu()
         {

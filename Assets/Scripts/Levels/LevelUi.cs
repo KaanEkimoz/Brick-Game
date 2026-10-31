@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Extras;
 using TMPro;
 using UnityEngine;
@@ -18,6 +19,9 @@ namespace Levels
         private const string ModeImageFolder = "ModeSelect/";
         private const int CanvasOrder = 100;
         private const float DividerThickness = 0.007f;
+        private const float IntroHoldSeconds = 1.6f;
+        private const float IntroShrinkSeconds = 0.45f;
+        private const float IntroEndScale = 0.3f;
         private const float ObjectiveY = 415f; // from the top, between the HUD and the board
 
         private static readonly Vector2 ReferenceResolution = new Vector2(1080f, 1920f);
@@ -28,6 +32,8 @@ namespace Levels
         private static readonly Vector2 UpperBorder = new Vector2(0.63f, 0.73f);
         private static readonly Vector2 LowerBorder = new Vector2(0.29f, 0.39f);
         private static readonly Color Accent = new Color(0.2f, 0.95f, 1f, 1f);
+        private static readonly Color IntroDim = new Color(0f, 0f, 0.05f, 0.75f);
+        private static readonly Vector2 IntroPanelSize = new Vector2(800f, 340f);
 
         private Transform _canvas;
         private TMP_FontAsset _font;
@@ -246,20 +252,77 @@ namespace Levels
             return LevelCatalog.Get(Mathf.Min(LevelProgress.Unlocked, last));
         }
 
+        // The board is ready behind a dim layer while a small goal panel shows. The panel then
+        // shrinks into the objective line and play starts by itself.
         private void ShowIntro(LevelDefinition level)
         {
             Transform screen = OpenScreen();
-            AddDialogText(screen, $"Level {level.id}", level.name, level.hint);
+            Image dim = screen.GetComponent<Image>();
+            dim.color = IntroDim;
 
-            Button start = CreateButton(screen, "Start", () =>
+            _session.Begin(level);
+            _session.SetIntroHold(true);
+            StartCoroutine(PlayIntro(dim, BuildIntroPanel(screen, level)));
+        }
+
+        private RectTransform BuildIntroPanel(Transform screen, LevelDefinition level)
+        {
+            GameObject go = new GameObject("IntroPanel", typeof(RectTransform), typeof(Image), typeof(Outline));
+            go.transform.SetParent(screen, false);
+            go.GetComponent<Image>().color = PanelBlue;
+            Outline border = go.GetComponent<Outline>();
+            border.effectColor = Accent;
+            border.effectDistance = new Vector2(3f, 3f);
+            RectTransform panel = (RectTransform)go.transform;
+            Place(panel, Vector2.zero, IntroPanelSize);
+
+            TextMeshProUGUI title = CreateText(panel, $"Level {level.id}", 44f, Accent);
+            Place(title.rectTransform, new Vector2(0f, 110f), new Vector2(740f, 70f));
+            TextMeshProUGUI goal = CreateText(panel, DescribeGoal(level), 42f, Color.white);
+            Place(goal.rectTransform, new Vector2(0f, 30f), new Vector2(740f, 70f));
+            TextMeshProUGUI hint = CreateText(panel, level.hint, 28f, Color.white);
+            Place(hint.rectTransform, new Vector2(0f, -80f), new Vector2(720f, 120f));
+            return panel;
+        }
+
+        private IEnumerator PlayIntro(Image dim, RectTransform panel)
+        {
+            yield return new WaitForSecondsRealtime(IntroHoldSeconds);
+
+            Vector3 from = panel.position;
+            Vector3 to = _objectiveText.rectTransform.position;
+            Color startDim = dim.color;
+            Color endDim = startDim;
+            endDim.a = 0f;
+
+            float elapsed = 0f;
+            while (elapsed < IntroShrinkSeconds)
             {
-                CloseScreen();
-                _session.Begin(level);
-            });
-            Place((RectTransform)start.transform, new Vector2(0f, -160f), new Vector2(520f, 110f));
+                elapsed += Time.unscaledDeltaTime;
+                float n = Mathf.Clamp01(elapsed / IntroShrinkSeconds);
+                float eased = n * n * (3f - 2f * n);
+                panel.position = Vector3.Lerp(from, to, eased);
+                panel.localScale = Vector3.one * Mathf.Lerp(1f, IntroEndScale, eased);
+                dim.color = Color.Lerp(startDim, endDim, eased);
+                yield return null;
+            }
 
-            Button back = CreateButton(screen, "Back", ShowModeSelect);
-            Place((RectTransform)back.transform, new Vector2(0f, -300f), new Vector2(520f, 96f));
+            CloseScreen();
+            _session.SetIntroHold(false);
+        }
+
+        private static string DescribeGoal(LevelDefinition level)
+        {
+            switch (level.objective)
+            {
+                case "Lines": return $"Clear {level.target} lines";
+                case "Score": return $"Reach {level.target} points";
+                case "AbilityCells": return $"Hit {level.target} cells with abilities";
+                case "Tetrises": return level.target == 1 ? "Clear a Tetris" : $"Clear {level.target} Tetrises";
+                case "Combo": return $"Clear lines {level.target} pieces in a row";
+                case "Gold": return "Clear all the gold";
+                default: return "Clear the board";
+            }
         }
 
         private void ShowWin(LevelDefinition level)
