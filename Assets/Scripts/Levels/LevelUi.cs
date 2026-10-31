@@ -537,6 +537,7 @@ namespace Levels
 
             CloseScreen();
             _session.SetIntroHold(false);
+            ShowTutorial();
         }
 
         private static string DescribeGoal(LevelDefinition level)

@@ -15,8 +15,8 @@ namespace Tutorial
     ///
     /// Wiring: attach to a Canvas; populate the core and (optionally) extended step lists
     /// in the inspector. Each entry pairs a step panel GameObject with the gesture that
-    /// completes it. The controller hooks itself into the StartCanvas Play buttons at
-    /// runtime so the tutorial fires AFTER GameMode is set and StartGame runs.
+    /// completes it. LevelUi calls <see cref="ShowForCurrentMode"/> once a run has started.
+    /// A first run in Extended or Levels also teaches the gestures, unless Classic already did.
     /// </summary>
     public class TutorialController : MonoBehaviour
     {
@@ -44,11 +44,28 @@ namespace Tutorial
                      "player's eye (e.g. blink the actual ability bar during the 'Ability Bar' step). " +
                      "Uses an attached CanvasGroup; one is added if missing.")]
             public GameObject blinkTarget;
+
+            /// <summary>English text for the step's title, replacing the scene's text.</summary>
+            [NonSerialized] public string titleKey;
         }
 
         private const float HintAboveBannerY = 195f;
         private const string ClassicSeenKey = "tutorial_classic_seen_v1";
         private const string ExtendedSeenKey = "tutorial_extended_seen_v1";
+        private const string LevelsSeenKey = "tutorial_levels_seen_v1";
+
+        private const string TitleName = "Title";
+        private const string IconName = "HandIcon";
+        private const string GoalIconPath = "Icons/icon_leaderboard_neon";
+        private const string BombStepName = "Step06_Bomb";
+        private const string LaserStepName = "Step07_Laser";
+        private const string BarStepName = "Step05_AbilityBar";
+        private const string BombTitle = "The bomb comes as a single block\nand clears a 3x3 area";
+        private const string LaserTitle = "Laser sits on one block of a piece\nRotate to fire a row or column";
+        private const string PatchTitle = "Patch sits on one block of a piece\nand fills holes in your stack";
+        private const string BarTitle = "Clear 5 lines to fill the ability bar\nand load a random ability";
+        private const string LevelsTitle = "Finish the goal above the board\nbefore your pieces or time run out";
+        private static readonly Color PatchIconColor = new Color(0.45f, 1f, 0.55f, 1f);
 
         [Header("Root overlay (toggled on/off; should NOT be the Canvas itself)")]
         [SerializeField] private GameObject _overlayRoot;
@@ -103,6 +120,7 @@ namespace Tutorial
         }
 
         private readonly List<TutorialStep> _activeSequence = new List<TutorialStep>();
+        private readonly List<TutorialStep> _levelSteps = new List<TutorialStep>();
         private int _index = -1;
 
         /// <summary>True while the tutorial overlay is showing a step that the player must satisfy.
@@ -137,12 +155,40 @@ namespace Tutorial
             foreach (var s in _coreSteps) if (s != null && s.panel != null) s.panel.SetActive(false);
             foreach (var s in _extendedSteps) if (s != null && s.panel != null) s.panel.SetActive(false);
             if (_completedCard != null) _completedCard.SetActive(false);
+            RefreshSteps();
 
             // Returning-user check: if this device has any sign of prior Brick Game play,
             // mark both tutorial seen-flags so the update from a pre-tutorial build doesn't
             // suddenly bombard veterans with a tutorial they don't need. Only effective when
             // AlwaysShow is OFF (production).
             if (!AlwaysShow) MarkSeenIfReturningUser();
+        }
+
+        // Keeps the scene's cards in step with the abilities, which are defined in code.
+        private void RefreshSteps()
+        {
+            TutorialStep template = null;
+            foreach (TutorialStep step in _extendedSteps)
+            {
+                if (step == null || step.panel == null) continue;
+                if (step.panel.name == BombStepName) { step.titleKey = BombTitle; template = step; }
+                else if (step.panel.name == LaserStepName) step.titleKey = LaserTitle;
+                else if (step.panel.name == BarStepName) step.titleKey = BarTitle;
+            }
+            if (template == null) return;
+
+            Sprite tile = FindAnyObjectByType<PieceSpawner>(FindObjectsInactive.Include)?.TileSprites[0];
+            _extendedSteps.Insert(_extendedSteps.Count - 1, CreateInfoStep(template.panel, PatchTitle, tile, PatchIconColor));
+            _levelSteps.Add(CreateInfoStep(template.panel, LevelsTitle, Resources.Load<Sprite>(GoalIconPath), Color.white));
+        }
+
+        private static TutorialStep CreateInfoStep(GameObject template, string titleKey, Sprite icon, Color iconColor)
+        {
+            GameObject panel = Instantiate(template, template.transform.parent);
+            UnityEngine.UI.Image image = panel.transform.Find(IconName).GetComponent<UnityEngine.UI.Image>();
+            image.sprite = icon;
+            image.color = iconColor;
+            return new TutorialStep { panel = panel, titleKey = titleKey };
         }
 
         private static void MarkSeenIfReturningUser()
@@ -220,38 +266,37 @@ namespace Tutorial
         /// <summary>Public entry: show the tutorial for whatever mode GameMode is currently in.</summary>
         public void ShowForCurrentMode()
         {
-            bool extended = GameMode.IsExtended;
-            string key = extended ? ExtendedSeenKey : ClassicSeenKey;
+            string key = GameMode.IsLevels ? LevelsSeenKey : GameMode.IsExtended ? ExtendedSeenKey : ClassicSeenKey;
             if (!AlwaysShow && PlayerPrefs.GetInt(key, 0) == 1)
                 return;
 
-            BuildSequence(extended);
+            BuildSequence();
             if (_activeSequence.Count == 0) return;
 
             if (!AlwaysShow)
             {
                 PlayerPrefs.SetInt(key, 1);
+                PlayerPrefs.SetInt(ClassicSeenKey, 1);
                 PlayerPrefs.Save();
             }
             BeginTutorial();
         }
 
-        private void BuildSequence(bool extended)
+        // Classic teaches the gestures. The other modes add them for a player who starts there.
+        private void BuildSequence()
         {
             _activeSequence.Clear();
-            if (extended)
-            {
-                // Extended mode skips the basic gesture lessons (move/rotate/soft/hard drop) —
-                // the player learned those in Classic. We only introduce what's NEW: bomb piece,
-                // laser piece, then the ability bar highlight + auto-complete.
-                foreach (var s in _extendedSteps)
-                    if (s != null && s.panel != null) _activeSequence.Add(s);
-            }
-            else
-            {
-                foreach (var s in _coreSteps)
-                    if (s != null && s.panel != null) _activeSequence.Add(s);
-            }
+            bool gesturesSeen = !AlwaysShow && PlayerPrefs.GetInt(ClassicSeenKey, 0) == 1;
+            bool classic = !GameMode.IsLevels && !GameMode.IsExtended;
+            if (classic || !gesturesSeen) AddSteps(_coreSteps);
+            if (GameMode.IsLevels) AddSteps(_levelSteps);
+            else if (GameMode.IsExtended) AddSteps(_extendedSteps);
+        }
+
+        private void AddSteps(List<TutorialStep> steps)
+        {
+            foreach (TutorialStep step in steps)
+                if (step != null && step.panel != null) _activeSequence.Add(step);
         }
 
         private void BeginTutorial()
@@ -316,6 +361,8 @@ namespace Tutorial
                 return;
             }
             var step = _activeSequence[_index];
+            if (step.titleKey != null)
+                step.panel.transform.Find(TitleName).GetComponent<TMPro.TMP_Text>().text = Localization.Loc.T(step.titleKey);
             step.panel.SetActive(true);
             RequiredGesture = step.requiredGesture;
             UpdateHintText();
@@ -386,6 +433,7 @@ namespace Tutorial
             // linger on screen after a Skip or after the last step completes.
             foreach (var s in _coreSteps) if (s != null && s.panel != null) s.panel.SetActive(false);
             foreach (var s in _extendedSteps) if (s != null && s.panel != null) s.panel.SetActive(false);
+            foreach (var s in _levelSteps) s.panel.SetActive(false);
             Time.timeScale = _savedTimeScale;
             ResumeParticles();
 
@@ -490,6 +538,7 @@ namespace Tutorial
         {
             PlayerPrefs.DeleteKey(ClassicSeenKey);
             PlayerPrefs.DeleteKey(ExtendedSeenKey);
+            PlayerPrefs.DeleteKey(LevelsSeenKey);
             PlayerPrefs.Save();
             Debug.Log("[Tutorial] Seen flags reset.");
         }
