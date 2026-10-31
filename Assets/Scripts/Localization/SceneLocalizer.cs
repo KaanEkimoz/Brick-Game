@@ -15,8 +15,9 @@ namespace Localization
         private const string BackButtonName = "B_Back";
         private const string SettingsPanelName = "SettingsPanel";
         private const string RestorePurchasesName = "B_RestorePurchases";
-        private static readonly Vector2 LanguageButtonSize = new Vector2(320f, 44f);
-        private const float LanguageButtonGap = 8f;
+        private const float BackButtonDrop = 18f; // makes room for the language button
+        private const float LanguageButtonGap = 10f;
+        private static readonly Vector2 LanguageButtonSize = new Vector2(320f, 38f);
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void Initialize()
@@ -30,6 +31,7 @@ namespace Localization
             foreach (TMP_Text label in Resources.FindObjectsOfTypeAll<TMP_Text>())
             {
                 if (!label.gameObject.scene.IsValid()) continue;
+                if (string.IsNullOrEmpty(label.text)) continue;
                 if (!Loc.TryGetSceneText(label.text, out string text)) continue;
                 label.text = IsPlainFont(label) ? text : Loc.Upper(text);
             }
@@ -56,6 +58,7 @@ namespace Localization
 
             RectTransform rect = (RectTransform)button.transform;
             RectTransform back = (RectTransform)backButton.transform;
+            back.anchoredPosition += Vector2.down * BackButtonDrop;
             rect.sizeDelta = LanguageButtonSize;
             rect.anchoredPosition = back.anchoredPosition
                 + Vector2.up * (back.sizeDelta.y * 0.5f + LanguageButtonSize.y * 0.5f + LanguageButtonGap);
