@@ -19,7 +19,10 @@ namespace Levels
         private const string ModeImageFolder = "ModeSelect/";
         private const int CanvasOrder = 100;
         private const float DividerThickness = 0.007f;
-        private const float IntroHoldSeconds = 1.6f;
+        private const float IntroMinHoldSeconds = 3f;
+        private const float IntroMaxHoldSeconds = 7f;
+        private const float IntroSecondsPerCharacter = 0.06f;
+        private const float IntroTapLockSeconds = 0.5f; // ignores the tap that opened the level
         private const float IntroShrinkSeconds = 0.45f;
         private const float IntroEndScale = 0.3f;
         private const float ObjectiveY = 415f; // from the top, between the HUD and the board
@@ -262,7 +265,9 @@ namespace Levels
 
             _session.Begin(level);
             _session.SetIntroHold(true);
-            StartCoroutine(PlayIntro(dim, BuildIntroPanel(screen, level)));
+            float readSeconds = (DescribeGoal(level).Length + level.hint.Length) * IntroSecondsPerCharacter;
+            float holdSeconds = Mathf.Clamp(readSeconds, IntroMinHoldSeconds, IntroMaxHoldSeconds);
+            StartCoroutine(PlayIntro(dim, BuildIntroPanel(screen, level), holdSeconds));
         }
 
         private RectTransform BuildIntroPanel(Transform screen, LevelDefinition level)
@@ -285,9 +290,16 @@ namespace Levels
             return panel;
         }
 
-        private IEnumerator PlayIntro(Image dim, RectTransform panel)
+        // Stays long enough to read, and a tap moves on sooner.
+        private IEnumerator PlayIntro(Image dim, RectTransform panel, float holdSeconds)
         {
-            yield return new WaitForSecondsRealtime(IntroHoldSeconds);
+            float held = 0f;
+            while (held < holdSeconds)
+            {
+                held += Time.unscaledDeltaTime;
+                if (held > IntroTapLockSeconds && Input.GetMouseButtonDown(0)) break;
+                yield return null;
+            }
 
             Vector3 from = panel.position;
             Vector3 to = _objectiveText.rectTransform.position;
