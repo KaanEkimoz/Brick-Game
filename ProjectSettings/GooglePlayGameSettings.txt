@@ -1,0 +1,11 @@
+proj.AppId=359608370817
+and.BundleId=com.ekimozgames.brickgame
+proj.classDir=Assets%2fScripts%2fLeaderboard
+proj.ConstantsClassName=GPGSIds
+and.ResourceData=%3c%3fxml+version%3d%221.0%22+encoding%3d%22utf-8%22%3f%3e%0a%3cresources%3e%0a++%3cstring+name%3d%22app_id%22+translatable%3d%22false%22%3e359608370817%3c%2fstring%3e%0a++%3cstring+name%3d%22package_name%22+translatable%3d%22false%22%3ecom.ekimozgames.brickgame%3c%2fstring%3e%0a++%3cstring+name%3d%22leaderboard_classic%22+translatable%3d%22false%22%3eCgkIgY3R0rsKEAIQAQ%3c%2fstring%3e%0a++%3cstring+name%3d%22leaderboard_extended%22+translatable%3d%22false%22%3eCgkIgY3R0rsKEAIQAg%3c%2fstring%3e%0a%3c%2fresources%3e
+App.NearbdServiceId=
+android.NearbySetupDone=true
+and.ClientId=
+android.SetupDone=true
+lastUpgrade=20100
+proj.pluginVersion=2.1.0
