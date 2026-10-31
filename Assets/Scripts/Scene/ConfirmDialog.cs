@@ -17,7 +17,7 @@ namespace Scene
         public const string NoText = "Cancel";
 
         private const float ButtonFontSize = 44f;
-        private static readonly Color BackdropColor = new Color(0f, 0f, 0.08f, 0.92f);
+        private static readonly Color BackdropColor = new Color(0f, 0f, 0.08f, 1f);
 
         private GameObject _root;
 
@@ -36,6 +36,8 @@ namespace Scene
             guardedButton.onClick.AddListener(() => _root.SetActive(true));
 
             Button yes = CreateButton(guardedButton, yesText, new Vector2(0f, -30f));
+            yes.colors = cancelTemplate.colors;
+            yes.GetComponentInChildren<TMP_Text>(true).color = buttonLabel.color;
             yes.onClick.AddListener(() =>
             {
                 _root.SetActive(false);
