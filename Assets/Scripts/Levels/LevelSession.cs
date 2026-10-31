@@ -22,8 +22,9 @@ namespace Levels
         private const char FixedChar = '#';
         private const char GoldChar = '*';
         private const char NormalChar = 'X';
-        private static readonly Color FixedTint = new Color(0.45f, 0.48f, 0.55f, 1f);
-        private static readonly Color GoldTint = new Color(1f, 0.85f, 0.2f, 1f);
+        private const float SolidTilePixelsPerUnit = 4f; // Unity's white texture is 4x4
+        private static readonly Color FixedTint = new Color(0.5f, 0.53f, 0.6f, 1f);
+        private static readonly Color GoldTint = new Color(1f, 0.82f, 0.15f, 1f);
 
         // Set before a scene reload so the level list reopens after "Levels" on the win dialog.
         private static bool _openSelectAfterLoad;
@@ -45,6 +46,7 @@ namespace Levels
         private GameObject _gameOverMenu;
         private GameObject _nextPiece;
 
+        private Sprite _solidTile;
         private bool _layoutPending;
         private int _linesCleared;
         private int _tetrises;
@@ -293,6 +295,13 @@ namespace Levels
         {
             Sprite[] palette = _spawner.TileSprites;
             GameObject template = PieceController.Tiles[0].gameObject;
+            if (_solidTile == null)
+            {
+                Texture2D white = Texture2D.whiteTexture;
+                _solidTile = Sprite.Create(white, new Rect(0f, 0f, white.width, white.height),
+                    new Vector2(0.5f, 0.5f), SolidTilePixelsPerUnit);
+            }
+
             for (int y = 0; y < Current.rows.Count; y++)
             {
                 string row = Current.rows[y];
@@ -302,8 +311,8 @@ namespace Levels
                     Vector2Int coords = new Vector2Int(x, y);
                     Sprite normal = palette[(x + y) % palette.Length];
                     if (cell == NormalChar) _board.PlaceTile(coords, template, normal, Color.white, TileKind.Normal);
-                    else if (cell == FixedChar) _board.PlaceTile(coords, template, palette[0], FixedTint, TileKind.Fixed);
-                    else if (cell == GoldChar) _board.PlaceTile(coords, template, palette[0], GoldTint, TileKind.Gold);
+                    else if (cell == FixedChar) _board.PlaceTile(coords, template, _solidTile, FixedTint, TileKind.Fixed);
+                    else if (cell == GoldChar) _board.PlaceTile(coords, template, _solidTile, GoldTint, TileKind.Gold);
                 }
             }
         }

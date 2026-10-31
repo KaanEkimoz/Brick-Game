@@ -58,7 +58,10 @@ namespace Extras
             // never re-runs and the gravity coroutine stays at the previous run's
             // (faster) drop time. Result: HUD reads "Level 1" but pieces still fall
             // at Level 12 speed after a restart.
-            OnLevelIncreased?.Invoke();
+            // A level's fixed speed is a setup step, not a level-up, so it plays no banner.
+            IsRestoring = FixedSpeedLevel > 0;
+            try { OnLevelIncreased?.Invoke(); }
+            finally { IsRestoring = false; }
         }
 
         /// <summary>Restores the level from a save file. Fires OnLevelIncreased so drop-time and UI recalc.</summary>

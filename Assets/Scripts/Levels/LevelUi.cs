@@ -154,7 +154,7 @@ namespace Levels
                 CreateLevelCell(content, level, unlocked);
 
             Button back = CreateButton(screen, "Back", CloseScreen);
-            Place((RectTransform)back.transform, new Vector2(0f, -840f), new Vector2(360f, 96f));
+            Place((RectTransform)back.transform, new Vector2(0f, -710f), new Vector2(360f, 96f));
         }
 
         private RectTransform BuildScrollContent(Transform parent)
@@ -163,7 +163,7 @@ namespace Levels
             viewport.transform.SetParent(parent, false);
             viewport.GetComponent<Image>().color = Color.clear;
             RectTransform viewportRect = (RectTransform)viewport.transform;
-            Place(viewportRect, new Vector2(0f, -10f), new Vector2(960f, 1480f));
+            Place(viewportRect, new Vector2(0f, 40f), new Vector2(960f, 1340f));
 
             int rows = Mathf.CeilToInt((float)LevelCatalog.All.Count / GridColumns);
             GameObject content = new GameObject("Content", typeof(RectTransform), typeof(GridLayoutGroup));
