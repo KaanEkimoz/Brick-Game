@@ -24,6 +24,7 @@ namespace Levels
         private const float WinPopScale = 1.25f;
         private const int CanvasOrder = 100;
         private const float DividerThickness = 0.007f;
+        private const float BackIconSize = 110f;
         private const float IntroMinHoldSeconds = 3f;
         private const float IntroMaxHoldSeconds = 7f;
         private const float IntroSecondsPerCharacter = 0.06f;
@@ -190,12 +191,34 @@ namespace Levels
             CreateModeLabel(screen, "Levels", $"Level {NextLevel().id}", new Vector2(0.5f, 0.51f), LevelsAccent);
             CreateModeLabel(screen, "Extended", "Bombs and lasers", new Vector2(0.5f, 0.2f), ExtendedAccent);
 
-            Button back = CreateButton(screen, "Back", CloseScreen);
-            RectTransform backRect = (RectTransform)back.transform;
-            backRect.anchorMin = backRect.anchorMax = new Vector2(0f, 1f);
-            backRect.pivot = new Vector2(0f, 1f);
-            backRect.sizeDelta = new Vector2(200f, 84f);
-            backRect.anchoredPosition = new Vector2(30f, -40f);
+            CreateBackIcon(screen);
+        }
+
+        // Neon badge with a left chevron, drawn from two slanted quads.
+        private void CreateBackIcon(Transform screen)
+        {
+            Button back = CreateButton(screen, "", CloseScreen);
+            back.GetComponent<Image>().color = BadgeColor;
+            Outline border = back.gameObject.AddComponent<Outline>();
+            border.effectColor = Accent;
+            border.effectDistance = new Vector2(3f, 3f);
+
+            RectTransform rect = (RectTransform)back.transform;
+            rect.anchorMin = rect.anchorMax = new Vector2(0f, 1f);
+            rect.pivot = new Vector2(0f, 1f);
+            rect.sizeDelta = new Vector2(BackIconSize, BackIconSize);
+            rect.anchoredPosition = new Vector2(30f, -40f);
+
+            Vector2 tipOuter = new Vector2(0.28f, 0.5f);
+            Vector2 tipInner = new Vector2(0.44f, 0.5f);
+            CreateSlice(back.transform, null, new[]
+            {
+                tipOuter, new Vector2(0.52f, 0.8f), new Vector2(0.68f, 0.8f), tipInner,
+            }, Accent).raycastTarget = false;
+            CreateSlice(back.transform, null, new[]
+            {
+                tipOuter, tipInner, new Vector2(0.68f, 0.2f), new Vector2(0.52f, 0.2f),
+            }, Accent).raycastTarget = false;
         }
 
         private void CreateModeSlice(Transform screen, string image, Vector2[] corners, Action onClick)
