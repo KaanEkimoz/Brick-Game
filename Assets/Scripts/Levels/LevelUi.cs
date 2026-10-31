@@ -86,6 +86,7 @@ namespace Levels
             BuildLeaderboardButton();
             BuildGameOverLeaderboard();
             gameObject.AddComponent<Leaderboard.LeaderboardSubmitter>();
+            gameObject.AddComponent<LevelsScoreHud>();
             BuildObjectiveLine();
         }
 
