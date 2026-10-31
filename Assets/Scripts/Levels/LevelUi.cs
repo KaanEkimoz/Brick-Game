@@ -525,8 +525,8 @@ namespace Levels
             Transform screen = OpenScreen();
             screen.GetComponent<Image>().color = Color.clear;
 
-            RunEffectsThroughFreeze();
             FindAnyObjectByType<TetrisCelebrationEffect>(FindObjectsInactive.Include)?.Celebrate();
+            RunEffectsThroughFreeze();
             if (SFXToggle.IsSfxEnabled) GetComponent<AudioSource>().PlayOneShot(Resources.Load<AudioClip>(WinSoundPath));
 
             TextMeshProUGUI banner = CreateWinTitle(screen, 96f);
@@ -555,7 +555,7 @@ namespace Levels
             foreach (ParticleSystem effect in FindObjectsByType<ParticleSystem>(FindObjectsSortMode.None))
             {
                 ParticleSystem.MainModule main = effect.main;
-                if (main.playOnAwake || main.useUnscaledTime) continue;
+                if (main.useUnscaledTime) continue; // the confetti already runs on real time
                 main.useUnscaledTime = true;
                 _frozenEffects.Add(effect);
             }
