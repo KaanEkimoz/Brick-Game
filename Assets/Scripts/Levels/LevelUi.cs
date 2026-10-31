@@ -216,7 +216,7 @@ namespace Levels
             titleText.outlineColor = Color.black;
             PlaceAt(titleText.rectTransform, anchor, new Vector2(0f, 24f), new Vector2(1000f, 120f));
 
-            TextMeshProUGUI subtitleText = CreateText(screen, subtitle, 36f, Accent);
+            TextMeshProUGUI subtitleText = CreateText(screen, subtitle, 40f, Color.white);
             subtitleText.outlineWidth = 0.25f;
             subtitleText.outlineColor = Color.black;
             PlaceAt(subtitleText.rectTransform, anchor, new Vector2(0f, -58f), new Vector2(1000f, 60f));
