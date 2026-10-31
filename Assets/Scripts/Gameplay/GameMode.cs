@@ -11,6 +11,20 @@ namespace Gameplay
         public static event Action OnChanged;
 
         private static bool _isExtended;
+        private static bool _isLevels;
+
+        /// <summary>True while a Levels run is active. Levels never touch the run saves and
+        /// keep their own high score.</summary>
+        public static bool IsLevels
+        {
+            get => _isLevels;
+            set
+            {
+                if (_isLevels == value) return;
+                _isLevels = value;
+                OnChanged?.Invoke();
+            }
+        }
 
         public static bool IsExtended
         {

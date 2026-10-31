@@ -9,6 +9,7 @@ namespace Tiles
         [HideInInspector]public Vector2Int coordinates;
         [HideInInspector]public PieceController pieceController;
         [HideInInspector]public int tileIndex;
+        [HideInInspector]public TileKind kind;
     
         public void InitializeTile(PieceController myPC, int index)
         {

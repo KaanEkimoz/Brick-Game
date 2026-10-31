@@ -12,12 +12,18 @@ namespace Extras
         private const string ClassicHighScoreKey = "highScore";
         private const string ExtendedHighScoreKey = "highScore_Extended";
 
-        private static string HighScoreKey => GameMode.IsExtended ? ExtendedHighScoreKey : ClassicHighScoreKey;
+        private const string LevelsHighScoreKey = "highScore_Levels";
+
+        private static string HighScoreKey => GameMode.IsLevels ? LevelsHighScoreKey
+            : GameMode.IsExtended ? ExtendedHighScoreKey : ClassicHighScoreKey;
 
         /// <summary>Reads the high score for the currently selected GameMode (Classic vs Extended)
         /// directly from PlayerPrefs. Use this from screens that show the high score outside of
         /// the live ScoreController instance, e.g. the Game Over panel.</summary>
         public static int GetCurrentHighScore() => PlayerPrefs.GetInt(HighScoreKey);
+
+        public static int ClassicHighScore => PlayerPrefs.GetInt(ClassicHighScoreKey);
+        public static int ExtendedHighScore => PlayerPrefs.GetInt(ExtendedHighScoreKey);
 
         /// <summary>Fires after a positive score gain lands (delta, new total). Popup effect hooks here.</summary>
         public static Action<int, int> OnScoreAdded;
@@ -78,6 +84,11 @@ namespace Extras
                     break;
                 case 4:
                     AddScore(1200 * (LevelController.CurrentLevel + 1));
+                    break;
+                default:
+                    // A Patch can complete more than four rows at once; pay those as a Tetris.
+                    if (consecutiveLineClears > 4)
+                        AddScore(1200 * (LevelController.CurrentLevel + 1));
                     break;
             }
         }

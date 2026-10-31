@@ -189,6 +189,13 @@ namespace InGame
 
             OnGameOver?.Invoke();
         }
+        /// <summary>Stops play without a game over, for a level that was won.</summary>
+        public void EndRound()
+        {
+            _gameOver = true;
+            softDropIsHolding = false;
+            StopDropCurPiece();
+        }
         /// <summary>
         /// Moves the current piece controlled by the player.
         /// </summary>
@@ -223,7 +230,7 @@ namespace InGame
             // in-place restart would otherwise leak from the previous run:
             //   • PieceBag — leftover 7-bag pieces would skew the first few spawns
             //     and break the no-drought guarantee.
-            //   • AbilityCharger — a 4/5 charge (or armed Bomb/Laser) from the prior
+            //   • AbilityCharger — a 4/5 charge (or armed ability) from the prior
             //     run would carry over into the new game's first line clear.
             //   • softDropIsHolding — if the player's finger is still on the screen
             //     when GameOver fires, the hold flag stays true through restart and

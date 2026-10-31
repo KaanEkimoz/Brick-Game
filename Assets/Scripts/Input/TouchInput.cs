@@ -9,75 +9,76 @@ namespace InputSystem
     /// <summary>
     /// Touch-driven input layer for the Brick Game gameplay scene.
     ///
-    /// Gestures (single finger, screen-wide):
-    ///   - Tap (short, small radius) ............ <see cref="PiecesController.RotateClockwise"/>
-    ///   - Horizontal drag / swipe .............. <see cref="PiecesController.MoveLeft"/> /
-    ///                                             <see cref="PiecesController.MoveRight"/>
-    ///                                             Cumulative horizontal delta is quantised to
-    ///                                             one cell width per step, so both a quick
-    ///                                             flick and a slow continuous drag feel the same.
-    ///   - Fast downward swipe (short + high vy)  <see cref="PiecesController.SendPieceToFloor"/>
-    ///   - Held downward drag ................... <see cref="PiecesController.MoveDown"/> at a
-    ///                                             tick interval driven by how far the finger has
-    ///                                             dragged below its highest reached Y. Far below
-    ///                                             peak = fast drop, just past activation = slow.
+    /// Gestures (single finger, screen-wide). The gesture's AXIS is decided ONCE, the moment the
+    /// finger leaves a small dead zone, from the cumulative travel so far — not per-frame. A single
+    /// axis per touch is what kills both classic touch bugs: a horizontal swipe that arcs can no
+    /// longer be killed mid-swipe by a stray vertical frame, and a downward hard-drop flick can no
+    /// longer sneak in a sideways step on its first diagonal frames.
+    ///   - Tap (short, inside dead zone) ........ <see cref="PiecesController.RotateClockwise"/>
+    ///   - Horizontal axis (drag/swipe) ......... <see cref="PiecesController.MoveLeft"/> /
+    ///                                             <see cref="PiecesController.MoveRight"/>, cumulative
+    ///                                             horizontal delta quantised to one cell per step.
+    ///                                             May also soft-drop if the finger later drags
+    ///                                             clearly below its peak (optional, see field).
+    ///   - Vertical axis, held drag ............. <see cref="PiecesController.MoveDown"/> at a tick
+    ///                                             interval scaled by how far below peak the finger is.
+    ///   - Vertical axis, fast flick on lift .... <see cref="PiecesController.SendPieceToFloor"/>
     ///
-    /// Touches that begin on top of a UI element (Pause button, ability button, menus) are
+    /// Touches that begin on top of an interactive UI element (Pause, ability buttons, menus) are
     /// ignored so the existing UI keeps working untouched.
     /// </summary>
     public class TouchInput : MonoBehaviour
     {
+        private enum Axis { Undecided, Horizontal, Vertical }
+
         [Header("Horizontal step")]
-        [Tooltip("Screen pixels the finger has to travel horizontally before the piece steps one " +
-                 "cell. Auto-calibrated from Screen.width on Awake so DPI / aspect doesn't break it.")]
+        [Tooltip("Screen pixels the finger travels horizontally per one-cell step. Auto-calibrated " +
+                 "from Screen.width on Awake. LOWER = more sensitive (piece tracks the finger more " +
+                 "eagerly); HIGHER = calmer. Tune on-device for feel.")]
         [SerializeField] private float _horizontalStepPixels = 40f;
 
-        [Tooltip("Per-frame vertical lock — when the frame's |dy| exceeds |dx| × this factor, " +
-                 "the horizontal accumulator is ignored AND drained, so a thumb sliding mostly " +
-                 "downward (e.g. a hard-drop swipe) can't sneak in a sideways step. Higher = " +
-                 "stricter (rarer accidental side-step on vertical gestures). 0 disables the lock.")]
-        [SerializeField] private float _horizontalLockRatio = 1.5f;
+        [Tooltip("Divisor applied to Screen.width on Awake to derive the step. width/13 ≈ a touch " +
+                 "more responsive than one visual cell. Smaller divisor = larger step = less sensitive.")]
+        [SerializeField] private float _horizontalStepScreenDivisor = 13f;
 
-        [Tooltip("Once a frame triggers the vertical lock, lock OUT all horizontal stepping for " +
-                 "the rest of THIS touch. Frame-only locking lets diagonal hard-drops sneak in a " +
-                 "side-step on the few frames where dx briefly catches up. Sticky commitment " +
-                 "removes that whole class of false side-steps.")]
-        [SerializeField] private bool _verticalLockSticky = true;
+        [Header("Axis decision (dead zone)")]
+        [Tooltip("Finger must leave this radius (px) from the touch start before any move/drop fires. " +
+                 "At the moment it crosses, the gesture axis is locked for the rest of the touch from " +
+                 "the cumulative dx vs dy. Also doubles as the tap radius.")]
+        [SerializeField] private float _tapMaxRadius = 24f;
 
         [Header("Tap (rotate)")]
         [SerializeField] private float _tapMaxDuration = 0.25f;
-        [SerializeField] private float _tapMaxRadius = 24f;
 
-        [Header("Hard drop swipe")]
+        [Header("Hard drop flick (vertical axis only)")]
         [Tooltip("Minimum downward velocity (px/s) required on lift-off to count as a hard drop.")]
         [SerializeField] private float _hardDropMinVelocity = 2200f;
 
-        [Tooltip("Maximum touch duration (seconds) for a hard drop. Anything longer is treated " +
-                 "as a controlled soft drop instead, no matter how far the finger moved.")]
+        [Tooltip("Maximum touch duration (seconds) for a hard drop. Anything longer is a controlled " +
+                 "soft drop instead, no matter how far the finger moved.")]
         [SerializeField] private float _hardDropMaxDuration = 0.30f;
 
-        [Tooltip("Minimum vertical distance the finger must travel for a hard drop.")]
+        [Tooltip("Minimum vertical distance (px) the finger must travel for a hard drop.")]
         [SerializeField] private float _hardDropMinDistance = 120f;
 
         [Header("Soft drop")]
-        [Tooltip("How far the finger must drag below its peak Y before soft drop starts firing. " +
-                 "Lower = more responsive to light downward pressure. The sticky vertical lock " +
-                 "above already prevents diagonal hard-drops from leaking sideways, so this can " +
-                 "stay forgiving without false side-steps.")]
+        [Tooltip("How far the finger must drag below its peak Y before soft drop starts firing.")]
         [SerializeField] private float _softDropActivatePixels = 40f;
 
-        [Tooltip("Soft drop fires only when the touch is clearly more vertical than horizontal. "
-               + "Multiplier applied to the horizontal travel — drop-below-peak must exceed "
-               + "horizontalTravel × this factor. Higher = stricter (left/right drags less likely "
-               + "to accidentally fire soft drop). 1.0 = equal vertical/horizontal threshold.")]
-        [SerializeField] private float _softDropVerticalDominance = 1.2f;
+        [Tooltip("Allow soft drop while the touch is committed to the HORIZONTAL axis, when the finger " +
+                 "later drags clearly below its peak. Lets a single touch move sideways THEN push down. " +
+                 "Turn off for strictly one-intent-per-touch controls.")]
+        [SerializeField] private bool _softDropInHorizontalAxis = true;
 
-        [Tooltip("Slowest soft-drop tick interval (seconds). Held just past activation drops " +
-                 "this often. Lower = more cells per second on a light downward press.")]
+        [Tooltip("In the horizontal axis, soft drop fires only when drop-below-peak exceeds horizontal " +
+                 "travel × this factor (keeps a pure sideways drag from drizzling drops). Ignored on the " +
+                 "vertical axis, which is already committed to dropping.")]
+        [SerializeField] private float _softDropVerticalDominance = 1.4f;
+
+        [Tooltip("Slowest soft-drop tick interval (seconds). Held just past activation drops this often.")]
         [SerializeField] private float _softDropSlowInterval = 0.15f;
 
-        [Tooltip("Fastest soft-drop tick interval (seconds). Held far below activation drops " +
-                 "this often.")]
+        [Tooltip("Fastest soft-drop tick interval (seconds). Held far below activation drops this often.")]
         [SerializeField] private float _softDropFastInterval = 0.039f;
 
         [Tooltip("Drag distance below activation (pixels) that maps to the fastest tick.")]
@@ -94,16 +95,13 @@ namespace InputSystem
         private float _softDropNextTickTime;
         private bool _hardDropFired;
         private bool _movedBeyondTapRadius;
-        // True once this touch has been classified as vertical. Sticky for the rest of the touch
-        // so a hard-drop swipe with mild diagonal drift cannot drop in a phantom side-step on
-        // frames where dx briefly recovers.
-        private bool _verticalCommitted;
+        private Axis _axis;
 
         private void Awake()
         {
-            // Calibrate cell width from screen size. The board is ~10 cells across the playfield
-            // but a slightly tighter step than Screen.width / 10 feels more responsive on a phone.
-            _horizontalStepPixels = Mathf.Max(28f, Screen.width / 12f);
+            // Calibrate cell step from screen size so DPI / aspect doesn't change the feel.
+            float divisor = Mathf.Max(6f, _horizontalStepScreenDivisor);
+            _horizontalStepPixels = Mathf.Max(24f, Screen.width / divisor);
         }
 
         private void Update()
@@ -188,7 +186,7 @@ namespace InputSystem
             _softDropNextTickTime = 0f;
             _hardDropFired = false;
             _movedBeyondTapRadius = false;
-            _verticalCommitted = false;
+            _axis = Axis.Undecided;
         }
 
         private void HandleMove(Touch t)
@@ -200,32 +198,28 @@ namespace InputSystem
             // reference so the player can wiggle freely as long as they're moving downward.
             if (t.position.y > _peakY) _peakY = t.position.y;
 
-            // Once the finger moves past the tap radius we know this is a drag, not a tap.
-            if (!_movedBeyondTapRadius && Vector2.Distance(t.position, _touchStart) > _tapMaxRadius)
-                _movedBeyondTapRadius = true;
-
-            // Vertical-lock: if THIS frame is sharply vertical (|dy| dominates |dx| by the
-            // configured ratio), do NOT integrate dx into the horizontal step accumulator. Also
-            // drain the accumulator slightly so a few prior near-step deltas don't carry over and
-            // fire a phantom side-step during a hard-drop swipe.
-            float absDX = Mathf.Abs(delta.x);
-            float absDY = Mathf.Abs(delta.y);
-            bool verticalLocked = _horizontalLockRatio > 0f && absDY > absDX * _horizontalLockRatio;
-
-            // Sticky lock: once any frame in this touch is clearly vertical, refuse all
-            // subsequent horizontal stepping. A diagonal hard-drop has a few frames where dx
-            // briefly catches up to dy — without sticky commitment those would slip through
-            // and fire a phantom side-step right before the hard-drop lands.
-            if (verticalLocked && _verticalLockSticky) _verticalCommitted = true;
-            bool blockHorizontalStep = verticalLocked || _verticalCommitted;
-
-            if (blockHorizontalStep)
+            // Inside the dead zone nothing fires — this is still a potential tap, and we have too
+            // little travel to tell horizontal intent from vertical intent reliably.
+            if (!_movedBeyondTapRadius)
             {
-                // Hard reset (not a soft drain) once we've committed to vertical — any residue
-                // from earlier near-step frames is invalid for the rest of this touch.
+                if (Vector2.Distance(t.position, _touchStart) <= _tapMaxRadius) return;
+                _movedBeyondTapRadius = true;
+            }
+
+            // Decide the axis ONCE, from the cumulative displacement at the moment we leave the dead
+            // zone. ~24px of accumulated travel reflects real intent and is immune to single-frame
+            // jitter, so a horizontal swipe commits horizontal and a downward flick commits vertical.
+            if (_axis == Axis.Undecided)
+            {
+                float totalDX = Mathf.Abs(t.position.x - _touchStart.x);
+                float totalDY = Mathf.Abs(t.position.y - _touchStart.y);
+                _axis = totalDX >= totalDY ? Axis.Horizontal : Axis.Vertical;
+                // Start the horizontal accumulator fresh from the decision point so the dead-zone
+                // travel doesn't instantly jump the piece a cell on commit.
                 _accumulatedHorizontalDelta = 0f;
             }
-            else
+
+            if (_axis == Axis.Horizontal)
             {
                 // Quantise horizontal motion into one-cell steps. Works for both quick swipes and
                 // slow continuous drags since we accumulate raw delta either way.
@@ -240,25 +234,36 @@ namespace InputSystem
                     MoveLeft();
                     _accumulatedHorizontalDelta += _horizontalStepPixels;
                 }
-            }
 
-            // Soft drop while the finger is below its peak Y by at least the activation amount
-            // AND the gesture is more vertical than horizontal — otherwise a left/right drag that
-            // bobs the thumb down a little would falsely trigger drops.
-            float belowPeak = _peakY - t.position.y;
-            float horizontalTravel = Mathf.Abs(t.position.x - _touchStart.x);
-            bool verticalDominant = belowPeak > horizontalTravel * _softDropVerticalDominance;
-            if (!_hardDropFired && verticalDominant && belowPeak >= _softDropActivatePixels)
-            {
-                if (Time.unscaledTime >= _softDropNextTickTime)
+                // Optional combined gesture: allow soft drop even on a horizontal-committed touch,
+                // but only when the finger is clearly dragging down relative to its sideways travel.
+                if (_softDropInHorizontalAxis)
                 {
-                    SoftDropTick();
-                    float range = Mathf.Max(1f, _softDropFullSpeedPixels - _softDropActivatePixels);
-                    float normalised = Mathf.Clamp01((belowPeak - _softDropActivatePixels) / range);
-                    float interval = Mathf.Lerp(_softDropSlowInterval, _softDropFastInterval, normalised);
-                    _softDropNextTickTime = Time.unscaledTime + interval;
+                    float belowPeakH = _peakY - t.position.y;
+                    float horizTravel = Mathf.Abs(t.position.x - _touchStart.x);
+                    if (belowPeakH > horizTravel * _softDropVerticalDominance)
+                        TrySoftDrop(belowPeakH);
                 }
             }
+            else // Axis.Vertical — committed to dropping; never step sideways.
+            {
+                float belowPeak = _peakY - t.position.y;
+                TrySoftDrop(belowPeak);
+            }
+        }
+
+        // Fires a soft-drop tick (at most one per scaled interval) when the finger is far enough
+        // below its peak. The interval scales from slow (just past activation) to fast (deep drag).
+        private void TrySoftDrop(float belowPeak)
+        {
+            if (_hardDropFired || belowPeak < _softDropActivatePixels) return;
+            if (Time.unscaledTime < _softDropNextTickTime) return;
+
+            SoftDropTick();
+            float range = Mathf.Max(1f, _softDropFullSpeedPixels - _softDropActivatePixels);
+            float normalised = Mathf.Clamp01((belowPeak - _softDropActivatePixels) / range);
+            float interval = Mathf.Lerp(_softDropSlowInterval, _softDropFastInterval, normalised);
+            _softDropNextTickTime = Time.unscaledTime + interval;
         }
 
         private void HandleEnd(Touch t)
@@ -268,7 +273,10 @@ namespace InputSystem
             float verticalDistance = -totalDelta.y;     // positive when finger ended below the start
             float verticalVelocity = verticalDistance / Mathf.Max(0.001f, duration);
 
+            // Hard drop only on a touch that committed to the vertical axis — a horizontal or
+            // undecided touch can never slam the piece, which is what kept producing side-drift.
             bool wasFastDownSwipe =
+                _axis == Axis.Vertical &&
                 duration <= _hardDropMaxDuration &&
                 verticalDistance >= _hardDropMinDistance &&
                 verticalVelocity >= _hardDropMinVelocity &&

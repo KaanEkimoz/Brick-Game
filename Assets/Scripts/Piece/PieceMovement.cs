@@ -77,6 +77,8 @@ namespace Piece
             }
             BoardController.Instance.CheckLineClears();
             PiecesController.Instance.StopDropCurPiece();
+            if (Levels.LevelSession.Instance != null && Levels.LevelSession.Instance.ResolvePlacedPiece())
+                return;
             PieceSpawner pieceSpawner = FindObjectOfType<PieceSpawner>();
             pieceSpawner.SpawnPiece();
         }

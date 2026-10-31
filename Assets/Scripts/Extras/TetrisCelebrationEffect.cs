@@ -34,6 +34,14 @@ namespace Extras
             BoardController.OnTetrisCleared -= Play;
         }
 
+        /// <summary>Plays the confetti and shake for a level win, while the game is frozen.</summary>
+        public void Celebrate()
+        {
+            ParticleSystem.MainModule main = _particles.main;
+            main.useUnscaledTime = true;
+            Play();
+        }
+
         private void Start()
         {
             FitToCameraViewport();

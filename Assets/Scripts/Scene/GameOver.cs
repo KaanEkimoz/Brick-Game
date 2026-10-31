@@ -9,6 +9,8 @@ public class GameOver : MonoBehaviour
     [SerializeField] private TextMeshProUGUI endScore, highScore;
     [SerializeField] private AudioSource bgMusic;
 
+    public GameObject GameOverScreen => gameOverScreen;
+
     private void OnEnable()
     {
         PiecesController.OnGameOver += OpenGameOverScreen;

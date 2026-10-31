@@ -21,6 +21,17 @@ namespace InGame
         };
 
         private static readonly List<PieceType> _current = new List<PieceType>(7);
+        private static readonly List<PieceType> _allowed = new List<PieceType>(StandardSeven);
+
+        /// <summary>Limits the bag to the given letters (e.g. "IO"). Null or empty allows all seven.</summary>
+        public static void SetAllowedPieces(string letters)
+        {
+            _allowed.Clear();
+            foreach (PieceType type in StandardSeven)
+                if (string.IsNullOrEmpty(letters) || letters.IndexOf(type.ToString()[0]) >= 0)
+                    _allowed.Add(type);
+            _current.Clear();
+        }
 
         /// <summary>Pulls the next piece from the bag, refilling + reshuffling when empty.</summary>
         public static PieceType Next()
@@ -61,8 +72,7 @@ namespace InGame
         private static void Refill()
         {
             _current.Clear();
-            for (int i = 0; i < StandardSeven.Length; i++)
-                _current.Add(StandardSeven[i]);
+            _current.AddRange(_allowed);
             // Fisher–Yates shuffle.
             for (int i = _current.Count - 1; i > 0; i--)
             {

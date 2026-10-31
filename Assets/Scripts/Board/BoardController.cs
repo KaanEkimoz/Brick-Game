@@ -21,6 +21,10 @@ namespace Board
         public static Action<int> OnLineCleared;
         /// <summary>Fires when a 4-line Tetris clear happens. Used by celebration VFX.</summary>
         public static Action OnTetrisCleared;
+        /// <summary>Fires when ClearBoard wipes the run, including the in-place Restart.</summary>
+        public static Action OnBoardCleared;
+        /// <summary>When true, full rows stay on the board. Set by levels where only abilities clear tiles.</summary>
+        public static bool LineClearsDisabled;
         public static BoardController Instance;
 
         /// <summary>World-space origin used when placing grid units, tiles and ghost tiles.
@@ -154,10 +158,53 @@ namespace Board
             return count;
         }
 
+        /// <summary>Collects the lowest covered holes, bottom row first, up to maxCells. A hole is an empty cell with a tile above it in the same column. landingTiles lets the target preview count a piece that has not settled yet; pass null once it has.</summary>
+        public void CollectPatchCells(int maxCells, IList<Vector2Int> landingTiles, List<Vector2Int> results)
+        {
+            results.Clear();
+            for (int y = 0; y < gridSizeY; y++)
+            {
+                for (int x = 0; x < gridSizeX; x++)
+                {
+                    Vector2Int cell = new Vector2Int(x, y);
+                    if (_fullGrid[x, y].isOccupied) continue;
+                    if (landingTiles != null && landingTiles.Contains(cell)) continue;
+                    if (!HasTileAbove(cell, landingTiles)) continue;
+                    results.Add(cell);
+                    if (results.Count == maxCells) return;
+                }
+            }
+        }
+
+        private bool HasTileAbove(Vector2Int cell, IList<Vector2Int> landingTiles)
+        {
+            for (int y = cell.y + 1; y < gridSizeY; y++)
+            {
+                if (_fullGrid[cell.x, y].isOccupied) return true;
+                if (landingTiles != null && landingTiles.Contains(new Vector2Int(cell.x, y))) return true;
+            }
+            return false;
+        }
+
+        /// <summary>Places a clone of the given tile on each cell.</summary>
+        public void FillCells(List<Vector2Int> cells, GameObject tileTemplate)
+        {
+            foreach (Vector2Int cell in cells)
+            {
+                GameObject tileGo = Instantiate(tileTemplate, transform);
+                tileGo.transform.localScale = tileTemplate.transform.lossyScale;
+                TileController tile = tileGo.GetComponent<TileController>();
+                tile.tileIndex = -1; // sentinel: not part of the active piece's Tiles array
+                tile.UpdatePosition(cell);
+                OccupyPos(cell, tileGo);
+            }
+        }
+
         private bool DestroyTileAt(int x, int y)
         {
             GridUnit unit = _fullGrid[x, y];
             if (!unit.isOccupied) return false;
+            if (GetKind(unit) == TileKind.Fixed) return false;
             if (unit.tileOnGridUnit != null) Destroy(unit.tileOnGridUnit);
             unit.tileOnGridUnit = null;
             unit.isOccupied = false;
@@ -166,7 +213,8 @@ namespace Board
 
         /// <summary>
         /// Pulls every occupied cell in column x down to fill any gaps, without touching other columns.
-        /// Used by the bomb ability so the tiles above a 3x3 hole fall into it.
+        /// Used by the bomb ability so the tiles above a 3x3 hole fall into it. Fixed tiles hold
+        /// their cell, so tiles above one settle on top of it.
         /// </summary>
         private void CompactColumn(int x)
         {
@@ -174,6 +222,11 @@ namespace Board
             for (int y = 0; y < gridSizeY; y++)
             {
                 if (!_fullGrid[x, y].isOccupied) continue;
+                if (GetKind(_fullGrid[x, y]) == TileKind.Fixed)
+                {
+                    writeY = y + 1;
+                    continue;
+                }
                 if (y != writeY)
                 {
                     GameObject tileGo = _fullGrid[x, y].tileOnGridUnit;
@@ -187,6 +240,67 @@ namespace Board
                 writeY++;
             }
         }
+
+        // === Levels hooks ===
+
+        private static TileKind GetKind(GridUnit unit)
+        {
+            TileController tile = unit.tileOnGridUnit != null ? unit.tileOnGridUnit.GetComponent<TileController>() : null;
+            return tile != null ? tile.kind : TileKind.Normal;
+        }
+
+        /// <summary>Clones a tile onto a cell with the given look.</summary>
+        public void PlaceTile(Vector2Int cell, GameObject template, Sprite sprite, Color color, TileKind kind)
+        {
+            GameObject tileGo = Instantiate(template, transform);
+            tileGo.transform.localScale = template.transform.lossyScale;
+            tileGo.transform.localRotation = Quaternion.identity;
+            SpriteRenderer renderer = tileGo.GetComponent<SpriteRenderer>();
+            renderer.sprite = sprite;
+            renderer.color = color;
+            TileController tile = tileGo.GetComponent<TileController>();
+            tile.tileIndex = -1; // sentinel: not part of the active piece's Tiles array
+            tile.kind = kind;
+            tile.UpdatePosition(cell);
+            OccupyPos(cell, tileGo);
+        }
+
+        /// <summary>Lifts the board one row and fills the bottom row except one gap. Returns false, leaving the board as it was, when the top row is occupied.</summary>
+        public bool PushGarbageRow(int gapX, GameObject template, Sprite sprite)
+        {
+            for (int x = 0; x < gridSizeX; x++)
+                if (_fullGrid[x, gridSizeY - 1].isOccupied) return false;
+
+            for (int y = gridSizeY - 2; y >= 0; y--)
+            {
+                for (int x = 0; x < gridSizeX; x++)
+                {
+                    GridUnit from = _fullGrid[x, y];
+                    if (!from.isOccupied) continue;
+                    GridUnit to = _fullGrid[x, y + 1];
+                    from.tileOnGridUnit.GetComponent<TileController>().UpdatePosition(new Vector2Int(x, y + 1));
+                    to.isOccupied = true;
+                    to.tileOnGridUnit = from.tileOnGridUnit;
+                    from.isOccupied = false;
+                    from.tileOnGridUnit = null;
+                }
+            }
+
+            for (int x = 0; x < gridSizeX; x++)
+                if (x != gapX) PlaceTile(new Vector2Int(x, 0), template, sprite, Color.white, TileKind.Normal);
+            return true;
+        }
+
+        public int CountTiles(TileKind kind)
+        {
+            int count = 0;
+            foreach (GridUnit unit in _fullGrid)
+                if (unit.isOccupied && GetKind(unit) == kind) count++;
+            return count;
+        }
+
+        /// <summary>Tiles that still have to go for the board to count as cleared.</summary>
+        public int CountClearableTiles() => CountTiles(TileKind.Normal) + CountTiles(TileKind.Gold);
 
         // === Persistence hooks ===
 
@@ -223,6 +337,12 @@ namespace Board
         /// </summary>
         public void CheckLineClears()
         {
+            if (LineClearsDisabled)
+            {
+                OnLinesCleared?.Invoke(0);
+                return;
+            }
+
             //List of indexes for the lines that need to be cleared.
             List<int> linesToClear = new List<int>();
 
@@ -270,7 +390,10 @@ namespace Board
                 for (int x = 0; x < gridSizeX; x++)
                 {
                     GridUnit curGridUnit = _fullGrid[x, lineToDrop];
-                    if (curGridUnit.isOccupied)
+                    // Without fixed tiles the cell below is always free here; with them, tiles
+                    // stop on top of whatever did not move.
+                    if (curGridUnit.isOccupied && GetKind(curGridUnit) != TileKind.Fixed
+                        && !_fullGrid[x, lineToDrop - 1].isOccupied)
                     {
                         MoveTileDown(curGridUnit);
                     }
@@ -317,6 +440,8 @@ namespace Board
             }
             for(int x = 0; x < gridSizeX; x++)
             {
+                if (GetKind(_fullGrid[x, lineToClear]) == TileKind.Fixed)
+                    continue;
                 // Restored board tiles carry tileIndex = -1 and do not belong to PieceController.Tiles.
                 int ti = _fullGrid[x, lineToClear].tileOnGridUnit.GetComponent<TileController>().tileIndex;
                 if (ti >= 0 && ti < PieceController.Tiles.Length)
@@ -346,6 +471,7 @@ namespace Board
             // OnTotalClearedLinesChanged — without this invoke, the counter stays
             // frozen at the previous run's value until the next live line clear.
             OnTotalClearedLinesChanged?.Invoke(_totalClearedLines);
+            OnBoardCleared?.Invoke();
         }
     }
 }

@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Board;
 using Extras;
+using Gameplay;
 using InGame;
-using Piece;
 using Tiles;
 using UnityEngine;
 
@@ -140,6 +140,7 @@ namespace Persistence
         private void HandlePieceSpawnedAutosave()
         {
             if (_restoring) return; // the spawn that restores from save must not overwrite itself
+            if (GameMode.IsLevels) return;
             if (_pieceSpawner == null || _boardController == null) return;
 
             // Skip the autosave while the run still has zero meaningful progress.
@@ -159,7 +160,17 @@ namespace Persistence
                 nextPieceType = PieceSpawner.NextPieceType,
                 // Capture the 7-bag's remaining draws so a resumed run picks up exactly where it left off.
                 bagState = PieceBag.Snapshot(),
+                abilityCharge = AbilityCharger.Instance != null ? AbilityCharger.Instance.Charge : 0,
             };
+
+            AbilityMarker marker = PiecesController.CurPiece != null
+                ? PiecesController.CurPiece.GetComponent<AbilityMarker>()
+                : null;
+            if (marker != null)
+            {
+                data.currentAbility = (int)marker.Ability;
+                data.currentAbilityTile = marker.TileIndex;
+            }
 
             foreach (KeyValuePair<Vector2Int, GameObject> kv in _boardController.GetOccupiedTiles())
             {
@@ -172,12 +183,10 @@ namespace Persistence
 
         private PieceType GetCurrentPieceType()
         {
-            // PieceSpawner keeps _curPieceType private; read it off the active piece's PieceRotation component instead.
             if (PiecesController.CurPiece == null)
                 return PieceSpawner.NextPieceType;
 
-            PieceRotation rot = PiecesController.CurPiece.GetComponent<PieceRotation>();
-            return rot != null ? rot.curType : PieceSpawner.NextPieceType;
+            return _pieceSpawner.CurrentPieceType;
         }
 
         private int ResolveSpriteIndex(GameObject tileGo)
@@ -202,6 +211,7 @@ namespace Persistence
 
         private void HandleGameOverClearSave()
         {
+            if (GameMode.IsLevels) return;
             GameSaveStorage.Delete();
         }
 
@@ -234,6 +244,12 @@ namespace Persistence
                 // 4) Spawn ghost + active piece with the saved types (bypasses the random roll).
                 _pieceSpawner.SpawnGhostPiece();
                 _pieceSpawner.SpawnPieceFromSave(data.currentPieceType, data.nextPieceType);
+
+                // 5) Restore the ability bar and the falling piece's charged tile.
+                if (AbilityCharger.Instance != null)
+                    AbilityCharger.Instance.RestoreCharge(data.abilityCharge);
+                if (data.currentAbility >= 0)
+                    _pieceSpawner.ChargeCurrentPiece((AbilityType)data.currentAbility, data.currentAbilityTile);
             }
             finally
             {

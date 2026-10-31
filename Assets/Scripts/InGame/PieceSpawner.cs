@@ -12,9 +12,8 @@ namespace InGame
     public class PieceSpawner : MonoBehaviour
     {
         // Single-spawner game (matches PieceBag's static design). Restart paths use
-        // this to clear _bufferedAbility — without a way to reach the instance,
-        // an armed Bomb/Laser buffered just before GameOver would carry into the
-        // next run and spawn immediately on Restart.
+        // this to re-seed the preview slot, and the save system reads the current
+        // piece type and charges the restored piece through it.
         public static PieceSpawner Instance { get; private set; }
 
         [Space]
@@ -22,7 +21,7 @@ namespace InGame
         public GameObject ghostPiecePrefab;
         public GameObject piecePrefab;
 
-        [Tooltip("Ability piece prefabs, ordered by AbilityType (0=Bomb, 1=Laser).")]
+        [Tooltip("Ability art sources, ordered by AbilityType (0=Bomb, 1=Laser). The first SpriteRenderer of each prefab skins the charged tile. Abilities without an entry (Patch) use a tint instead.")]
         [SerializeField] private GameObject[] _abilityPiecePrefabs;
 
         [Space]
@@ -33,6 +32,10 @@ namespace InGame
 
         public static Action OnPieceSpawned;
         public static Action<PieceType> OnNextPieceChanged;
+        /// <summary>Fires when an ability is loaded onto the falling piece. The target preview refreshes here.</summary>
+        public static Action OnPieceCharged;
+
+        private static readonly Color PatchTileTint = new Color(0.45f, 1f, 0.55f, 1f);
     
         private PieceType _curPieceType;
         private static PieceType _nextPieceType;
@@ -52,15 +55,10 @@ namespace InGame
             _nextPieceType = PieceBag.Next();
         }
 
-        /// <summary>Clears any ability that was armed but not yet spawned (e.g. AbilityCharger
-        /// hit MaxCharge mid-run, _bufferedAbility was set, then GameOver fired before the
-        /// next SpawnPiece). Called from PiecesController.DestroyCurPiece on the in-place
-        /// Restart path so the new run does not start with a free Bomb/Laser piece.
-        /// Also re-seeds _nextPieceType from the (just-reset) bag so the preview slot
-        /// stops showing the previous run's queued ability after restart.</summary>
+        /// <summary>Re-seeds _nextPieceType from the (just-reset) bag on the in-place Restart
+        /// path. Called from PiecesController.DestroyCurPiece.</summary>
         public void ResetBufferedAbility()
         {
-            _bufferedAbility = null;
             _nextPieceType = PieceBag.Next();
             OnNextPieceChanged?.Invoke(_nextPieceType);
         }
@@ -148,89 +146,64 @@ namespace InGame
                 _tiles[i].gameObject.GetComponent<SpriteRenderer>().sprite = newSpr;
             }
         }
-        // The ability that will spawn on the NEXT call to SpawnPiece. Set the moment the bar
-        // fills (which also resets the bar visually); cleared when the ability piece actually
-        // spawns. PieceSpawner owns this state so a double SpawnPiece cannot fire two abilities.
-        private AbilityType? _bufferedAbility;
-
         public void SpawnPiece()
         {
-            // 1) If an ability is buffered from a previous spawn, fire it now.
-            if (_bufferedAbility.HasValue && _abilityPiecePrefabs != null)
-            {
-                AbilityType ability = _bufferedAbility.Value;
-                _bufferedAbility = null;
-                int idx = (int)ability;
-                if (idx >= 0 && idx < _abilityPiecePrefabs.Length && _abilityPiecePrefabs[idx] != null)
-                {
-                    GameObject abilityPiece = Instantiate(_abilityPiecePrefabs[idx], transform);
-                    InitializeCurPiece(abilityPiece);
-
-                    AbilityMarker marker = abilityPiece.GetComponent<AbilityMarker>();
-                    if (marker != null) marker.SetAbility(ability);
-
-                    PieceController pc = abilityPiece.GetComponent<PieceController>();
-                    if (PieceController.Tiles != null && PieceController.Tiles.Length > 0)
-                    {
-                        PieceController.Tiles[0].UpdatePosition(spawnPosition);
-                        PieceController.Tiles[0].InitializeTile(pc, 0);
-                    }
-
-                    // _nextPieceType was overridden to the ability type for the preview during the
-                    // arming spawn. Re-roll it so the spawn AFTER this one uses a normal tetromino;
-                    // otherwise UpdateTiles would be called with Bomb/Laser (no switch case) and
-                    // tiles 1..3 would stay at their default (0,0) coords, eventually triggering
-                    // game-over from the broken layout.
-                    _nextPieceType = PieceBag.Next();
-                    OnNextPieceChanged?.Invoke(_nextPieceType);
-
-                    OnPieceSpawned?.Invoke();
-                    return;
-                }
-            }
-
-            // 2) Normal tetromino spawn.
             GameObject curPiece = Instantiate(piecePrefab, transform);
             InitializeCurPiece(curPiece);
 
             _curPieceType = _nextPieceType;
             _nextPieceType = PieceBag.Next();
 
-            // 3) If the bar is full and we don't already have a buffered ability, take the
-            // pending ability now (which also empties the bar) and queue it for the next spawn.
-            // The preview slot is overridden so the player sees what's coming.
-            if (GameMode.IsExtended
-                && AbilityCharger.Instance != null
-                && AbilityCharger.Instance.IsReady
-                && !_bufferedAbility.HasValue)
-            {
-                _bufferedAbility = AbilityCharger.Instance.ConsumePending();
-                _nextPieceType = AbilityToPieceType(_bufferedAbility.Value);
-            }
-
             OnNextPieceChanged?.Invoke(_nextPieceType);
             UpdateTiles(_curPieceType, PiecesController.CurPiece.GetComponent<PieceController>());
+
+            // Full bar: load the ability onto one random tile of this tetromino, so the player
+            // aims it through placement and rotation. The bag and the preview stay untouched.
+            if (GameMode.IsExtended
+                && AbilityCharger.Instance != null
+                && AbilityCharger.Instance.IsReady)
+            {
+                ChargeCurrentPiece(AbilityCharger.Instance.ConsumePending(),
+                    Random.Range(0, PieceController.Tiles.Length));
+            }
+
             OnPieceSpawned?.Invoke();
         }
 
-        private static PieceType AbilityToPieceType(AbilityType ability)
+        /// <summary>Loads an ability onto one tile of the falling piece. Used by the spawn path
+        /// and by the save system when a charged piece is restored.</summary>
+        public void ChargeCurrentPiece(AbilityType ability, int tileIndex)
         {
-            switch (ability)
-            {
-                case AbilityType.Bomb: return PieceType.Bomb;
-                case AbilityType.Laser: return PieceType.Laser;
-                default: return PieceType.O;
-            }
+            GameObject piece = PiecesController.CurPiece;
+            AbilityMarker marker = piece.GetComponent<AbilityMarker>();
+            if (marker == null) marker = piece.AddComponent<AbilityMarker>();
+            marker.SetAbility(ability);
+            marker.SetTileIndex(tileIndex);
+
+            SpriteRenderer tileRenderer = PieceController.Tiles[tileIndex].GetComponent<SpriteRenderer>();
+            int artIndex = (int)ability;
+            bool hasArt = _abilityPiecePrefabs != null
+                && artIndex < _abilityPiecePrefabs.Length
+                && _abilityPiecePrefabs[artIndex] != null;
+            if (hasArt)
+                tileRenderer.sprite = _abilityPiecePrefabs[artIndex].GetComponentInChildren<SpriteRenderer>(true).sprite;
+            else
+                tileRenderer.color = PatchTileTint;
+
+            if (ability == AbilityType.Laser)
+                piece.AddComponent<LaserOrientation>().BindVisual(tileRenderer);
+
+            OnPieceCharged?.Invoke();
         }
 
 #if UNITY_EDITOR
-        /// <summary>Editor-only test hook: kills the active piece and immediately spawns the requested ability piece.</summary>
+        /// <summary>Editor-only test hook: replaces the active piece with one carrying the requested ability.</summary>
         public void DebugForceAbility(AbilityType ability)
         {
             if (PiecesController.CurPiece != null && PiecesController.Instance != null)
                 PiecesController.Instance.DestroyCurPiece();
-            _bufferedAbility = ability;
             SpawnPiece();
+            ChargeCurrentPiece(ability, Random.Range(0, PieceController.Tiles.Length));
         }
 #endif
         private void InitializeCurPiece(GameObject curPiece)
@@ -244,6 +217,9 @@ namespace InGame
         }
 
         // === Persistence hooks ===
+
+        /// <summary>Type of the falling piece. PieceRotation.curType stays at its prefab value, so the save system reads this instead.</summary>
+        public PieceType CurrentPieceType => _curPieceType;
 
         /// <summary>Upcoming piece type. Used by the save system to persist the preview state.</summary>
         public static PieceType NextPieceType => _nextPieceType;

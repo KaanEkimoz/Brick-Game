@@ -5,6 +5,8 @@ namespace Piece
 {
     public class GhostPieceController : MonoBehaviour
     {
+        public static bool Hidden;
+
         [Space]
         public GhostTileController[] ghostTiles;
         private void OnEnable()
@@ -21,9 +23,8 @@ namespace Piece
         }
         private void UpdateGhostTiles()
         {
-            // Extended-mode ability pieces carry fewer tiles than the ghost's four; skip the
-            // preview and park the unused ghost tiles off-screen so they don't linger.
-            if (PieceController.Tiles == null || PieceController.Tiles.Length < ghostTiles.Length)
+            // No active piece tiles, or a level hides the ghost: park the ghost tiles off-screen.
+            if (Hidden || PieceController.Tiles == null || PieceController.Tiles.Length < ghostTiles.Length)
             {
                 foreach (var gt in ghostTiles)
                     gt.UpdatePosition(new Vector2Int(-100, -100));
