@@ -16,10 +16,12 @@ namespace Levels
     {
         private const string PlayButtonName = "B_Play";
         private const string ExtendedButtonName = "B_PlayExtended";
+        private const string SettingsButtonName = "B_Settings";
         private const string MenuButtonText = "Play";
         private const string ModeImageFolder = "ModeSelect/";
         private const string WinSoundPath = "LevelAudio/level_win";
         private const string WinTitleText = "LEVEL CLEARED!";
+        private const string LanguageKey = "Language";
         private const float MenuButtonFontSize = 58f;
         private const float WinCelebrationSeconds = 2f;
         private const float WinPopSeconds = 0.3f;
@@ -27,6 +29,9 @@ namespace Levels
         private const int CanvasOrder = 100;
         private const float DividerThickness = 0.007f;
         private const float BackIconSize = 110f;
+        private const float LanguageButtonSpacing = 118f; // same step as Play to Settings
+        private const float LanguageRowHeight = 140f;
+        private const float LanguageHeadingHeight = 150f;
         private const float IntroMinHoldSeconds = 3f;
         private const float IntroMaxHoldSeconds = 7f;
         private const float IntroSecondsPerCharacter = 0.06f;
@@ -56,6 +61,7 @@ namespace Levels
         private static readonly Color BadgeColor = new Color(0.01f, 0.03f, 0.14f, 0.88f);
         private static readonly Vector2 BadgePadding = new Vector2(64f, 22f);
         private static readonly Color MenuButtonTextColor = new Color(0.08f, 0.3f, 0.8f, 1f);
+        private static readonly Color SelectedLanguageTextColor = new Color(0.8f, 0.1f, 0.55f, 1f);
         private static readonly Color ModeImageTint = new Color(0.68f, 0.68f, 0.74f, 1f);
 
         private Transform _canvas;
@@ -74,6 +80,7 @@ namespace Levels
             _plainFont = PlainFont.Asset;
             BuildCanvas();
             BuildMenuButton();
+            BuildLanguageButton();
             BuildObjectiveLine();
         }
 
@@ -131,6 +138,69 @@ namespace Levels
 
             _classicButton.gameObject.SetActive(false);
             _extendedButton.gameObject.SetActive(false);
+        }
+
+        private void BuildLanguageButton()
+        {
+            foreach (Button settings in Resources.FindObjectsOfTypeAll<Button>())
+            {
+                if (settings.name != SettingsButtonName || !settings.gameObject.scene.IsValid()) continue;
+
+                Button button = Instantiate(settings, settings.transform.parent);
+                button.name = "B_Language";
+                button.onClick = new Button.ButtonClickedEvent();
+                button.onClick.AddListener(ShowLanguageSelect);
+                ((RectTransform)button.transform).anchoredPosition += Vector2.down * LanguageButtonSpacing;
+                TMP_Text label = button.GetComponentInChildren<TMP_Text>(true);
+                if (label != null) label.text = Loc.Caps(LanguageKey);
+                return;
+            }
+        }
+
+        // Each language keeps its own name, whichever language is active.
+        private void ShowLanguageSelect()
+        {
+            Transform screen = OpenScreen();
+            screen.GetComponent<Image>().color = IntroDim;
+
+            Language[] languages = (Language[])Enum.GetValues(typeof(Language));
+            int rows = languages.Length + 1;
+            float height = LanguageHeadingHeight + rows * LanguageRowHeight + LanguageRowHeight * 0.5f;
+            RectTransform panel = CreatePanel(screen, new Vector2(WinPanelSize.x, height));
+
+            float top = height * 0.5f;
+            TextMeshProUGUI heading = CreatePlainText(panel, Loc.T(LanguageKey), 66f, Accent);
+            Place(heading.rectTransform, new Vector2(0f, top - LanguageHeadingHeight * 0.6f), new Vector2(740f, 90f));
+
+            for (int i = 0; i < rows; i++)
+            {
+                float y = top - LanguageHeadingHeight - LanguageRowHeight * (i + 0.5f);
+                Button row = i < languages.Length
+                    ? CreateLanguageRow(panel, languages[i])
+                    : CreateMenuStyleButton(panel, "Back", CloseScreen);
+                Place((RectTransform)row.transform, new Vector2(0f, y), WinButtonSize);
+            }
+        }
+
+        private Button CreateLanguageRow(Transform panel, Language language)
+        {
+            string name = Loc.NativeName(language).ToUpperInvariant();
+            Button row = CreateMenuStyleButton(panel, name, () => SelectLanguage(language));
+            if (language == Loc.Current)
+                row.GetComponentInChildren<TMP_Text>(true).color = SelectedLanguageTextColor;
+            return row;
+        }
+
+        // Reloading rebuilds every screen in the new language; this list is only in the menu.
+        private void SelectLanguage(Language language)
+        {
+            if (language == Loc.Current)
+            {
+                CloseScreen();
+                return;
+            }
+            Loc.Select(language);
+            _session.ReturnToMenu();
         }
 
         private void BuildObjectiveLine()
