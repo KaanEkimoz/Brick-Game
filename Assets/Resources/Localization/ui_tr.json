@@ -1,0 +1,328 @@
+{
+ "entries": [
+  {
+   "en": "Play",
+   "text": "Oyna"
+  },
+  {
+   "en": "Settings",
+   "text": "Ayarlar"
+  },
+  {
+   "en": "back",
+   "text": "Geri"
+  },
+  {
+   "en": "Back",
+   "text": "Geri"
+  },
+  {
+   "en": "Restart",
+   "text": "Yeniden Başlat"
+  },
+  {
+   "en": "Resume",
+   "text": "Devam Et"
+  },
+  {
+   "en": "Main Menu",
+   "text": "Ana Menü"
+  },
+  {
+   "en": "Continue",
+   "text": "Devam Et"
+  },
+  {
+   "en": "New Game",
+   "text": "Yeni Oyun"
+  },
+  {
+   "en": "CONTINUE\nor new game?",
+   "text": "DEVAM ET\nya da yeni oyun?"
+  },
+  {
+   "en": "Music",
+   "text": "Müzik"
+  },
+  {
+   "en": "Effects",
+   "text": "Efektler"
+  },
+  {
+   "en": "Volume",
+   "text": "Ses Düzeyi"
+  },
+  {
+   "en": "sound",
+   "text": "Ses"
+  },
+  {
+   "en": "Restore Purchases",
+   "text": "Satın Alımları Geri Yükle"
+  },
+  {
+   "en": "Remove Ads",
+   "text": "Reklamları Kaldır"
+  },
+  {
+   "en": "Already owned.",
+   "text": "Zaten satın alınmış."
+  },
+  {
+   "en": "Restoring…",
+   "text": "Geri yükleniyor…"
+  },
+  {
+   "en": "Purchases restored.",
+   "text": "Satın alımlar geri yüklendi."
+  },
+  {
+   "en": "Tutorial",
+   "text": "Eğitim"
+  },
+  {
+   "en": "Tutorial Completed",
+   "text": "Eğitim Tamamlandı"
+  },
+  {
+   "en": "Tutorial Completed!",
+   "text": "Eğitim Tamamlandı!"
+  },
+  {
+   "en": "Skip ›",
+   "text": "Geç ›"
+  },
+  {
+   "en": "Tap the screen\nto rotate the piece",
+   "text": "Parçayı döndürmek için\nekrana dokun"
+  },
+  {
+   "en": "Swipe left or right\nto move the piece",
+   "text": "Parçayı hareket ettirmek için\nsağa veya sola kaydır"
+  },
+  {
+   "en": "Swipe down fast\nto drop instantly",
+   "text": "Anında düşürmek için\nhızla aşağı kaydır"
+  },
+  {
+   "en": "Hold and drag down\nto descend faster",
+   "text": "Daha hızlı inmek için\nbasılı tutup aşağı sürükle"
+  },
+  {
+   "en": "Clear lines to charge\nthe ability bar to gain a random ability piece",
+   "text": "Satır temizleyerek yetenek çubuğunu\ndoldur, rastgele yetenek parçası kazan"
+  },
+  {
+   "en": "Bomb tile\nclears a 3x3 area",
+   "text": "Bomba bloğu\n3x3 alanı temizler"
+  },
+  {
+   "en": "Laser tile - rotate it\nto fire a row or column",
+   "text": "Lazer bloğu - döndürerek\nsatıra veya sütuna ateş et"
+  },
+  {
+   "en": "Swipe left or right to continue",
+   "text": "Devam etmek için sağa veya sola kaydır"
+  },
+  {
+   "en": "Tap the screen to rotate",
+   "text": "Döndürmek için ekrana dokun"
+  },
+  {
+   "en": "Swipe down fast to continue",
+   "text": "Devam etmek için hızla aşağı kaydır"
+  },
+  {
+   "en": "Hold and drag down to continue",
+   "text": "Devam etmek için basılı tutup aşağı sürükle"
+  },
+  {
+   "en": "Tap anywhere to continue",
+   "text": "Devam etmek için dokun"
+  },
+  {
+   "en": "Score",
+   "text": "Skor"
+  },
+  {
+   "en": "High Score",
+   "text": "En Yüksek Skor"
+  },
+  {
+   "en": "Lines",
+   "text": "Satır"
+  },
+  {
+   "en": "Level",
+   "text": "Level"
+  },
+  {
+   "en": "Score: {0}",
+   "text": "Skor: {0}"
+  },
+  {
+   "en": "High Score: {0}",
+   "text": "En Yüksek Skor: {0}"
+  },
+  {
+   "en": "Level {0}",
+   "text": "Level {0}"
+  },
+  {
+   "en": "Classic",
+   "text": "Klasik"
+  },
+  {
+   "en": "classic",
+   "text": "Klasik"
+  },
+  {
+   "en": "Levels",
+   "text": "Leveller"
+  },
+  {
+   "en": "Extended",
+   "text": "Gelişmiş"
+  },
+  {
+   "en": "Endless blocks",
+   "text": "Sonsuz bloklar"
+  },
+  {
+   "en": "Bombs and lasers",
+   "text": "Bombalar ve lazerler"
+  },
+  {
+   "en": "LEVEL CLEARED!",
+   "text": "LEVEL GEÇİLDİ!"
+  },
+  {
+   "en": "Next",
+   "text": "Sonraki"
+  },
+  {
+   "en": "Menu",
+   "text": "Menü"
+  },
+  {
+   "en": "Yes",
+   "text": "Evet"
+  },
+  {
+   "en": "Cancel",
+   "text": "İptal"
+  },
+  {
+   "en": "Main Menu?",
+   "text": "Ana Menü?"
+  },
+  {
+   "en": "Are you sure you want to leave?",
+   "text": "Çıkmak istediğine emin misin?"
+  },
+  {
+   "en": "Restart?",
+   "text": "Yeniden Başlat?"
+  },
+  {
+   "en": "Your current game will be lost",
+   "text": "Mevcut oyunun kaybolacak"
+  },
+  {
+   "en": "Yes, restart",
+   "text": "Evet, başlat"
+  },
+  {
+   "en": "Clear lines: {0}/{1}",
+   "text": "Satır: {0}/{1}"
+  },
+  {
+   "en": "Reach score: {0}/{1}",
+   "text": "Skor: {0}/{1}"
+  },
+  {
+   "en": "Ability cells: {0}/{1}",
+   "text": "Yetenek: {0}/{1}"
+  },
+  {
+   "en": "Tetrises: {0}/{1}",
+   "text": "Tetris: {0}/{1}"
+  },
+  {
+   "en": "Combo: {0}/{1}",
+   "text": "Kombo: {0}/{1}"
+  },
+  {
+   "en": "Gold left: {0}",
+   "text": "Kalan altın: {0}"
+  },
+  {
+   "en": "Clear {0} lines",
+   "text": "{0} satır temizle"
+  },
+  {
+   "en": "Reach {0} points",
+   "text": "{0} puana ulaş"
+  },
+  {
+   "en": "Hit {0} cells with abilities",
+   "text": "Yeteneklerle {0} hücre vur"
+  },
+  {
+   "en": "Clear a Tetris",
+   "text": "Bir Tetris yap"
+  },
+  {
+   "en": "Clear {0} Tetrises",
+   "text": "{0} Tetris yap"
+  },
+  {
+   "en": "Clear lines {0} pieces in a row",
+   "text": "Üst üste {0} parçayla satır temizle"
+  },
+  {
+   "en": "Clear all the gold",
+   "text": "Tüm altınları temizle"
+  },
+  {
+   "en": "Clear the board",
+   "text": "Tahtayı temizle"
+  },
+  {
+   "en": "NEW BEST!",
+   "text": "YENİ REKOR!"
+  },
+  {
+   "en": "Score {score}",
+   "text": "Skor {score}"
+  },
+  {
+   "en": "+{n} CELLS!",
+   "text": "+{n} HÜCRE!"
+  },
+  {
+   "en": "Bomb",
+   "text": "Bomba"
+  },
+  {
+   "en": "Laser",
+   "text": "Lazer"
+  },
+  {
+   "en": "Patch",
+   "text": "Yama"
+  },
+  {
+   "en": "{ability} READY!",
+   "text": "{ability} HAZIR!"
+  },
+  {
+   "en": "{ability} piece coming up",
+   "text": "{ability} parçası geliyor"
+  },
+  {
+   "en": "Fills the {0} lowest holes",
+   "text": "En alttaki {0} boşluğu doldurur"
+  }
+ ]
+}

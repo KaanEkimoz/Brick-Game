@@ -376,7 +376,7 @@ namespace Tutorial
             if (_tapToContinueHint == null) return;
             var tmp = _tapToContinueHint.GetComponent<TMPro.TMP_Text>();
             if (tmp == null) return;
-            tmp.text = HintForGesture(CurrentGesture());
+            tmp.text = Localization.Loc.Upper(Localization.Loc.T(HintForGesture(CurrentGesture())));
         }
 
         private static string HintForGesture(TutorialGesture g)

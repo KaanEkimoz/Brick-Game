@@ -83,7 +83,7 @@ namespace Extras
 
             TextMeshPro tmp = go.AddComponent<TextMeshPro>();
             if (_font != null) tmp.font = _font;
-            tmp.text = _template.Replace("{n}", cleared.ToString());
+            tmp.text = Localization.Loc.T(_template).Replace("{n}", cleared.ToString());
             tmp.fontSize = _fontSize;
             tmp.fontStyle = FontStyles.Bold;
             tmp.alignment = TextAlignmentOptions.Center;

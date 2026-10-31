@@ -69,8 +69,8 @@ namespace Extras
 
         private void ApplyAbilityCopy(AbilityType ability)
         {
-            string title = ability.ToString();
-            string upper = title.ToUpperInvariant();
+            string title = Localization.Loc.T(ability.ToString());
+            string upper = Localization.Loc.Upper(title);
             Color tint = ability switch
             {
                 AbilityType.Bomb => _bombColor,
@@ -80,14 +80,14 @@ namespace Extras
 
             if (_headlineText != null)
             {
-                _headlineText.text = _headlineTemplate.Replace("{ability}", upper);
+                _headlineText.text = Localization.Loc.T(_headlineTemplate).Replace("{ability}", upper);
                 _headlineText.color = tint;
             }
             if (_subText != null)
             {
                 _subText.text = ability == AbilityType.Patch
-                    ? $"Fills the {AbilityExecutor.PatchCellCount} lowest holes"
-                    : _subTemplate.Replace("{ability}", title);
+                    ? Localization.Loc.F("Fills the {0} lowest holes", AbilityExecutor.PatchCellCount)
+                    : Localization.Loc.T(_subTemplate).Replace("{ability}", title);
                 _subText.color = tint;
             }
         }

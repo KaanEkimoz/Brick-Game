@@ -13,6 +13,8 @@ namespace Ekimoz.IAP
     [RequireComponent(typeof(Button))]
     public class RemoveAdsButton : MonoBehaviour
     {
+        private const string RemoveAdsKey = "Remove Ads";
+
         [Tooltip("Root object to hide once Remove Ads is owned. Defaults to this GameObject.")]
         [SerializeField] private GameObject _rootToHideWhenOwned;
 
@@ -20,7 +22,7 @@ namespace Ekimoz.IAP
         [SerializeField] private TMP_Text _label;
 
         [Tooltip("Base label text shown before/around the price.")]
-        [SerializeField] private string _labelText = "Reklamları Kaldır";
+        [SerializeField] private string _labelText = RemoveAdsKey;
 
         private Button _button;
 
@@ -84,9 +86,8 @@ namespace Ekimoz.IAP
             if (_label != null)
             {
                 string price = pm?.RemoveAdsPrice;
-                _label.text = string.IsNullOrEmpty(price)
-                    ? _labelText
-                    : $"{_labelText} — {price}";
+                string text = Localization.Loc.T(RemoveAdsKey);
+                _label.text = string.IsNullOrEmpty(price) ? text : $"{text} — {price}";
             }
         }
     }

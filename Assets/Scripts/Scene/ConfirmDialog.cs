@@ -27,8 +27,8 @@ namespace Scene
             _root = CreateBackdrop(menu);
 
             TMP_Text buttonLabel = cancelTemplate.GetComponentInChildren<TMP_Text>(true);
-            CreateText(title, buttonLabel, 44f, new Vector2(0f, 150f));
-            CreateText(message, buttonLabel, 20f, new Vector2(0f, 90f));
+            CreateText(Localization.Loc.T(title), buttonLabel, 44f, new Vector2(0f, 150f));
+            CreateText(Localization.Loc.T(message), buttonLabel, 20f, new Vector2(0f, 90f));
 
             Button.ButtonClickedEvent guardedChain = guardedButton.onClick;
             guardedButton.onClick = new Button.ButtonClickedEvent();
@@ -81,7 +81,7 @@ namespace Scene
 
             TMP_Text label = button.GetComponentInChildren<TMP_Text>(true);
             label.font = Levels.PlainFont.Asset;
-            label.text = text;
+            label.text = Localization.Loc.T(text);
             label.fontSize = ButtonFontSize;
             label.rectTransform.anchoredPosition = Vector2.zero;
             return button;

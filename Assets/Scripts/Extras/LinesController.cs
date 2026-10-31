@@ -32,7 +32,7 @@ namespace Extras
         private void UpdateLinesText(int totalClearedLines)
         {
             if (_linesText == null) return;
-            _linesText.text = "Lines\n" + totalClearedLines;
+            _linesText.text = Localization.Loc.Caps("Lines") + "\n" + totalClearedLines;
         }
     }
 }

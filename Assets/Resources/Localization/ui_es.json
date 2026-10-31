@@ -1,0 +1,328 @@
+{
+ "entries": [
+  {
+   "en": "Play",
+   "text": "Jugar"
+  },
+  {
+   "en": "Settings",
+   "text": "Ajustes"
+  },
+  {
+   "en": "back",
+   "text": "Atrás"
+  },
+  {
+   "en": "Back",
+   "text": "Atrás"
+  },
+  {
+   "en": "Restart",
+   "text": "Reiniciar"
+  },
+  {
+   "en": "Resume",
+   "text": "Reanudar"
+  },
+  {
+   "en": "Main Menu",
+   "text": "Menú principal"
+  },
+  {
+   "en": "Continue",
+   "text": "Continuar"
+  },
+  {
+   "en": "New Game",
+   "text": "Nueva partida"
+  },
+  {
+   "en": "CONTINUE\nor new game?",
+   "text": "CONTINUAR\no nueva partida?"
+  },
+  {
+   "en": "Music",
+   "text": "Música"
+  },
+  {
+   "en": "Effects",
+   "text": "Efectos"
+  },
+  {
+   "en": "Volume",
+   "text": "Volumen"
+  },
+  {
+   "en": "sound",
+   "text": "Sonido"
+  },
+  {
+   "en": "Restore Purchases",
+   "text": "Restaurar compras"
+  },
+  {
+   "en": "Remove Ads",
+   "text": "Quitar anuncios"
+  },
+  {
+   "en": "Already owned.",
+   "text": "Ya lo tienes."
+  },
+  {
+   "en": "Restoring…",
+   "text": "Restaurando…"
+  },
+  {
+   "en": "Purchases restored.",
+   "text": "Compras restauradas."
+  },
+  {
+   "en": "Tutorial",
+   "text": "Tutorial"
+  },
+  {
+   "en": "Tutorial Completed",
+   "text": "Tutorial completado"
+  },
+  {
+   "en": "Tutorial Completed!",
+   "text": "¡Tutorial completado!"
+  },
+  {
+   "en": "Skip ›",
+   "text": "Omitir ›"
+  },
+  {
+   "en": "Tap the screen\nto rotate the piece",
+   "text": "Toca la pantalla\npara girar la pieza"
+  },
+  {
+   "en": "Swipe left or right\nto move the piece",
+   "text": "Desliza a la izquierda o derecha\npara mover la pieza"
+  },
+  {
+   "en": "Swipe down fast\nto drop instantly",
+   "text": "Desliza rápido hacia abajo\npara soltarla al instante"
+  },
+  {
+   "en": "Hold and drag down\nto descend faster",
+   "text": "Mantén y arrastra hacia abajo\npara bajar más rápido"
+  },
+  {
+   "en": "Clear lines to charge\nthe ability bar to gain a random ability piece",
+   "text": "Limpia líneas para cargar\nla barra y ganar una pieza con habilidad al azar"
+  },
+  {
+   "en": "Bomb tile\nclears a 3x3 area",
+   "text": "El bloque bomba\nlimpia un área de 3x3"
+  },
+  {
+   "en": "Laser tile - rotate it\nto fire a row or column",
+   "text": "Bloque láser: gíralo\npara disparar a una fila o columna"
+  },
+  {
+   "en": "Swipe left or right to continue",
+   "text": "Desliza a un lado para continuar"
+  },
+  {
+   "en": "Tap the screen to rotate",
+   "text": "Toca la pantalla para girar"
+  },
+  {
+   "en": "Swipe down fast to continue",
+   "text": "Desliza rápido hacia abajo para continuar"
+  },
+  {
+   "en": "Hold and drag down to continue",
+   "text": "Mantén y arrastra hacia abajo para continuar"
+  },
+  {
+   "en": "Tap anywhere to continue",
+   "text": "Toca para continuar"
+  },
+  {
+   "en": "Score",
+   "text": "Puntos"
+  },
+  {
+   "en": "High Score",
+   "text": "Récord"
+  },
+  {
+   "en": "Lines",
+   "text": "Líneas"
+  },
+  {
+   "en": "Level",
+   "text": "Nivel"
+  },
+  {
+   "en": "Score: {0}",
+   "text": "Puntos: {0}"
+  },
+  {
+   "en": "High Score: {0}",
+   "text": "Récord: {0}"
+  },
+  {
+   "en": "Level {0}",
+   "text": "Nivel {0}"
+  },
+  {
+   "en": "Classic",
+   "text": "Clásico"
+  },
+  {
+   "en": "classic",
+   "text": "Clásico"
+  },
+  {
+   "en": "Levels",
+   "text": "Niveles"
+  },
+  {
+   "en": "Extended",
+   "text": "Extendido"
+  },
+  {
+   "en": "Endless blocks",
+   "text": "Bloques sin fin"
+  },
+  {
+   "en": "Bombs and lasers",
+   "text": "Bombas y láseres"
+  },
+  {
+   "en": "LEVEL CLEARED!",
+   "text": "¡NIVEL SUPERADO!"
+  },
+  {
+   "en": "Next",
+   "text": "Siguiente"
+  },
+  {
+   "en": "Menu",
+   "text": "Menú"
+  },
+  {
+   "en": "Yes",
+   "text": "Sí"
+  },
+  {
+   "en": "Cancel",
+   "text": "Cancelar"
+  },
+  {
+   "en": "Main Menu?",
+   "text": "¿Menú principal?"
+  },
+  {
+   "en": "Are you sure you want to leave?",
+   "text": "¿Seguro que quieres salir?"
+  },
+  {
+   "en": "Restart?",
+   "text": "¿Reiniciar?"
+  },
+  {
+   "en": "Your current game will be lost",
+   "text": "Perderás la partida actual"
+  },
+  {
+   "en": "Yes, restart",
+   "text": "Sí, reiniciar"
+  },
+  {
+   "en": "Clear lines: {0}/{1}",
+   "text": "Líneas: {0}/{1}"
+  },
+  {
+   "en": "Reach score: {0}/{1}",
+   "text": "Puntos: {0}/{1}"
+  },
+  {
+   "en": "Ability cells: {0}/{1}",
+   "text": "Habilidad: {0}/{1}"
+  },
+  {
+   "en": "Tetrises: {0}/{1}",
+   "text": "Tetris: {0}/{1}"
+  },
+  {
+   "en": "Combo: {0}/{1}",
+   "text": "Combo: {0}/{1}"
+  },
+  {
+   "en": "Gold left: {0}",
+   "text": "Oro restante: {0}"
+  },
+  {
+   "en": "Clear {0} lines",
+   "text": "Limpia {0} líneas"
+  },
+  {
+   "en": "Reach {0} points",
+   "text": "Alcanza {0} puntos"
+  },
+  {
+   "en": "Hit {0} cells with abilities",
+   "text": "Golpea {0} celdas con habilidades"
+  },
+  {
+   "en": "Clear a Tetris",
+   "text": "Haz un Tetris"
+  },
+  {
+   "en": "Clear {0} Tetrises",
+   "text": "Haz {0} Tetris"
+  },
+  {
+   "en": "Clear lines {0} pieces in a row",
+   "text": "Limpia líneas con {0} piezas seguidas"
+  },
+  {
+   "en": "Clear all the gold",
+   "text": "Limpia todo el oro"
+  },
+  {
+   "en": "Clear the board",
+   "text": "Limpia el tablero"
+  },
+  {
+   "en": "NEW BEST!",
+   "text": "¡NUEVO RÉCORD!"
+  },
+  {
+   "en": "Score {score}",
+   "text": "Puntos {score}"
+  },
+  {
+   "en": "+{n} CELLS!",
+   "text": "¡+{n} CELDAS!"
+  },
+  {
+   "en": "Bomb",
+   "text": "Bomba"
+  },
+  {
+   "en": "Laser",
+   "text": "Láser"
+  },
+  {
+   "en": "Patch",
+   "text": "Parche"
+  },
+  {
+   "en": "{ability} READY!",
+   "text": "¡{ability} LISTO!"
+  },
+  {
+   "en": "{ability} piece coming up",
+   "text": "Llega una pieza de {ability}"
+  },
+  {
+   "en": "Fills the {0} lowest holes",
+   "text": "Rellena los {0} huecos más bajos"
+  }
+ ]
+}

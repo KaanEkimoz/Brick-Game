@@ -29,10 +29,10 @@ public class GameOver : MonoBehaviour
     }
     private void UpdateScores()
     {
-        endScore.text = "Score\n" + ScoreController.score;
+        endScore.text = Localization.Loc.Caps("Score") + "\n" + ScoreController.score;
         // Read the mode-aware high score (Classic / Extended) instead of the legacy key,
         // otherwise the Extended Game Over panel shows the Classic record.
-        highScore.text = "High Score\n" + ScoreController.GetCurrentHighScore();
+        highScore.text = Localization.Loc.Caps("High Score") + "\n" + ScoreController.GetCurrentHighScore();
     }
     private void StopMusic()
     {

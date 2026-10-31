@@ -63,9 +63,9 @@ namespace Extras
         private void ApplyCopy(int newScore)
         {
             if (_headlineText != null)
-                _headlineText.text = _headlineTemplate;
+                _headlineText.text = Localization.Loc.Caps(_headlineTemplate);
             if (_subText != null)
-                _subText.text = _subTemplate.Replace("{score}", newScore.ToString("N0"));
+                _subText.text = Localization.Loc.T(_subTemplate).Replace("{score}", newScore.ToString("N0"));
         }
 
         private IEnumerator Show()

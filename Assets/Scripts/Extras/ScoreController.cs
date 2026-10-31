@@ -113,11 +113,11 @@ namespace Extras
         }
         private void UpdateScoreText()
         {
-            scoreText.text = "Score\n" + score;
+            scoreText.text = Localization.Loc.Caps("Score") + "\n" + score;
         }
         private void UpdateHighScoreText()
         {
-            highScoreText.text = "High Score\n" + highScore;
+            highScoreText.text = Localization.Loc.Caps("High Score") + "\n" + highScore;
         }
         private void SaveHighScore()
         {

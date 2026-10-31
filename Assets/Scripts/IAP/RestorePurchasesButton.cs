@@ -99,13 +99,13 @@ namespace Ekimoz.IAP
             // for owned entitlements, which PurchaseManager already routes into ApplyRemoveAds.
             // We just show a brief status line so the player knows something is happening.
             pm.RestorePurchases();
-            ShowStatus(pm.RemoveAdsOwned ? "Already owned." : "Restoring…", 2.5f);
+            ShowStatus(Localization.Loc.T(pm.RemoveAdsOwned ? "Already owned." : "Restoring…"), 2.5f);
         }
 
         private void HandleOwnedChanged(bool owned)
         {
             Refresh();
-            if (owned) ShowStatus("Purchases restored.", 2.5f);
+            if (owned) ShowStatus(Localization.Loc.T("Purchases restored."), 2.5f);
         }
 
         private void Refresh()
