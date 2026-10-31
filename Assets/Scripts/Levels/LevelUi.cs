@@ -16,7 +16,8 @@ namespace Levels
     {
         private const string PlayButtonName = "B_Play";
         private const string ExtendedButtonName = "B_PlayExtended";
-        private const string SettingsButtonName = "B_Settings";
+        private const string SettingsIconName = "B_SettingsIcon";
+        private const string LanguageIconPath = "Icons/icon_language_neon";
         private const string MenuButtonText = "Play";
         private const string ModeImageFolder = "ModeSelect/";
         private const string WinSoundPath = "LevelAudio/level_win";
@@ -29,7 +30,7 @@ namespace Levels
         private const int CanvasOrder = 100;
         private const float DividerThickness = 0.007f;
         private const float BackIconSize = 110f;
-        private const float LanguageButtonSpacing = 118f; // same step as Play to Settings
+        private const float LanguageIconGap = 12f;
         private const float LanguageRowHeight = 140f;
         private const float LanguageHeadingHeight = 150f;
         private const float IntroMinHoldSeconds = 3f;
@@ -140,19 +141,21 @@ namespace Levels
             _extendedButton.gameObject.SetActive(false);
         }
 
+        // Sits under the gear icon and copies its look.
         private void BuildLanguageButton()
         {
             foreach (Button settings in Resources.FindObjectsOfTypeAll<Button>())
             {
-                if (settings.name != SettingsButtonName || !settings.gameObject.scene.IsValid()) continue;
+                if (settings.name != SettingsIconName || !settings.gameObject.scene.IsValid()) continue;
 
                 Button button = Instantiate(settings, settings.transform.parent);
-                button.name = "B_Language";
+                button.name = "B_LanguageIcon";
                 button.onClick = new Button.ButtonClickedEvent();
                 button.onClick.AddListener(ShowLanguageSelect);
-                ((RectTransform)button.transform).anchoredPosition += Vector2.down * LanguageButtonSpacing;
-                TMP_Text label = button.GetComponentInChildren<TMP_Text>(true);
-                if (label != null) label.text = Loc.Caps(LanguageKey);
+                button.GetComponent<Image>().sprite = Resources.Load<Sprite>(LanguageIconPath);
+
+                RectTransform rect = (RectTransform)button.transform;
+                rect.anchoredPosition += Vector2.down * (rect.rect.height + LanguageIconGap);
                 return;
             }
         }
