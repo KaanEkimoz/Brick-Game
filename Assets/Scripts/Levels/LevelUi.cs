@@ -90,6 +90,7 @@ namespace Levels
             BuildGameOverLeaderboard();
             gameObject.AddComponent<Leaderboard.LeaderboardSubmitter>();
             gameObject.AddComponent<LevelsScoreHud>();
+            gameObject.AddComponent<Gameplay.BonusCollectibles>();
             BuildObjectiveLine();
         }
 

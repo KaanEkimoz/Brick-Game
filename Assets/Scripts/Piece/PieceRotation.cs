@@ -113,6 +113,7 @@ namespace Piece
                 // A charged Laser flips its firing axis (row vs column) with each rotation.
                 LaserOrientation laser = GetComponent<LaserOrientation>();
                 if (laser != null) laser.Toggle();
+                GetComponent<DynamiteOrientation>()?.Apply();
             }
         
             OnPieceRotation?.Invoke();

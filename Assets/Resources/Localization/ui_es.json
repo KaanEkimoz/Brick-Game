@@ -411,6 +411,18 @@
   {
    "en": "Finish the goal above the board\nbefore your pieces or time run out",
    "text": "Cumple el objetivo sobre el tablero\nantes de quedarte sin piezas o tiempo"
+  },
+  {
+   "en": "Dynamite",
+   "text": "Dinamita"
+  },
+  {
+   "en": "Dynamite comes as a 1x2 piece\nand clears 3x4 along its direction",
+   "text": "La dinamita es una pieza de 1x2 y\nlimpia 3x4 según su dirección"
+  },
+  {
+   "en": "Land a piece on a fruit\nfor bonus points before it fades",
+   "text": "Coloca una pieza sobre la fruta antes\nde que desaparezca y gana puntos"
   }
  ]
 }

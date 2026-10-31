@@ -18,6 +18,8 @@ namespace Extras
     /// </summary>
     public class AbilityArmedBanner : MonoBehaviour
     {
+        private static readonly Color DynamiteColor = new Color(1f, 0.3f, 0.2f, 1f);
+
         [Tooltip("Root that gets SetActive(true) for the burst. Disabled at rest.")]
         [SerializeField] private GameObject _bannerRoot;
 
@@ -75,6 +77,7 @@ namespace Extras
             {
                 AbilityType.Bomb => _bombColor,
                 AbilityType.Laser => _laserColor,
+                AbilityType.Dynamite => DynamiteColor,
                 _ => _patchColor,
             };
 

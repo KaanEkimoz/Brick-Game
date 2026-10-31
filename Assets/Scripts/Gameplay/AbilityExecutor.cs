@@ -73,6 +73,16 @@ namespace Gameplay
                     cleared = _boardController.ClearBoxCells(anchor.x, anchor.y, 1);
                     OnBombExploded?.Invoke(anchor);
                     break;
+                case AbilityType.Dynamite:
+                {
+                    Vector2Int other = PieceController.Tiles[1].coordinates;
+                    Vector2Int min = Vector2Int.Min(anchor, other) - Vector2Int.one;
+                    Vector2Int max = Vector2Int.Max(anchor, other) + Vector2Int.one;
+                    cleared = _boardController.ClearRectCells(min, max);
+                    OnBombExploded?.Invoke(anchor);
+                    OnBombExploded?.Invoke(other);
+                    break;
+                }
                 case AbilityType.Laser:
                 {
                     LaserOrientation orientation = piece.GetComponent<LaserOrientation>();

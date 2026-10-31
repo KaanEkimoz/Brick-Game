@@ -46,6 +46,7 @@ as `{ "levels": [ ... ] }`. Every field below is required on every level (JsonUt
   except that an `I` always sits in the line it fires along. So `laser` with `abilityEvery: 1` and
   `pieces: "I"` can never grow either and needs a limit too.
 - Patch: fills the 6 lowest covered holes. `bar`: clearing 5 lines charges one random ability.
+- Dynamite: appears only through the `bar` charge in Extended, as a 1x2 piece that clears 3x4 along its direction. No level mode charges it.
 - `AbilityCells` counts cells destroyed by Bomb or Laser, the bomb's own tile included, and cells
   filled by Patch.
 - A fixed tile does not fall, so tiles above it hang when the rows below clear. A `#` in the middle

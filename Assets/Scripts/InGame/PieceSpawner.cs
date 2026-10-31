@@ -156,8 +156,8 @@ namespace InGame
                 && AbilityCharger.Instance != null
                 && AbilityCharger.Instance.IsReady;
 
-            // A bomb arrives on its own, so the previewed piece stays next in line.
-            if (!abilityDue || AbilityCharger.Instance.Pending != AbilityType.Bomb)
+            // A bomb or dynamite arrives on its own, so the previewed piece stays next in line.
+            if (!abilityDue || !ArrivesAlone(AbilityCharger.Instance.Pending.Value))
             {
                 _curPieceType = _nextPieceType;
                 _nextPieceType = PieceBag.Next();
@@ -182,9 +182,14 @@ namespace InGame
         public void ChargeCurrentPiece(AbilityType ability, int tileIndex)
         {
             GameObject piece = PiecesController.CurPiece;
+            if (ability == AbilityType.Dynamite)
+            {
+                ChargeDynamite(piece);
+                return;
+            }
             if (ability == AbilityType.Bomb)
             {
-                KeepOnlyFirstTile(piece.GetComponent<PieceController>());
+                KeepFirstTiles(piece.GetComponent<PieceController>(), 1);
                 tileIndex = 0;
             }
 
@@ -209,15 +214,36 @@ namespace InGame
             OnPieceCharged?.Invoke();
         }
 
-        /// <summary>Turns the falling piece into a single tile at its origin cell.</summary>
-        private static void KeepOnlyFirstTile(PieceController pieceController)
+        private static bool ArrivesAlone(AbilityType ability) => ability == AbilityType.Bomb || ability == AbilityType.Dynamite;
+
+        /// <summary>Shrinks the falling piece to its first tiles.</summary>
+        private static void KeepFirstTiles(PieceController pieceController, int count)
         {
             TileController[] tiles = PieceController.Tiles;
-            for (int i = 1; i < tiles.Length; i++)
+            for (int i = count; i < tiles.Length; i++)
                 Destroy(tiles[i].gameObject);
 
-            pieceController.tiles = new[] { tiles[0] };
-            PieceController.Tiles = pieceController.tiles;
+            Array.Resize(ref tiles, count);
+            pieceController.tiles = tiles;
+            PieceController.Tiles = tiles;
+        }
+
+        // Standing 1x2 piece: the first tile is the bottom half, the second the top half.
+        private void ChargeDynamite(GameObject piece)
+        {
+            KeepFirstTiles(piece.GetComponent<PieceController>(), 2);
+            TileController[] tiles = PieceController.Tiles;
+            tiles[1].UpdatePosition(tiles[0].coordinates + Vector2Int.up);
+            piece.GetComponent<PieceRotation>().curType = PieceType.Bomb;
+
+            float tileWidth = tiles[0].GetComponent<SpriteRenderer>().bounds.size.x;
+            tiles[0].GetComponent<SpriteRenderer>().sprite = DynamiteArt.Half(false, tileWidth);
+            tiles[1].GetComponent<SpriteRenderer>().sprite = DynamiteArt.Half(true, tileWidth);
+
+            AbilityMarker marker = piece.AddComponent<AbilityMarker>();
+            marker.SetAbility(AbilityType.Dynamite);
+            piece.AddComponent<DynamiteOrientation>();
+            OnPieceCharged?.Invoke();
         }
 
 #if UNITY_EDITOR

@@ -64,6 +64,9 @@ namespace Tutorial
         private const string LaserTitle = "Laser sits on one block of a piece\nRotate to fire a row or column";
         private const string PatchTitle = "Patch sits on one block of a piece\nand fills holes in your stack";
         private const string BarTitle = "Clear 5 lines to fill the ability bar\nand load a random ability";
+        private const string DynamiteTitle = "Dynamite comes as a 1x2 piece\nand clears 3x4 along its direction";
+        private const string FruitTitle = "Land a piece on a fruit\nfor bonus points before it fades";
+        private const string FruitIconPath = "Collectibles/cherry";
         private const string LevelsTitle = "Finish the goal above the board\nbefore your pieces or time run out";
         private static readonly Color PatchIconColor = new Color(0.45f, 1f, 0.55f, 1f);
 
@@ -178,8 +181,17 @@ namespace Tutorial
             if (template == null) return;
 
             Sprite tile = FindAnyObjectByType<PieceSpawner>(FindObjectsInactive.Include)?.TileSprites[0];
-            _extendedSteps.Insert(_extendedSteps.Count - 1, CreateInfoStep(template.panel, PatchTitle, tile, PatchIconColor));
+            int barIndex = _extendedSteps.Count - 1;
+            _extendedSteps.Insert(barIndex, CreateInfoStep(template.panel, PatchTitle, tile, PatchIconColor));
+            _extendedSteps.Insert(barIndex, CreateInfoStep(template.panel, DynamiteTitle, DynamiteArt.Whole(), Color.white));
+            _extendedSteps.Add(CreateInfoStep(template.panel, FruitTitle, LoadSprite(FruitIconPath), Color.white));
             _levelSteps.Add(CreateInfoStep(template.panel, LevelsTitle, Resources.Load<Sprite>(GoalIconPath), Color.white));
+        }
+
+        private static Sprite LoadSprite(string path)
+        {
+            Texture2D texture = Resources.Load<Texture2D>(path);
+            return Sprite.Create(texture, new Rect(0f, 0f, texture.width, texture.height), new Vector2(0.5f, 0.5f));
         }
 
         private static TutorialStep CreateInfoStep(GameObject template, string titleKey, Sprite icon, Color iconColor)
@@ -188,6 +200,7 @@ namespace Tutorial
             UnityEngine.UI.Image image = panel.transform.Find(IconName).GetComponent<UnityEngine.UI.Image>();
             image.sprite = icon;
             image.color = iconColor;
+            image.preserveAspect = true;
             return new TutorialStep { panel = panel, titleKey = titleKey };
         }
 
