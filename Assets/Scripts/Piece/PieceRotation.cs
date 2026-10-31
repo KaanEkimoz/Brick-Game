@@ -91,7 +91,8 @@ namespace Piece
         /// <param name="shouldOffset">Set to true if offset operations should be attempted.</param>
         public void RotatePiece(bool clockwise, bool shouldOffset)
         {
-            if (PieceController.Tiles == null || PieceController.Tiles.Length == 0)
+            // A single tile has nothing to rotate, and the wall-kick tests could shift it.
+            if (PieceController.Tiles == null || PieceController.Tiles.Length <= 1)
                 return;
 
             int oldRotationIndex = RotationIndex;

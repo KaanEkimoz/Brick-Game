@@ -151,17 +151,23 @@ namespace InGame
             GameObject curPiece = Instantiate(piecePrefab, transform);
             InitializeCurPiece(curPiece);
 
-            _curPieceType = _nextPieceType;
-            _nextPieceType = PieceBag.Next();
+            bool abilityDue = GameMode.IsExtended
+                && AbilityCharger.Instance != null
+                && AbilityCharger.Instance.IsReady;
+
+            // A bomb arrives on its own, so the previewed piece stays next in line.
+            if (!abilityDue || AbilityCharger.Instance.Pending != AbilityType.Bomb)
+            {
+                _curPieceType = _nextPieceType;
+                _nextPieceType = PieceBag.Next();
+            }
 
             OnNextPieceChanged?.Invoke(_nextPieceType);
             UpdateTiles(_curPieceType, PiecesController.CurPiece.GetComponent<PieceController>());
 
             // Full bar: load the ability onto one random tile of this tetromino, so the player
-            // aims it through placement and rotation. The bag and the preview stay untouched.
-            if (GameMode.IsExtended
-                && AbilityCharger.Instance != null
-                && AbilityCharger.Instance.IsReady)
+            // aims it through placement and rotation. A bomb shrinks the piece to that one tile.
+            if (abilityDue)
             {
                 ChargeCurrentPiece(AbilityCharger.Instance.ConsumePending(),
                     Random.Range(0, PieceController.Tiles.Length));
@@ -175,6 +181,12 @@ namespace InGame
         public void ChargeCurrentPiece(AbilityType ability, int tileIndex)
         {
             GameObject piece = PiecesController.CurPiece;
+            if (ability == AbilityType.Bomb)
+            {
+                KeepOnlyFirstTile(piece.GetComponent<PieceController>());
+                tileIndex = 0;
+            }
+
             AbilityMarker marker = piece.GetComponent<AbilityMarker>();
             if (marker == null) marker = piece.AddComponent<AbilityMarker>();
             marker.SetAbility(ability);
@@ -194,6 +206,17 @@ namespace InGame
                 piece.AddComponent<LaserOrientation>().BindVisual(tileRenderer);
 
             OnPieceCharged?.Invoke();
+        }
+
+        /// <summary>Turns the falling piece into a single tile at its origin cell.</summary>
+        private static void KeepOnlyFirstTile(PieceController pieceController)
+        {
+            TileController[] tiles = PieceController.Tiles;
+            for (int i = 1; i < tiles.Length; i++)
+                Destroy(tiles[i].gameObject);
+
+            pieceController.tiles = new[] { tiles[0] };
+            PieceController.Tiles = pieceController.tiles;
         }
 
 #if UNITY_EDITOR
