@@ -43,6 +43,7 @@ namespace Levels
         private static readonly Color IntroDim = new Color(0f, 0f, 0.05f, 0.75f);
         private static readonly Vector2 IntroPanelSize = new Vector2(800f, 340f);
         private static readonly Vector2 WinPanelSize = new Vector2(880f, 780f);
+        private static readonly Color MenuButtonTextColor = new Color(0.08f, 0.3f, 0.8f, 1f);
         private static readonly Color ModeImageTint = new Color(0.68f, 0.68f, 0.74f, 1f);
 
         private Transform _canvas;
@@ -424,6 +425,7 @@ namespace Levels
                 text.text = label;
                 text.enableAutoSizing = false;
                 text.fontSize = MenuButtonFontSize;
+                text.color = MenuButtonTextColor;
                 text.alignment = TextAlignmentOptions.Center;
                 text.rectTransform.anchorMin = Vector2.zero;
                 text.rectTransform.anchorMax = Vector2.one;
