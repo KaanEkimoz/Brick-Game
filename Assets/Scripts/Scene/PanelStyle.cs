@@ -14,6 +14,7 @@ namespace Scene
         public const string ButtonName = "B_Play";
 
         private const float MinFontSizeRatio = 0.55f;
+        private const float ButtonGlowRatio = 0.16f; // the button sprite's glow, per side
 
         public static readonly Color ButtonTextColor = new Color(0.08f, 0.3f, 0.8f, 1f);
 
@@ -50,6 +51,14 @@ namespace Scene
             label.fontSizeMax = size;
             label.fontSizeMin = size * MinFontSizeRatio;
             label.fontSize = size;
+        }
+
+        /// <summary>Fits a button's label inside the visible button, leaving out the glow.</summary>
+        public static void FitButtonLabel(TMP_Text label, float size, float buttonWidth)
+        {
+            FitLine(label, size);
+            float glow = buttonWidth * ButtonGlowRatio;
+            label.margin = new Vector4(glow, 0f, glow, 0f);
         }
     }
 }

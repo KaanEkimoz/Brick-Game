@@ -19,7 +19,7 @@ namespace Scene
         private const float TitleFontSize = 50f;
         private const float MessageFontSize = 30f;
         private const float ButtonFontSize = 44f;
-        private static readonly Vector2 TextSize = new Vector2(540f, 110f);
+        private static readonly Vector2 TextSize = new Vector2(490f, 110f);
         private static readonly Vector2 ButtonSize = new Vector2(485f, 114f);
 
         private GameObject _root;
@@ -93,7 +93,7 @@ namespace Scene
             label.text = Localization.Loc.Caps(text);
             label.color = PanelStyle.ButtonTextColor;
             label.alignment = TextAlignmentOptions.Center;
-            PanelStyle.FitLine(label, ButtonFontSize);
+            PanelStyle.FitButtonLabel(label, ButtonFontSize, ButtonSize.x);
             label.rectTransform.anchorMin = Vector2.zero;
             label.rectTransform.anchorMax = Vector2.one;
             label.rectTransform.offsetMin = Vector2.zero;

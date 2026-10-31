@@ -32,7 +32,7 @@ namespace Levels
         private const float BackIconSize = 110f;
         private const float LanguageIconGap = 12f;
         private const float LanguageRowHeight = 140f;
-        private const float LanguageHeadingHeight = 150f;
+        private const float LanguageHeadingHeight = 200f;
         private const float IntroMinHoldSeconds = 3f;
         private const float IntroMaxHoldSeconds = 7f;
         private const float IntroSecondsPerCharacter = 0.06f;
@@ -50,8 +50,8 @@ namespace Levels
         private static readonly Vector2 LowerBorder = new Vector2(0.29f, 0.39f);
         private static readonly Color Accent = new Color(0.2f, 0.95f, 1f, 1f);
         private static readonly Color IntroDim = new Color(0f, 0f, 0.05f, 0.75f);
-        private static readonly Vector2 IntroPanelSize = new Vector2(800f, 340f);
-        private static readonly Vector2 WinPanelSize = new Vector2(880f, 700f);
+        private static readonly Vector2 IntroPanelSize = new Vector2(800f, 440f);
+        private static readonly Vector2 WinPanelSize = new Vector2(880f, 780f);
         private static readonly Vector2 WinButtonSize = new Vector2(640f, 150f);
         private static readonly Vector2 WinRuleSize = new Vector2(520f, 4f);
         private static readonly Color WinTitleTop = new Color(1f, 0.97f, 0.72f, 1f);
@@ -435,7 +435,7 @@ namespace Levels
             RectTransform panel = CreatePanel(screen, IntroPanelSize);
 
             TextMeshProUGUI title = CreateHeading(panel, Loc.Upper(Loc.F("Level {0}", level.id)), 56f);
-            Place(title.rectTransform, new Vector2(0f, 110f), new Vector2(740f, 70f));
+            Place(title.rectTransform, new Vector2(0f, 135f), new Vector2(680f, 70f));
             TextMeshProUGUI goal = CreatePlainText(panel, DescribeGoal(level), 50f, Color.white);
             Place(goal.rectTransform, new Vector2(0f, 30f), new Vector2(740f, 70f));
             TextMeshProUGUI hint = CreatePlainText(panel, Loc.LevelHint(level.id, level.hint), 36f, Color.white);
@@ -541,7 +541,7 @@ namespace Levels
 
             RectTransform panel = CreatePanel(screen, WinPanelSize);
             TextMeshProUGUI heading = CreateWinTitle(panel, 76f);
-            Place(heading.rectTransform, new Vector2(0f, 245f), new Vector2(840f, 100f));
+            Place(heading.rectTransform, new Vector2(0f, 255f), new Vector2(720f, 100f));
 
             GameObject rule = new GameObject("Rule", typeof(RectTransform), typeof(Image));
             rule.transform.SetParent(panel, false);
@@ -588,7 +588,7 @@ namespace Levels
 
             RectTransform panel = CreatePanel(dim.transform, WinPanelSize);
             TextMeshProUGUI heading = CreateHeading(panel, Loc.Caps(Scene.ConfirmDialog.MainMenuTitle), 66f);
-            Place(heading.rectTransform, new Vector2(0f, 235f), new Vector2(740f, 90f));
+            Place(heading.rectTransform, new Vector2(0f, 245f), new Vector2(720f, 90f));
             TextMeshProUGUI message = CreatePlainText(panel, Loc.T(Scene.ConfirmDialog.MainMenuMessage), 40f, Color.white);
             Place(message.rectTransform, new Vector2(0f, 145f), new Vector2(740f, 70f));
 
@@ -613,8 +613,7 @@ namespace Levels
             if (text != null)
             {
                 text.text = Loc.Caps(label);
-                text.enableAutoSizing = false;
-                text.fontSize = MenuButtonFontSize;
+                Scene.PanelStyle.FitButtonLabel(text, MenuButtonFontSize, WinButtonSize.x);
                 text.color = Scene.PanelStyle.ButtonTextColor;
                 text.alignment = TextAlignmentOptions.Center;
                 text.rectTransform.anchorMin = Vector2.zero;
