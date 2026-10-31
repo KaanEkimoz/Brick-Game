@@ -26,9 +26,6 @@ namespace Levels
         private static readonly Color FixedTint = new Color(0.5f, 0.53f, 0.6f, 1f);
         private static readonly Color GoldTint = new Color(1f, 0.82f, 0.15f, 1f);
 
-        // Set before a scene reload so the level list reopens after "Levels" on the win dialog.
-        private static bool _openSelectAfterLoad;
-
         public static LevelSession Instance { get; private set; }
 
         /// <summary>True once a round has ended, until the next one begins.</summary>
@@ -94,13 +91,6 @@ namespace Levels
             }
             GameOver gameOver = FindAnyObjectByType<GameOver>(FindObjectsInactive.Include);
             if (gameOver != null) _gameOverMenu = gameOver.GameOverScreen;
-        }
-
-        private void Start()
-        {
-            if (!_openSelectAfterLoad) return;
-            _openSelectAfterLoad = false;
-            GetComponent<LevelUi>().ShowLevelSelect();
         }
 
         private void OnEnable()
@@ -174,10 +164,9 @@ namespace Levels
             OnProgressChanged?.Invoke();
         }
 
-        /// <summary>Returns to the main menu with the level list open.</summary>
-        public void ReturnToLevelSelect()
+        /// <summary>Returns to the main menu.</summary>
+        public void ReturnToMenu()
         {
-            _openSelectAfterLoad = true;
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
 

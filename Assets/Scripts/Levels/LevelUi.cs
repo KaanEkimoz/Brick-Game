@@ -7,26 +7,26 @@ using UnityEngine.UI;
 namespace Levels
 {
     /// <summary>
-    /// All Levels screens: the menu button, level list, intro and win dialogs and the objective
+    /// All menu screens: the Play button, mode select, level intro and win dialogs and the objective
     /// line. Built at runtime on its own overlay canvas so the shipped scene stays untouched.
     /// </summary>
     public class LevelUi : MonoBehaviour
     {
         private const string PlayButtonName = "B_Play";
         private const string ExtendedButtonName = "B_PlayExtended";
-        private const string MenuButtonText = "Levels";
+        private const string MenuButtonText = "Play";
+        private const string ModeImageFolder = "ModeSelect/";
         private const int CanvasOrder = 100;
-        private const int GridColumns = 5;
-        private const float CellSize = 170f;
-        private const float CellGap = 26f;
+        private const float DividerThickness = 0.007f;
         private const float ObjectiveY = 415f; // from the top, between the HUD and the board
 
         private static readonly Vector2 ReferenceResolution = new Vector2(1080f, 1920f);
         private static readonly Color Backdrop = new Color(0.01f, 0.02f, 0.1f, 0.96f);
         private static readonly Color PanelBlue = new Color(0.1f, 0.26f, 0.62f, 1f);
-        private static readonly Color Unlocked = new Color(0.16f, 0.42f, 0.85f, 1f);
-        private static readonly Color Locked = new Color(0.08f, 0.1f, 0.2f, 1f);
-        private static readonly Color Cleared = new Color(0.1f, 0.62f, 0.55f, 1f);
+
+        // Slanted borders between the three modes, as heights at the screen's left and right.
+        private static readonly Vector2 UpperBorder = new Vector2(0.63f, 0.73f);
+        private static readonly Vector2 LowerBorder = new Vector2(0.29f, 0.39f);
         private static readonly Color Accent = new Color(0.2f, 0.95f, 1f, 1f);
 
         private Transform _canvas;
@@ -34,6 +34,8 @@ namespace Levels
         private TextMeshProUGUI _objectiveText;
         private GameObject _screen;
         private LevelSession _session;
+        private Button _classicButton;
+        private Button _extendedButton;
 
         private void Awake()
         {
@@ -76,30 +78,28 @@ namespace Levels
             _canvas = go.transform;
         }
 
+        // One Play button replaces the Classic and Extended buttons. Those stay hidden in the
+        // scene because their click chains are what start the two modes.
         private void BuildMenuButton()
         {
-            GameObject play = null;
-            GameObject extended = null;
             foreach (Button button in Resources.FindObjectsOfTypeAll<Button>())
             {
                 if (!button.gameObject.scene.IsValid()) continue;
-                if (button.name == PlayButtonName) play = button.gameObject;
-                if (button.name == ExtendedButtonName) extended = button.gameObject;
+                if (button.name == PlayButtonName) _classicButton = button;
+                if (button.name == ExtendedButtonName) _extendedButton = button;
             }
-            if (play == null || extended == null) return;
+            if (_classicButton == null || _extendedButton == null) return;
 
-            GameObject levels = Instantiate(play, play.transform.parent);
-            levels.name = "B_PlayLevels";
-            RectTransform rect = (RectTransform)levels.transform;
-            RectTransform playRect = (RectTransform)play.transform;
-            RectTransform extendedRect = (RectTransform)extended.transform;
-            rect.anchoredPosition = playRect.anchoredPosition + (playRect.anchoredPosition - extendedRect.anchoredPosition);
-
-            Button click = levels.GetComponent<Button>();
+            GameObject play = Instantiate(_classicButton.gameObject, _classicButton.transform.parent);
+            play.name = "B_PlayMain";
+            Button click = play.GetComponent<Button>();
             click.onClick = new Button.ButtonClickedEvent();
-            click.onClick.AddListener(ShowLevelSelect);
-            TMP_Text label = levels.GetComponentInChildren<TMP_Text>(true);
+            click.onClick.AddListener(ShowModeSelect);
+            TMP_Text label = play.GetComponentInChildren<TMP_Text>(true);
             if (label != null) label.text = MenuButtonText;
+
+            _classicButton.gameObject.SetActive(false);
+            _extendedButton.gameObject.SetActive(false);
         }
 
         private void BuildObjectiveLine()
@@ -140,65 +140,110 @@ namespace Levels
             }
         }
 
-        /// <summary>Opens the scrollable list of all levels.</summary>
-        public void ShowLevelSelect()
+        /// <summary>Opens the three-way mode screen.</summary>
+        public void ShowModeSelect()
         {
             Transform screen = OpenScreen();
+            Vector2 upper = UpperBorder;
+            Vector2 lower = LowerBorder;
 
-            TextMeshProUGUI title = CreateText(screen, "Levels", 64f, Color.white);
-            Place(title.rectTransform, new Vector2(0f, 800f), new Vector2(900f, 110f));
+            CreateModeSlice(screen, "mode_classic", new[]
+            {
+                new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(1f, upper.y), new Vector2(0f, upper.x),
+            }, StartClassic);
+            CreateModeSlice(screen, "mode_levels", new[]
+            {
+                new Vector2(0f, upper.x), new Vector2(1f, upper.y), new Vector2(1f, lower.y), new Vector2(0f, lower.x),
+            }, StartLevels);
+            CreateModeSlice(screen, "mode_extended", new[]
+            {
+                new Vector2(0f, lower.x), new Vector2(1f, lower.y), new Vector2(1f, 0f), new Vector2(0f, 0f),
+            }, StartExtended);
 
-            RectTransform content = BuildScrollContent(screen);
-            int unlocked = LevelProgress.Unlocked;
-            foreach (LevelDefinition level in LevelCatalog.All)
-                CreateLevelCell(content, level, unlocked);
+            CreateDivider(screen, upper);
+            CreateDivider(screen, lower);
+
+            CreateModeLabel(screen, "Classic", "Endless blocks", new Vector2(0.5f, 0.84f));
+            CreateModeLabel(screen, "Levels", $"Level {NextLevel().id}", new Vector2(0.5f, 0.51f));
+            CreateModeLabel(screen, "Extended", "Bombs and lasers", new Vector2(0.5f, 0.2f));
 
             Button back = CreateButton(screen, "Back", CloseScreen);
-            Place((RectTransform)back.transform, new Vector2(0f, -710f), new Vector2(360f, 96f));
+            RectTransform backRect = (RectTransform)back.transform;
+            backRect.anchorMin = backRect.anchorMax = new Vector2(0f, 1f);
+            backRect.pivot = new Vector2(0f, 1f);
+            backRect.sizeDelta = new Vector2(200f, 84f);
+            backRect.anchoredPosition = new Vector2(30f, -40f);
         }
 
-        private RectTransform BuildScrollContent(Transform parent)
+        private void CreateModeSlice(Transform screen, string image, Vector2[] corners, Action onClick)
         {
-            GameObject viewport = new GameObject("Viewport", typeof(RectTransform), typeof(RectMask2D), typeof(Image));
-            viewport.transform.SetParent(parent, false);
-            viewport.GetComponent<Image>().color = Color.clear;
-            RectTransform viewportRect = (RectTransform)viewport.transform;
-            Place(viewportRect, new Vector2(0f, 40f), new Vector2(960f, 1340f));
-
-            int rows = Mathf.CeilToInt((float)LevelCatalog.All.Count / GridColumns);
-            GameObject content = new GameObject("Content", typeof(RectTransform), typeof(GridLayoutGroup));
-            content.transform.SetParent(viewport.transform, false);
-            RectTransform contentRect = (RectTransform)content.transform;
-            contentRect.anchorMin = new Vector2(0.5f, 1f);
-            contentRect.anchorMax = new Vector2(0.5f, 1f);
-            contentRect.pivot = new Vector2(0.5f, 1f);
-            contentRect.sizeDelta = new Vector2(960f, rows * (CellSize + CellGap));
-
-            GridLayoutGroup grid = content.GetComponent<GridLayoutGroup>();
-            grid.cellSize = new Vector2(CellSize, CellSize);
-            grid.spacing = new Vector2(CellGap, CellGap);
-            grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
-            grid.constraintCount = GridColumns;
-            grid.childAlignment = TextAnchor.UpperCenter;
-
-            ScrollRect scroll = viewport.AddComponent<ScrollRect>();
-            scroll.viewport = viewportRect;
-            scroll.content = contentRect;
-            scroll.horizontal = false;
-            scroll.movementType = ScrollRect.MovementType.Clamped;
-            return contentRect;
+            DiagonalSlice slice = CreateSlice(screen, Resources.Load<Texture2D>(ModeImageFolder + image), corners, Color.white);
+            Button button = slice.gameObject.AddComponent<Button>();
+            button.targetGraphic = slice;
+            button.onClick.AddListener(() => onClick());
         }
 
-        private void CreateLevelCell(Transform parent, LevelDefinition level, int unlocked)
+        private void CreateDivider(Transform screen, Vector2 border)
         {
-            bool open = level.id <= unlocked;
-            Button cell = CreateButton(parent, level.id.ToString(), () => ShowIntro(level));
-            cell.interactable = open;
-            Color color = !open ? Locked : level.id < unlocked ? Cleared : Unlocked;
-            cell.GetComponent<Image>().color = color;
-            ColorBlock colors = cell.colors;
-            colors.disabledColor = Color.white;
-            cell.colors = colors;
+            float half = DividerThickness * 0.5f;
+            DiagonalSlice divider = CreateSlice(screen, null, new[]
+            {
+                new Vector2(0f, border.x + half), new Vector2(1f, border.y + half),
+                new Vector2(1f, border.y - half), new Vector2(0f, border.x - half),
+            }, Accent);
+            divider.raycastTarget = false;
+        }
+
+        private static DiagonalSlice CreateSlice(Transform parent, Texture texture, Vector2[] corners, Color color)
+        {
+            GameObject go = new GameObject("Slice", typeof(RectTransform));
+            go.transform.SetParent(parent, false);
+            RectTransform rect = (RectTransform)go.transform;
+            rect.anchorMin = Vector2.zero;
+            rect.anchorMax = Vector2.one;
+            rect.offsetMin = Vector2.zero;
+            rect.offsetMax = Vector2.zero;
+            DiagonalSlice slice = go.AddComponent<DiagonalSlice>();
+            slice.color = color;
+            slice.Setup(texture, corners);
+            return slice;
+        }
+
+        private void CreateModeLabel(Transform screen, string title, string subtitle, Vector2 anchor)
+        {
+            TextMeshProUGUI titleText = CreateText(screen, title, 84f, Color.white);
+            titleText.outlineWidth = 0.25f;
+            titleText.outlineColor = Color.black;
+            PlaceAt(titleText.rectTransform, anchor, new Vector2(0f, 24f), new Vector2(1000f, 120f));
+
+            TextMeshProUGUI subtitleText = CreateText(screen, subtitle, 36f, Accent);
+            subtitleText.outlineWidth = 0.25f;
+            subtitleText.outlineColor = Color.black;
+            PlaceAt(subtitleText.rectTransform, anchor, new Vector2(0f, -58f), new Vector2(1000f, 60f));
+        }
+
+        private void StartClassic()
+        {
+            CloseScreen();
+            _classicButton.onClick.Invoke();
+        }
+
+        private void StartExtended()
+        {
+            CloseScreen();
+            _extendedButton.onClick.Invoke();
+        }
+
+        private void StartLevels()
+        {
+            ShowIntro(NextLevel());
+        }
+
+        // The level to continue from, or the last one once every level is cleared.
+        private static LevelDefinition NextLevel()
+        {
+            int last = LevelCatalog.All.Count;
+            return LevelCatalog.Get(Mathf.Min(LevelProgress.Unlocked, last));
         }
 
         private void ShowIntro(LevelDefinition level)
@@ -213,7 +258,7 @@ namespace Levels
             });
             Place((RectTransform)start.transform, new Vector2(0f, -160f), new Vector2(520f, 110f));
 
-            Button back = CreateButton(screen, "Back", ShowLevelSelect);
+            Button back = CreateButton(screen, "Back", ShowModeSelect);
             Place((RectTransform)back.transform, new Vector2(0f, -300f), new Vector2(520f, 96f));
         }
 
@@ -229,8 +274,8 @@ namespace Levels
                 Place((RectTransform)nextButton.transform, new Vector2(0f, -160f), new Vector2(520f, 110f));
             }
 
-            Button levels = CreateButton(screen, "All levels", _session.ReturnToLevelSelect);
-            Place((RectTransform)levels.transform, new Vector2(0f, -300f), new Vector2(520f, 96f));
+            Button menu = CreateButton(screen, "Main menu", _session.ReturnToMenu);
+            Place((RectTransform)menu.transform, new Vector2(0f, -300f), new Vector2(520f, 96f));
         }
 
         private void AddDialogText(Transform screen, string heading, string title, string body)
@@ -296,7 +341,12 @@ namespace Levels
 
         private static void Place(RectTransform rect, Vector2 position, Vector2 size)
         {
-            rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
+            PlaceAt(rect, new Vector2(0.5f, 0.5f), position, size);
+        }
+
+        private static void PlaceAt(RectTransform rect, Vector2 anchor, Vector2 position, Vector2 size)
+        {
+            rect.anchorMin = rect.anchorMax = anchor;
             rect.pivot = new Vector2(0.5f, 0.5f);
             rect.sizeDelta = size;
             rect.anchoredPosition = position;
