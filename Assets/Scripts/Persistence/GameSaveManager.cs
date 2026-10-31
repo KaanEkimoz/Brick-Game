@@ -178,6 +178,10 @@ namespace Persistence
                 data.tiles.Add(new TileSaveData(kv.Key.x, kv.Key.y, spriteIndex));
             }
 
+            data.runSeconds = Leaderboard.RunLedger.Seconds;
+            data.ranked = Leaderboard.RunLedger.Ranked;
+            data.signature = SaveSignature.Sign(data);
+
             GameSaveStorage.Save(data);
         }
 
@@ -231,6 +235,7 @@ namespace Persistence
                 // 2) Restore counters (UI + drop-speed).
                 if (_scoreController != null)
                     _scoreController.LoadScore(data.score);
+                Leaderboard.RunLedger.Restore(data.score, data.runSeconds, data.ranked && SaveSignature.IsValid(data));
 
                 if (_levelController != null)
                     _levelController.LoadLevel(data.currentLevel);

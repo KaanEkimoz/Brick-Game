@@ -12,7 +12,7 @@
             url "https://maven.google.com"
         }
         maven {
-            url "https://maven.google.com/" // Assets/LevelPlay/Editor/IronSourceSDKDependencies.xml:12
+            url "https://maven.google.com/" // Assets/GooglePlayGames/com.google.play.games/Editor/GooglePlayGamesPluginDependencies.xml:9, Assets/GooglePlayGames/com.google.play.games/Editor/GooglePlayGamesPluginDependencies.xml:14, Assets/LevelPlay/Editor/IronSourceSDKDependencies.xml:12
         }
         mavenLocal()
         jcenter()
@@ -29,17 +29,18 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 // Android Resolver Dependencies Start
     implementation 'com.google.android.gms:play-services-ads-identifier:18.1.0' // Assets/LevelPlay/Editor/IronSourceSDKDependencies.xml:12
-    implementation('com.unity3d.ads:unity-ads:4.18.0') { // Assets/LevelPlay/Editor/ISUnityAdsAdapterDependencies.xml:9
-        exclude group: 'com.unity3d.ads-mediation', module: 'adquality-sdk'
-    }
-    implementation('com.unity3d.ads-mediation:mediation-sdk:9.4.3') { // Assets/LevelPlay/Editor/IronSourceSDKDependencies.xml:5
-        exclude group: 'com.unity3d.ads-mediation', module: 'adquality-sdk'
-    }
-    implementation('com.unity3d.ads-mediation:unityads-adapter:5.8.0') { // Assets/LevelPlay/Editor/ISUnityAdsAdapterDependencies.xml:5
-        exclude group: 'com.unity3d.ads-mediation', module: 'adquality-sdk'
-    }
+    implementation 'com.google.android.gms:play-services-games-v2:22.1.0' // Assets/GooglePlayGames/com.google.play.games/Editor/GooglePlayGamesPluginDependencies.xml:9
+    implementation 'com.google.android.gms:play-services-nearby:18.5.0' // Assets/GooglePlayGames/com.google.play.games/Editor/GooglePlayGamesPluginDependencies.xml:14
+    implementation 'com.unity3d.ads:unity-ads:4.18.0' // Assets/LevelPlay/Editor/ISUnityAdsAdapterDependencies.xml:9
+    implementation 'com.unity3d.ads-mediation:mediation-sdk:9.4.3' // Assets/LevelPlay/Editor/IronSourceSDKDependencies.xml:5
+    implementation 'com.unity3d.ads-mediation:unityads-adapter:5.8.0' // Assets/LevelPlay/Editor/ISUnityAdsAdapterDependencies.xml:5
 // Android Resolver Dependencies End
 **DEPS**}
+
+// Kept outside the resolver blocks, which the External Dependency Manager rewrites.
+configurations.all {
+    exclude group: 'com.unity3d.ads-mediation', module: 'adquality-sdk' // missing from maven
+}
 
 // Android Resolver Exclusions Start
 android {

@@ -12,7 +12,7 @@ namespace Levels
     /// All menu screens: the Play button, mode select, level intro and win dialogs and the objective
     /// line. Built at runtime on its own overlay canvas so the shipped scene stays untouched.
     /// </summary>
-    public class LevelUi : MonoBehaviour
+    public partial class LevelUi : MonoBehaviour
     {
         private const string PlayButtonName = "B_Play";
         private const string ExtendedButtonName = "B_PlayExtended";
@@ -83,6 +83,9 @@ namespace Levels
             BuildCanvas();
             BuildMenuButton();
             BuildLanguageButton();
+            BuildLeaderboardButton();
+            BuildGameOverLeaderboard();
+            gameObject.AddComponent<Leaderboard.LeaderboardSubmitter>();
             BuildObjectiveLine();
         }
 
@@ -145,18 +148,24 @@ namespace Levels
         // Sits under the gear icon and copies its look.
         private void BuildLanguageButton()
         {
+            CreateMenuIcon("B_LanguageIcon", LanguageIconPath, 1, ShowLanguageSelect);
+        }
+
+        // Icons stack under the gear; slot 1 is the first place below it.
+        private void CreateMenuIcon(string name, string spritePath, int slot, UnityEngine.Events.UnityAction onClick)
+        {
             foreach (Button settings in Resources.FindObjectsOfTypeAll<Button>())
             {
                 if (settings.name != SettingsIconName || !settings.gameObject.scene.IsValid()) continue;
 
                 Button button = Instantiate(settings, settings.transform.parent);
-                button.name = "B_LanguageIcon";
+                button.name = name;
                 button.onClick = new Button.ButtonClickedEvent();
-                button.onClick.AddListener(ShowLanguageSelect);
-                button.GetComponent<Image>().sprite = Resources.Load<Sprite>(LanguageIconPath);
+                button.onClick.AddListener(onClick);
+                button.GetComponent<Image>().sprite = Resources.Load<Sprite>(spritePath);
 
                 RectTransform rect = (RectTransform)button.transform;
-                rect.anchoredPosition += Vector2.down * (rect.rect.height + LanguageIconGap);
+                rect.anchoredPosition += Vector2.down * ((rect.rect.height + LanguageIconGap) * slot);
                 return;
             }
         }

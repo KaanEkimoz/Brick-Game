@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
@@ -36,6 +37,19 @@ namespace Localization
             {
                 EnsureLoaded();
                 return _current;
+            }
+        }
+
+        public static CultureInfo Culture
+        {
+            get
+            {
+                switch (Current)
+                {
+                    case Language.Turkish: return CultureInfo.GetCultureInfo("tr-TR");
+                    case Language.Spanish: return CultureInfo.GetCultureInfo("es-ES");
+                    default: return CultureInfo.GetCultureInfo("en-US");
+                }
             }
         }
 
