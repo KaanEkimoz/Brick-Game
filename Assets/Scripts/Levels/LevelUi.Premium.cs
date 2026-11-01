@@ -23,7 +23,7 @@ namespace Levels
         private const float PremiumRestoreY = -275f;
         private const float PremiumBackY = -375f;
 
-        private static readonly string[] PremiumFeatures = { "Play without ads", "New game themes" };
+        private static readonly string[] PremiumFeatures = { "Remove all ads", "100+ new levels", "All themes unlocked" };
 
         private TextMeshProUGUI _premiumStatus;
 
