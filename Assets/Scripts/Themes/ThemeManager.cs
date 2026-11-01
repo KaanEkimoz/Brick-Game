@@ -12,11 +12,11 @@ namespace Themes
     {
         private const string ThemeKey = "game_theme";
         private const string ResourceFolder = "Themes/";
-        private const string BackgroundObjectName = "BackgroundImage";
+        private const string BackgroundTextureName = "Background";
         private const string FrameSpritePrefix = "!TetrisGameSprites_";
         private const string ButtonSpriteName = "!TetrisGameSprites_3";
         private const string PanelSpriteName = "PanelBackground";
-        private const string GridSpriteName = "Grid";
+        private const string GridSpriteName = "ghost";
 
         /// <summary>The theme's asset name, or empty for the standard look.</summary>
         public static string Selected
@@ -57,7 +57,7 @@ namespace Themes
             {
                 if (!image.gameObject.scene.IsValid() || image.sprite == null) continue;
 
-                if (image.name == BackgroundObjectName && theme.Background != null)
+                if (image.sprite.texture.name == BackgroundTextureName && theme.Background != null)
                     image.sprite = theme.Background;
                 else if (image.sprite.name == PanelSpriteName)
                     image.color = theme.PanelTint;
@@ -76,8 +76,11 @@ namespace Themes
             if (theme == null) return;
 
             foreach (SpriteRenderer renderer in board.GetComponentsInChildren<SpriteRenderer>(true))
-                if (renderer.sprite != null && renderer.sprite.name == GridSpriteName)
-                    renderer.color = theme.GridTint;
+            {
+                if (renderer.sprite == null || renderer.sprite.name != GridSpriteName) continue;
+                if (theme.GridSprite != null) renderer.sprite = theme.GridSprite;
+                renderer.color = theme.GridTint;
+            }
         }
 
         private static void ApplyEffects(Color color)

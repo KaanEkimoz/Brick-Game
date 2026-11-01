@@ -8,6 +8,7 @@ namespace Themes
     {
         [SerializeField] private Sprite[] _tileSprites;
         [SerializeField] private Sprite _background;
+        [SerializeField] private Sprite _gridSprite;
         [SerializeField] private Color _frameTint = Color.white;
         [SerializeField] private Color _panelTint = Color.white;
         [SerializeField] private Color _gridTint = Color.white;
@@ -21,6 +22,7 @@ namespace Themes
 
         public Sprite[] TileSprites => _tileSprites;
         public Sprite Background => _background;
+        public Sprite GridSprite => _gridSprite;
         public Color FrameTint => _frameTint;
         public Color PanelTint => _panelTint;
         public Color GridTint => _gridTint;
