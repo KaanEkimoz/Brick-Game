@@ -15,6 +15,9 @@ namespace Persistence
     /// A run in progress stays on its own device.</summary>
     public static class CloudProgress
     {
+        /// <summary>Fires after a sync changed this device's saved progress.</summary>
+        public static Action OnLocalChanged;
+
         // New keys go at the end, so older cloud files keep their meaning.
         private static readonly string[] Keys =
         {
@@ -84,7 +87,11 @@ namespace Persistence
         private static void Store(ISavedGameMetadata file, byte[] data)
         {
             int[] merged = Merge(Parse(data), out bool localChanged, out bool cloudChanged);
-            if (localChanged) PlayerPrefs.Save();
+            if (localChanged)
+            {
+                PlayerPrefs.Save();
+                OnLocalChanged?.Invoke();
+            }
             if (!cloudChanged)
             {
                 _syncing = false;

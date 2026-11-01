@@ -101,7 +101,7 @@ namespace Leaderboard
                 }
 
                 // A score earned in an earlier month no longer belongs on the monthly board.
-                bool sameMonth = earned.Year == utcNow.Value.Year && earned.Month == utcNow.Value.Month;
+                bool sameMonth = LeaderboardSchedule.SameMonth(earned, utcNow.Value);
                 long monthlyScore = sameMonth ? LeaderboardSchedule.StampMonth(score, utcNow.Value) : -1;
                 Provider.Submit(board, score, monthlyScore, accepted =>
                 {
