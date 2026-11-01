@@ -131,12 +131,15 @@ namespace Gameplay
                 _flying = _fruit;
                 _fruit = null;
                 ResetSpawnTimer();
-                StartCoroutine(FlyToScore(_flying, _points));
+                // Paid on landing: the flight stops if the next piece ends the run.
+                _score.AddBonusScore(_points);
+                OnFruitCollected?.Invoke();
+                StartCoroutine(FlyToScore(_flying));
                 return;
             }
         }
 
-        private IEnumerator FlyToScore(SpriteRenderer fruit, int points)
+        private IEnumerator FlyToScore(SpriteRenderer fruit)
         {
             fruit.enabled = true;
             Vector3 from = fruit.transform.position;
@@ -152,8 +155,6 @@ namespace Gameplay
             }
 
             Destroy(fruit.gameObject);
-            _score.AddBonusScore(points);
-            OnFruitCollected?.Invoke();
         }
 
         private Vector3 ScoreWorldPosition()

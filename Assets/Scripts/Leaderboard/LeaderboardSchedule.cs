@@ -22,6 +22,12 @@ namespace Leaderboard
             return MonthKey(utcNow) * MonthStep + score;
         }
 
+        /// <summary>True when both times fall in the same board month, which starts in UTC-7.</summary>
+        public static bool SameMonth(DateTime utcA, DateTime utcB)
+        {
+            return MonthKey(utcA) == MonthKey(utcB);
+        }
+
         /// <summary>Keeps the current month's rows, restored to plain scores.</summary>
         public static List<LeaderboardRow> ReadMonth(List<LeaderboardRow> rows, DateTime utcNow, int count)
         {

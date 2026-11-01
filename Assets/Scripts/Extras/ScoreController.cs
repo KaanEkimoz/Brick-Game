@@ -1,6 +1,7 @@
 using System;
 using Board;
 using Gameplay;
+using Persistence;
 using TMPro;
 using UnityEngine;
 
@@ -51,11 +52,13 @@ namespace Extras
         {
             BoardController.OnLinesCleared += ClearedLineScore;
             GameMode.OnChanged += LoadHighScore;
+            CloudProgress.OnLocalChanged += LoadHighScore;
         }
         private void OnDisable()
         {
             BoardController.OnLinesCleared -= ClearedLineScore;
             GameMode.OnChanged -= LoadHighScore;
+            CloudProgress.OnLocalChanged -= LoadHighScore;
         }
         private void Start()
         {
