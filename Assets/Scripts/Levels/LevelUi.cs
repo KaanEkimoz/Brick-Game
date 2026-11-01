@@ -456,6 +456,12 @@ namespace Levels
         // shrinks into the objective line and play starts by itself.
         private void ShowIntro(LevelDefinition level)
         {
+            if (!LevelAccess.CanPlay(level.id))
+            {
+                ShowPremiumLock();
+                return;
+            }
+
             Transform screen = OpenScreen();
             Image dim = screen.GetComponent<Image>();
             dim.color = IntroDim;
