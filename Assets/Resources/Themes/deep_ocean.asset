@@ -47,6 +47,11 @@ MonoBehaviour:
   _panelTextColor: {r: 0.03, g: 0.19, b: 0.27, a: 1}
   _ghostTint: {r: 0.6, g: 1, b: 0.95, a: 0.7}
   _soundPanelTint: {r: 0.05, g: 0.2, b: 0.27, a: 0.9}
+  _chargeFillColor: {r: 0.6, g: 1, b: 0.92, a: 1}
+  _chargeTrackColor: {r: 0.03, g: 0.16, b: 0.2, a: 0.85}
+  _chargeLowColor: {r: 0.2, g: 0.75, b: 0.8, a: 1}
+  _chargePanelColor: {r: 0.06, g: 0.27, b: 0.32, a: 0.72}
+  _chargeBorderColor: {r: 0.72, g: 0.95, b: 0.95, a: 0.75}
   _panelTint: {r: 1, g: 1, b: 1, a: 1}
   _gridTint: {r: 0.6, g: 1, b: 0.92, a: 0.32}
   _effectColor: {r: 0.6, g: 1, b: 0.95, a: 1}
@@ -55,4 +60,5 @@ MonoBehaviour:
   _softDropClip: {fileID: 8300000, guid: 52648aa3b4c2a4c809f1234adbc42ab9, type: 3}
   _bombClip: {fileID: 8300000, guid: 15431f0f051da47cb9ce0e360a711d42, type: 3}
   _laserClip: {fileID: 8300000, guid: 8399ef41ef0b5418f9ee40114856b55f, type: 3}
+  _buttonClip: {fileID: 8300000, guid: d6050d5e9bc234e22a0882df1a7d4207, type: 3}
   _musicCutoff: 1400
