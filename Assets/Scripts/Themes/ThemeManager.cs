@@ -1,5 +1,7 @@
 using Extras;
 using InGame;
+using TMPro;
+using Tiles;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -17,6 +19,8 @@ namespace Themes
         private const string PopupSpriteName = "!TetrisGameSprites_2";
         private const string ChargeBarObjectName = "AbilityChargeBar";
         private const float PopupBorderDensity = 1f;
+        private const string HudObjectName = "TopHUD";
+        private const string SoundPanelObjectName = "SoundPanel";
         private const string FrameSpritePrefix = "!TetrisGameSprites_";
         private const string ButtonSpriteName = "!TetrisGameSprites_3";
         private const string PanelSpriteName = "PanelBackground";
@@ -33,6 +37,9 @@ namespace Themes
         private const float BoardFramePadding = 13f;
         private static readonly Vector2 HolderPadding = new Vector2(16f, 18f);
         private static readonly Vector2 PanelInset = new Vector2(-18f, -8f);
+
+        private static GameTheme _active;
+        private static bool _ghostHooked;
 
         /// <summary>The theme's asset name, or empty for the standard look.</summary>
         public static string Selected
@@ -53,12 +60,16 @@ namespace Themes
 
         private static void HandleSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
         {
+            _active = null;
             if (string.IsNullOrEmpty(Selected)) return;
 
             GameTheme theme = Resources.Load<GameTheme>(ResourceFolder + Selected);
             if (theme == null) return;
 
+            _active = theme;
             ApplyVisuals(theme);
+            ApplyText(theme);
+            HookGhost();
             ApplyEffects(theme.EffectColor);
             ApplyParticles(theme.ParticleFrames);
             foreach (NextPiece preview in FindAll<NextPiece>())
@@ -96,8 +107,10 @@ namespace Themes
                 }
                 else if (image.name == LogoObjectName && theme.Logo != null)
                     image.sprite = theme.Logo;
-                else if (image.sprite.name == PopupSpriteName && image.name != ChargeBarObjectName && theme.FrameSprite != null)
-                    ApplyPanel(image, theme.FrameSprite, PopupBorderDensity);
+                else if (image.name == SoundPanelObjectName)
+                    image.color = theme.SoundPanelTint;
+                else if (image.sprite.name == PopupSpriteName && image.name != ChargeBarObjectName && theme.PopupSprite != null)
+                    ApplyPanel(image, theme.PopupSprite, PopupBorderDensity);
                 else if (image.sprite.name == ButtonSpriteName)
                     image.color = theme.ButtonTint;
                 else if (image.sprite.name == PanelSpriteName)
@@ -106,6 +119,47 @@ namespace Themes
                     image.color = theme.FrameTint;
             }
 
+        }
+
+        /// <summary>The pause menu styles its buttons when it first opens.</summary>
+        public static Color PrimaryButtonTint(Color standard) => _active != null ? _active.ButtonTint : standard;
+        public static Color PrimaryButtonText(Color standard) => _active != null ? _active.ButtonTextColor : standard;
+        public static Color SecondaryButtonTint(Color standard) => _active != null ? _active.SecondaryButtonTint : standard;
+
+        private static void ApplyText(GameTheme theme)
+        {
+            GameObject hud = GameObject.Find(HudObjectName);
+            if (hud != null)
+                foreach (TMP_Text label in hud.GetComponentsInChildren<TMP_Text>(true))
+                    label.color = theme.PanelTextColor;
+
+            foreach (Button button in Resources.FindObjectsOfTypeAll<Button>())
+            {
+                if (!button.gameObject.scene.IsValid() || !(button.targetGraphic is Image image)) continue;
+                if (image.sprite == null || image.sprite.name != ButtonSpriteName) continue;
+
+                TMP_Text label = button.GetComponentInChildren<TMP_Text>(true);
+                if (label != null) label.color = theme.ButtonTextColor;
+            }
+        }
+
+        private static void HookGhost()
+        {
+            if (_ghostHooked) return;
+            _ghostHooked = true;
+            PieceSpawner.OnPieceSpawned += ThemeGhost;
+        }
+
+        private static void ThemeGhost()
+        {
+            if (_active == null || _active.GhostSprite == null) return;
+
+            foreach (GhostTileController tile in FindAll<GhostTileController>())
+            {
+                SpriteRenderer renderer = tile.GetComponent<SpriteRenderer>();
+                renderer.sprite = _active.GhostSprite;
+                renderer.color = _active.GhostTint;
+            }
         }
 
         private static void ApplyPanel(Image image, Sprite sprite, float borderDensity)
