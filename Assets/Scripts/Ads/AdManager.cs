@@ -75,7 +75,7 @@ namespace Ekimoz.Ads
         private void OnEnable() => SceneManager.sceneLoaded += HandleSceneLoaded;
         private void OnDisable() => SceneManager.sceneLoaded -= HandleSceneLoaded;
 
-        private void HandleSceneLoaded(Scene scene, LoadSceneMode mode) => ShowBanner();
+        private void HandleSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode) => ShowBanner();
 
         // Coming back from a full-screen ad or another app must not leave the banner hidden.
         private void OnApplicationPause(bool paused)
