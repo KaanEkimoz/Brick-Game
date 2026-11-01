@@ -14,6 +14,11 @@ public class PieceLandingSFX : MonoBehaviour
 
     private AudioSource _source;
 
+    public void SetClip(AudioClip clip)
+    {
+        if (clip != null) _landingClip = clip;
+    }
+
     void Awake()
     {
         _source = GetComponent<AudioSource>();

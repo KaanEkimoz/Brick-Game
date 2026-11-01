@@ -1,0 +1,31 @@
+using UnityEngine;
+
+namespace Themes
+{
+    /// <summary>Everything a theme replaces. An empty field keeps what the scene already uses.</summary>
+    [CreateAssetMenu(menuName = "Brick Game/Theme", fileName = "Theme")]
+    public class GameTheme : ScriptableObject
+    {
+        [SerializeField] private Sprite[] _tileSprites;
+        [SerializeField] private Sprite _background;
+        [SerializeField] private Color _frameTint = Color.white;
+        [SerializeField] private Color _effectColor = Color.white;
+        [SerializeField] private AudioClip _lineClearClip;
+        [SerializeField] private AudioClip _landingClip;
+        [SerializeField] private AudioClip _softDropClip;
+        [SerializeField] private AudioClip _bombClip;
+        [SerializeField] private AudioClip _laserClip;
+        [SerializeField] private float _musicCutoff;
+
+        public Sprite[] TileSprites => _tileSprites;
+        public Sprite Background => _background;
+        public Color FrameTint => _frameTint;
+        public Color EffectColor => _effectColor;
+        public AudioClip LineClearClip => _lineClearClip;
+        public AudioClip LandingClip => _landingClip;
+        public AudioClip SoftDropClip => _softDropClip;
+        public AudioClip BombClip => _bombClip;
+        public AudioClip LaserClip => _laserClip;
+        public float MusicCutoff => _musicCutoff;
+    }
+}

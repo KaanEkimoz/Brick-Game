@@ -28,6 +28,8 @@ namespace Extras
         private Material _runtimeMat;
         private AnimationCurve _widthCurve;
 
+        public void SetColor(Color color) => _sparkColor = color;
+
         private void OnEnable()
         {
             PieceMovement.OnHardDrop += HandleHardDrop;

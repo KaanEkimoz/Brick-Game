@@ -16,6 +16,15 @@ namespace Extras
         [SerializeField] private float _playDuration = 0.35f;
         [SerializeField] [Range(0f, 1f)] private float _volume = 1f;
 
+        /// <summary>Uses a clip that needs no trimming.</summary>
+        public void SetClip(AudioClip clip)
+        {
+            if (clip == null) return;
+            _clip = clip;
+            _trimStart = 0f;
+            _playDuration = clip.length;
+        }
+
         private void OnEnable()
         {
             BoardController.OnLinesCleared += HandleLinesCleared;

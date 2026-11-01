@@ -35,6 +35,12 @@ namespace Extras
         [Tooltip("Delay between successive outward steps of the explosion ripple from the anchor cell.")]
         [SerializeField] private float _cellRippleInterval = 0.018f;
 
+        public void SetColor(Color color)
+        {
+            _beamColor = color;
+            _cellColor = color;
+        }
+
         private void OnEnable()
         {
             if (_axis == ExplosionAxis.Horizontal)
