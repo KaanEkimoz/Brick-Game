@@ -73,6 +73,7 @@ namespace Scene
         private Button _template;
         private TextMeshProUGUI _score;
         private GameObject _guide;
+        private TextMeshProUGUI _guideText;
 
         private void Awake()
         {
@@ -169,14 +170,13 @@ namespace Scene
 
             CreateHeading(_guide.transform, "How to Play", TitleY);
 
-            TextMeshProUGUI body = CreateLine(_guide.transform, 20f, GuideTextSize, GuideFontSize, Color.white);
-            body.textWrappingMode = TextWrappingModes.Normal;
-            body.enableAutoSizing = true;
-            body.fontSizeMax = GuideFontSize;
-            body.fontSizeMin = GuideFontSize * 0.7f;
-            body.lineSpacing = -10f;
-            body.paragraphSpacing = 26f;
-            body.text = BuildGuideText();
+            _guideText = CreateLine(_guide.transform, 20f, GuideTextSize, GuideFontSize, Color.white);
+            _guideText.textWrappingMode = TextWrappingModes.Normal;
+            _guideText.enableAutoSizing = true;
+            _guideText.fontSizeMax = GuideFontSize;
+            _guideText.fontSizeMin = GuideFontSize * 0.7f;
+            _guideText.lineSpacing = -10f;
+            _guideText.paragraphSpacing = 26f;
 
             Button back = CreateButton(_guide.transform, "Back", new Vector2(0f, GuideBackY), SecondarySize, SecondaryFontSize, true);
             back.onClick.AddListener(() => _guide.SetActive(false));
@@ -184,6 +184,7 @@ namespace Scene
 
         private void ShowGuide()
         {
+            _guideText.text = BuildGuideText(); // the mode can change between runs
             _guide.transform.SetAsLastSibling();
             _guide.SetActive(true);
         }
