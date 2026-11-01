@@ -195,7 +195,7 @@ namespace Levels
                 float y = top - LanguageHeadingHeight - LanguageRowHeight * (i + 0.5f);
                 Button row = i < languages.Length
                     ? CreateLanguageRow(panel, languages[i])
-                    : CreateMenuStyleButton(panel, "Back", CloseScreen);
+                    : CreateBackLink(panel);
                 Place((RectTransform)row.transform, new Vector2(0f, y), WinButtonSize);
             }
         }
@@ -207,6 +207,20 @@ namespace Levels
             if (language == Loc.Current)
                 row.GetComponentInChildren<TMP_Text>(true).color = SelectedLanguageTextColor;
             return row;
+        }
+
+        // Plain text, so the way out does not read as one more language.
+        private Button CreateBackLink(Transform panel)
+        {
+            Button back = CreateMenuStyleButton(panel, "Back", CloseScreen);
+            back.transition = Selectable.Transition.None;
+            foreach (Animator animator in back.GetComponentsInChildren<Animator>(true)) animator.enabled = false;
+            foreach (Image image in back.GetComponentsInChildren<Image>(true)) image.color = Color.clear;
+
+            TMP_Text label = back.GetComponentInChildren<TMP_Text>(true);
+            label.text = "< " + label.text;
+            label.color = Color.white;
+            return back;
         }
 
         // Reloading rebuilds every screen in the new language; this list is only in the menu.
