@@ -26,6 +26,9 @@ namespace Themes
         [SerializeField] private Color _panelTextColor = Color.white;
         [SerializeField] private Color _ghostTint = Color.white;
         [SerializeField] private Color _soundPanelTint = Color.white;
+        [SerializeField] private Color _chargeFillColor = Color.white;
+        [SerializeField] private Color _chargeTrackColor = Color.black;
+        [SerializeField] private Color _chargeDividerColor = Color.black;
         [SerializeField] private Color _panelTint = Color.white;
         [SerializeField] private Color _gridTint = Color.white;
         [SerializeField] private Color _effectColor = Color.white;
@@ -34,6 +37,7 @@ namespace Themes
         [SerializeField] private AudioClip _softDropClip;
         [SerializeField] private AudioClip _bombClip;
         [SerializeField] private AudioClip _laserClip;
+        [SerializeField] private AudioClip _buttonClip;
         [SerializeField] private float _musicCutoff;
 
         public Sprite[] TileSprites => _tileSprites;
@@ -55,6 +59,9 @@ namespace Themes
         public Color PanelTextColor => _panelTextColor;
         public Color GhostTint => _ghostTint;
         public Color SoundPanelTint => _soundPanelTint;
+        public Color ChargeFillColor => _chargeFillColor;
+        public Color ChargeTrackColor => _chargeTrackColor;
+        public Color ChargeDividerColor => _chargeDividerColor;
         public Color PanelTint => _panelTint;
         public Color GridTint => _gridTint;
         public Color EffectColor => _effectColor;
@@ -63,6 +70,7 @@ namespace Themes
         public AudioClip SoftDropClip => _softDropClip;
         public AudioClip BombClip => _bombClip;
         public AudioClip LaserClip => _laserClip;
+        public AudioClip ButtonClip => _buttonClip;
         public float MusicCutoff => _musicCutoff;
     }
 }

@@ -3,6 +3,7 @@ using InGame;
 using TMPro;
 using Tiles;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -19,6 +20,12 @@ namespace Themes
         private const string PopupSpriteName = "!TetrisGameSprites_2";
         private const string ChargeBarObjectName = "AbilityChargeBar";
         private const float PopupBorderDensity = 1f;
+        private const float ChargeBarBorderDensity = 2.2f;
+        private const string ChargeBarFillName = "Fill";
+        private const string ChargeBarTrackName = "Background";
+        private const string ChargeBarBackName = "I_White_Background";
+        private const string ChargeBarDividerPrefix = "Divider_";
+        private const string PlayOneShotMethod = "PlayOneShot";
         private const string HudObjectName = "TopHUD";
         private const string SoundPanelObjectName = "SoundPanel";
         private const string FrameSpritePrefix = "!TetrisGameSprites_";
@@ -69,6 +76,7 @@ namespace Themes
             _active = theme;
             ApplyVisuals(theme);
             ApplyText(theme);
+            ApplyChargeBar(theme);
             HookGhost();
             ApplyEffects(theme.EffectColor);
             ApplyParticles(theme.ParticleFrames);
@@ -109,7 +117,9 @@ namespace Themes
                     image.sprite = theme.Logo;
                 else if (image.name == SoundPanelObjectName)
                     image.color = theme.SoundPanelTint;
-                else if (image.sprite.name == PopupSpriteName && image.name != ChargeBarObjectName && theme.PopupSprite != null)
+                else if (image.name == ChargeBarObjectName && theme.FrameSprite != null)
+                    ApplyPanel(image, theme.FrameSprite, ChargeBarBorderDensity);
+                else if (image.sprite.name == PopupSpriteName && theme.PopupSprite != null)
                     ApplyPanel(image, theme.PopupSprite, PopupBorderDensity);
                 else if (image.sprite.name == ButtonSpriteName)
                     image.color = theme.ButtonTint;
@@ -125,6 +135,41 @@ namespace Themes
         public static Color PrimaryButtonTint(Color standard) => _active != null ? _active.ButtonTint : standard;
         public static Color PrimaryButtonText(Color standard) => _active != null ? _active.ButtonTextColor : standard;
         public static Color SecondaryButtonTint(Color standard) => _active != null ? _active.SecondaryButtonTint : standard;
+
+        private static void ApplyChargeBar(GameTheme theme)
+        {
+            foreach (Image image in Resources.FindObjectsOfTypeAll<Image>())
+            {
+                if (!image.gameObject.scene.IsValid() || image.sprite != null) continue;
+                Transform bar = image.transform;
+                while (bar != null && bar.name != ChargeBarObjectName) bar = bar.parent;
+                if (bar == null) continue;
+
+                if (image.name == ChargeBarFillName) image.color = theme.ChargeFillColor;
+                else if (image.name == ChargeBarTrackName || image.name == ChargeBarBackName) image.color = theme.ChargeTrackColor;
+                else if (image.name.StartsWith(ChargeBarDividerPrefix)) image.color = theme.ChargeDividerColor;
+            }
+        }
+
+        /// <summary>Swaps a click chain's scene-wired sound. ConfirmDialog keeps chains apart
+        /// from their buttons, so it hands them over itself.</summary>
+        public static void ThemeClickSound(UnityEvent clickChain)
+        {
+            if (string.IsNullOrEmpty(Selected)) return;
+
+            GameTheme theme = Resources.Load<GameTheme>(ResourceFolder + Selected);
+            if (theme == null || theme.ButtonClip == null) return;
+
+            for (int i = 0; i < clickChain.GetPersistentEventCount(); i++)
+            {
+                if (clickChain.GetPersistentMethodName(i) != PlayOneShotMethod) continue;
+                if (!(clickChain.GetPersistentTarget(i) is AudioSource source)) continue;
+                if (clickChain.GetPersistentListenerState(i) == UnityEventCallState.Off) continue;
+
+                clickChain.SetPersistentListenerState(i, UnityEventCallState.Off);
+                clickChain.AddListener(() => source.PlayOneShot(theme.ButtonClip));
+            }
+        }
 
         /// <summary>The theme's font. LevelUi reads it in Awake, before the scene finishes loading.</summary>
         public static TMP_FontAsset ThemeFont(TMP_FontAsset standard)
@@ -318,6 +363,10 @@ namespace Themes
             foreach (SoftDropSFX sound in FindAll<SoftDropSFX>()) sound.SetClip(theme.SoftDropClip);
             foreach (AbilityBombSFX sound in FindAll<AbilityBombSFX>()) sound.SetClip(theme.BombClip);
             foreach (AbilityLaserSFX sound in FindAll<AbilityLaserSFX>()) sound.SetClip(theme.LaserClip);
+
+            foreach (Button button in Resources.FindObjectsOfTypeAll<Button>())
+                if (button.gameObject.scene.IsValid())
+                    ThemeClickSound(button.onClick);
 
             if (theme.MusicCutoff <= 0f) return;
             foreach (BGMusicToggle music in FindAll<BGMusicToggle>())
