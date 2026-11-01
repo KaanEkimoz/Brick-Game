@@ -30,6 +30,7 @@ namespace Gameplay
         public static Action<Vector2Int> OnBombExploded;
         public static Action<Vector2Int> OnRowExploded;       // anchor cell of the cleared row
         public static Action<Vector2Int> OnColumnExploded;    // anchor cell of the cleared column
+        public static Action<AbilityType> OnAbilityUsed;
 
         /// <summary>Fires after every ability hit with (anchor cell, cells destroyed).
         /// Separate from the per-shape Bomb/Row/Column events because those drive VFX
@@ -114,6 +115,8 @@ namespace Gameplay
                     break;
                 }
             }
+
+            OnAbilityUsed?.Invoke(marker.Ability);
 
             if (cleared > 0 && _scoreController != null)
                 _scoreController.AddBonusScore(cleared * PointsPerTile * (LevelController.CurrentLevel + 1));

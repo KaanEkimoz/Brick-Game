@@ -9,6 +9,9 @@ namespace Leaderboard
     {
         private const int MonthlyLoadCount = 25; // room for scores from a device with a wrong date
 
+        /// <summary>Fires each time a sign-in succeeds.</summary>
+        public static Action OnSignedIn;
+
         private static ILeaderboardProvider _provider;
         private static bool _signInDeclined;
 
@@ -35,8 +38,30 @@ namespace Leaderboard
         {
             Provider.SignIn(false, signedIn =>
             {
-                if (signedIn) SendAllPending();
+                if (signedIn) HandleSignedIn();
             });
+        }
+
+        /// <summary>Shows the sign-in prompt, unless the player is already signed in.</summary>
+        public static void SignIn(Action<bool> done)
+        {
+            if (Provider.IsSignedIn)
+            {
+                done(true);
+                return;
+            }
+
+            Provider.SignIn(true, signedIn =>
+            {
+                if (signedIn) HandleSignedIn();
+                done(signedIn);
+            });
+        }
+
+        private static void HandleSignedIn()
+        {
+            SendAllPending();
+            OnSignedIn?.Invoke();
         }
 
         /// <summary>Lets the next load ask for sign-in again. Called when the player opens the
@@ -106,7 +131,7 @@ namespace Leaderboard
                 _signInDeclined = !signedIn;
                 if (signedIn)
                 {
-                    SendAllPending();
+                    HandleSignedIn();
                     LoadSignedIn(board, period, count, done);
                 }
                 else done(null);
