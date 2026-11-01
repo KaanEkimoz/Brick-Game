@@ -11,6 +11,9 @@ namespace Levels
     {
         private const string PremiumIconPath = "Icons/icon_diamond_neon";
         private const string RemoveAdsIconName = "B_RemoveAds";
+        private const string GameRemoveAdsName = "B_RemoveAds_Game";
+        private const string GamePauseName = "B_Pause";
+        private const float GameIconStep = 0.075f; // screen share between the left column's icons
         private const float PremiumPanelHeight = 980f;
         private const float PremiumFeatureHeight = 74f;
         private const float PremiumHeadingY = 370f;
@@ -49,6 +52,46 @@ namespace Levels
             rect.pivot = removeAds.pivot;
             rect.sizeDelta = removeAds.sizeDelta;
             rect.anchoredPosition = removeAds.anchoredPosition + Vector2.down * ((removeAds.rect.height + LanguageIconGap) * slot);
+        }
+
+        // Hidden for Premium owners, who have nothing left to buy here.
+        private void CreateGamePremiumIcon()
+        {
+            if (PurchaseManager.Instance != null && PurchaseManager.Instance.PremiumOwned) return;
+            if (PlayerPrefs.GetInt(PurchaseManager.PremiumPrefKey) == 1) return;
+
+            RectTransform removeAds = null;
+            foreach (Button button in Resources.FindObjectsOfTypeAll<Button>())
+                if (button.gameObject.scene.IsValid() && button.name == GameRemoveAdsName)
+                    removeAds = (RectTransform)button.transform;
+            if (removeAds == null) return;
+
+            GameObject icon = new GameObject("B_PremiumGame", typeof(RectTransform), typeof(Image), typeof(Button));
+            icon.transform.SetParent(removeAds.parent, false);
+            icon.transform.SetSiblingIndex(removeAds.GetSiblingIndex() + 1);
+            Image image = icon.GetComponent<Image>();
+            image.sprite = Resources.Load<Sprite>(PremiumIconPath);
+            image.preserveAspect = true;
+            icon.GetComponent<Button>().onClick.AddListener(ShowPremiumInGame);
+
+            RectTransform rect = (RectTransform)icon.transform;
+            rect.anchorMin = removeAds.anchorMin + Vector2.down * GameIconStep;
+            rect.anchorMax = removeAds.anchorMax + Vector2.down * GameIconStep;
+            rect.pivot = removeAds.pivot;
+            rect.sizeDelta = removeAds.sizeDelta;
+            rect.anchoredPosition = removeAds.anchoredPosition;
+        }
+
+        // The run waits behind the pause menu while the player looks at the offer.
+        private void ShowPremiumInGame()
+        {
+            foreach (Button button in Resources.FindObjectsOfTypeAll<Button>())
+            {
+                if (!button.gameObject.scene.IsValid() || button.name != GamePauseName) continue;
+                button.onClick.Invoke();
+                break;
+            }
+            ShowPremium();
         }
 
         private void ShowPremium()
