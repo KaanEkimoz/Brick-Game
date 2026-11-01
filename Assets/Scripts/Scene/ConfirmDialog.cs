@@ -18,9 +18,9 @@ namespace Scene
 
         private const float TitleFontSize = 50f;
         private const float MessageFontSize = 30f;
-        private const float ButtonFontSize = 44f;
+        private const float ButtonFontSize = 52f;
         private static readonly Vector2 TextSize = new Vector2(490f, 110f);
-        private static readonly Vector2 ButtonSize = new Vector2(485f, 114f);
+        private static readonly Vector2 ButtonSize = new Vector2(560f, 142f);
 
         private GameObject _root;
 
@@ -48,7 +48,7 @@ namespace Scene
                 guardedChain.Invoke();
             });
 
-            Button no = CreateButton(template, NoText, new Vector2(0f, -165f));
+            Button no = CreateButton(template, NoText, new Vector2(0f, -195f));
             no.onClick.AddListener(() => _root.SetActive(false));
         }
 

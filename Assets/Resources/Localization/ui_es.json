@@ -415,6 +415,62 @@
   {
    "en": "How to Play",
    "text": "Cómo jugar"
+  },
+  {
+   "en": "Tap",
+   "text": "Toca"
+  },
+  {
+   "en": "Rotates the piece",
+   "text": "Gira la pieza"
+  },
+  {
+   "en": "Swipe",
+   "text": "Desliza"
+  },
+  {
+   "en": "Moves the piece",
+   "text": "Mueve la pieza"
+  },
+  {
+   "en": "Swipe down",
+   "text": "Desliza abajo"
+  },
+  {
+   "en": "Drops the piece",
+   "text": "Suelta la pieza"
+  },
+  {
+   "en": "Clears a 3x3 area",
+   "text": "Limpia un área de 3x3"
+  },
+  {
+   "en": "Clears a 3x4 area",
+   "text": "Limpia un área de 3x4"
+  },
+  {
+   "en": "Clears a row or column",
+   "text": "Limpia una fila o columna"
+  },
+  {
+   "en": "Fills the holes",
+   "text": "Rellena los huecos"
+  },
+  {
+   "en": "Fruit",
+   "text": "Fruta"
+  },
+  {
+   "en": "Gives bonus points",
+   "text": "Da puntos extra"
+  },
+  {
+   "en": "Goal",
+   "text": "Objetivo"
+  },
+  {
+   "en": "Finish it before the limit",
+   "text": "Complétalo antes del límite"
   }
  ]
 }

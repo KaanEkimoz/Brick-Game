@@ -415,6 +415,62 @@
   {
    "en": "How to Play",
    "text": "Nasıl Oynanır"
+  },
+  {
+   "en": "Tap",
+   "text": "Dokun"
+  },
+  {
+   "en": "Rotates the piece",
+   "text": "Parçayı döndürür"
+  },
+  {
+   "en": "Swipe",
+   "text": "Kaydır"
+  },
+  {
+   "en": "Moves the piece",
+   "text": "Parçayı taşır"
+  },
+  {
+   "en": "Swipe down",
+   "text": "Aşağı kaydır"
+  },
+  {
+   "en": "Drops the piece",
+   "text": "Parçayı düşürür"
+  },
+  {
+   "en": "Clears a 3x3 area",
+   "text": "3x3 alanı temizler"
+  },
+  {
+   "en": "Clears a 3x4 area",
+   "text": "3x4 alanı temizler"
+  },
+  {
+   "en": "Clears a row or column",
+   "text": "Satır veya sütunu temizler"
+  },
+  {
+   "en": "Fills the holes",
+   "text": "Boşlukları doldurur"
+  },
+  {
+   "en": "Fruit",
+   "text": "Meyve"
+  },
+  {
+   "en": "Gives bonus points",
+   "text": "Bonus puan verir"
+  },
+  {
+   "en": "Goal",
+   "text": "Hedef"
+  },
+  {
+   "en": "Finish it before the limit",
+   "text": "Limit dolmadan tamamla"
   }
  ]
 }

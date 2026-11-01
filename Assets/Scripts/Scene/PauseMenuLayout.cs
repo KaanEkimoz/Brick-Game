@@ -37,43 +37,62 @@ namespace Scene
         private const float PrimaryFontSize = 44f;
         private const float SecondaryFontSize = 34f;
         private const float RestoreFontSize = 24f;
-        private const float GuideFontSize = 30f;
+        private const float GuideNameFontSize = 30f;
+        private const float GuideEffectFontSize = 26f;
+        private const float GuideTopY = 318f;
+        private const float GuideRowHeight = 90f;
+        private const float GuideIconX = -205f;
+        private const float GuideTextX = 62f;
+        private const float GuideNameOffset = 18f;
 
         private static readonly Vector2 PrimarySize = new Vector2(500f, 128f);
         private static readonly Vector2 SecondarySize = new Vector2(470f, 104f);
         private static readonly Vector2 HeadingSize = new Vector2(520f, 80f);
         private static readonly Vector2 ScoreSize = new Vector2(540f, 50f);
         private static readonly Vector2 RestoreSize = new Vector2(420f, 60f);
-        private static readonly Vector2 GuideTextSize = new Vector2(510f, 720f);
+        private static readonly Vector2 GuideIconSize = new Vector2(78f, 78f);
+        private static readonly Vector2 GuideLineSize = new Vector2(400f, 40f);
         private static readonly Color SecondaryColor = new Color(0.02f, 0.08f, 0.32f, 0.9f);
         private static readonly Color RestoreTextColor = new Color(1f, 1f, 1f, 0.7f);
 
-        private static readonly string[] Controls =
+        private struct GuideRow
         {
-            "Tap the screen\nto rotate the piece",
-            "Swipe left or right\nto move the piece",
-            "Swipe down fast\nto drop instantly",
-            "Hold and drag down\nto descend faster",
+            public readonly string Icon;
+            public readonly string Name;
+            public readonly string Effect;
+
+            public GuideRow(string icon, string name, string effect)
+            {
+                Icon = icon;
+                Name = name;
+                Effect = effect;
+            }
+        }
+
+        private static readonly GuideRow[] Controls =
+        {
+            new GuideRow("Guide/tap", "Tap", "Rotates the piece"),
+            new GuideRow("Guide/swipe", "Swipe", "Moves the piece"),
+            new GuideRow("Guide/drop", "Swipe down", "Drops the piece"),
         };
 
-        private static readonly string[] Abilities =
+        private static readonly GuideRow[] Pieces =
         {
-            "Clear 5 lines to fill the ability bar\nand load a random ability",
-            "The bomb comes as a single block\nand clears a 3x3 area",
-            "Dynamite comes as a 1x2 piece\nand clears 3x4 along its direction",
-            "Laser sits on one block of a piece\nRotate to fire a row or column",
-            "Patch sits on one block of a piece\nand fills holes in your stack",
-            "Land a piece on a fruit\nfor bonus points before it fades",
+            new GuideRow("Guide/bomb", "Bomb", "Clears a 3x3 area"),
+            new GuideRow("Guide/dynamite", "Dynamite", "Clears a 3x4 area"),
+            new GuideRow("Guide/laser", "Laser", "Clears a row or column"),
+            new GuideRow("Guide/patch", "Patch", "Fills the holes"),
+            new GuideRow("Guide/fruit", "Fruit", "Gives bonus points"),
         };
 
-        private const string LevelsGoal = "Finish the goal above the board\nbefore your pieces or time run out";
+        private static readonly GuideRow LevelGoal = new GuideRow("Icons/icon_leaderboard_neon", "Goal", "Finish it before the limit");
 
         private TMP_FontAsset _headingFont;
         private Color _headingColor;
         private Button _template;
         private TextMeshProUGUI _score;
         private GameObject _guide;
-        private TextMeshProUGUI _guideText;
+        private Transform _guideRows;
 
         private void Awake()
         {
@@ -170,13 +189,10 @@ namespace Scene
 
             CreateHeading(_guide.transform, "How to Play", TitleY);
 
-            _guideText = CreateLine(_guide.transform, 20f, GuideTextSize, GuideFontSize, Color.white);
-            _guideText.textWrappingMode = TextWrappingModes.Normal;
-            _guideText.enableAutoSizing = true;
-            _guideText.fontSizeMax = GuideFontSize;
-            _guideText.fontSizeMin = GuideFontSize * 0.7f;
-            _guideText.lineSpacing = -10f;
-            _guideText.paragraphSpacing = 26f;
+            GameObject rows = new GameObject("Rows", typeof(RectTransform));
+            rows.transform.SetParent(_guide.transform, false);
+            Place((RectTransform)rows.transform, Vector2.zero, Vector2.zero);
+            _guideRows = rows.transform;
 
             Button back = CreateButton(_guide.transform, "Back", new Vector2(0f, GuideBackY), SecondarySize, SecondaryFontSize, true);
             back.onClick.AddListener(() => _guide.SetActive(false));
@@ -184,21 +200,47 @@ namespace Scene
 
         private void ShowGuide()
         {
-            _guideText.text = BuildGuideText(); // the mode can change between runs
+            BuildGuideRows(); // the mode can change between runs
             _guide.transform.SetAsLastSibling();
             _guide.SetActive(true);
         }
 
-        private static string BuildGuideText()
+        private void BuildGuideRows()
         {
-            List<string> lines = new List<string>();
-            if (GameMode.IsLevels) lines.Add(LevelsGoal);
-            lines.AddRange(Controls);
-            if (GameMode.IsExtended) lines.AddRange(Abilities);
+            foreach (Transform row in _guideRows) Destroy(row.gameObject);
 
-            for (int i = 0; i < lines.Count; i++)
-                lines[i] = Loc.T(lines[i]).Replace('\n', ' ');
-            return string.Join("\n", lines);
+            List<GuideRow> rows = new List<GuideRow>();
+            if (GameMode.IsLevels) rows.Add(LevelGoal);
+            rows.AddRange(Controls);
+            if (GameMode.IsExtended) rows.AddRange(Pieces);
+
+            for (int i = 0; i < rows.Count; i++)
+                CreateGuideRow(rows[i], GuideTopY - i * GuideRowHeight);
+        }
+
+        private void CreateGuideRow(GuideRow row, float y)
+        {
+            GameObject icon = new GameObject("Icon", typeof(RectTransform), typeof(Image));
+            icon.transform.SetParent(_guideRows, false);
+            Image image = icon.GetComponent<Image>();
+            image.sprite = Resources.Load<Sprite>(row.Icon);
+            image.preserveAspect = true;
+            image.raycastTarget = false;
+            Place((RectTransform)icon.transform, new Vector2(GuideIconX, y), GuideIconSize);
+
+            TextMeshProUGUI name = CreateLine(_guideRows, y + GuideNameOffset, GuideLineSize, GuideNameFontSize, _headingColor);
+            name.text = Loc.T(row.Name);
+            AlignGuideLine(name, y + GuideNameOffset);
+
+            TextMeshProUGUI effect = CreateLine(_guideRows, y - GuideNameOffset, GuideLineSize, GuideEffectFontSize, Color.white);
+            effect.text = Loc.T(row.Effect);
+            AlignGuideLine(effect, y - GuideNameOffset);
+        }
+
+        private static void AlignGuideLine(TextMeshProUGUI line, float y)
+        {
+            line.alignment = TextAlignmentOptions.Left;
+            line.rectTransform.anchoredPosition = new Vector2(GuideTextX, y);
         }
 
         private void KeepDialogsOnTop()
