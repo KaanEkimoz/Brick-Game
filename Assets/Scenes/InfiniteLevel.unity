@@ -1858,7 +1858,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.072502136}
+  m_AnchoredPosition: {x: 0, y: 0.072509766}
   m_SizeDelta: {x: -2, y: -1.2634}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &244726593
@@ -4201,7 +4201,8 @@ MonoBehaviour:
   _armedIcon: {fileID: 1061053093}
   _bombSprite: {fileID: 0}
   _laserSprite: {fileID: 0}
-  _boltSprite: {fileID: -2469090453941949488, guid: 0576ff553915f40eb8a73479c7652eee, type: 3}
+  _boltSprite: {fileID: -2469090453941949488, guid: 0576ff553915f40eb8a73479c7652eee,
+    type: 3}
 --- !u!1 &512768029
 GameObject:
   m_ObjectHideFlags: 0
@@ -9366,7 +9367,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 28.27, y: 377}
-  m_SizeDelta: {x: 558.46, y: 320.7064}
+  m_SizeDelta: {x: 470, y: 270}
   m_Pivot: {x: 0.5, y: 0.75357825}
 --- !u!114 &1060285818
 MonoBehaviour:
@@ -9440,7 +9441,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -0.0000042915, y: -0.000015258789}
+  m_AnchoredPosition: {x: 0, y: -0.000015258789}
   m_SizeDelta: {x: 71.695, y: 36}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &1061053093
@@ -9871,7 +9872,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000030517578, y: -0.17240143}
+  m_AnchoredPosition: {x: 0.000030517578, y: -0.1723938}
   m_SizeDelta: {x: 0.0001, y: -9.3559}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1107567865
@@ -10216,14 +10217,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InputSystem.TouchInput
   _horizontalStepPixels: 40
-  _horizontalLockRatio: 2
-  _verticalLockSticky: 1
-  _tapMaxDuration: 0.25
+  _horizontalStepScreenDivisor: 13
   _tapMaxRadius: 24
+  _tapMaxDuration: 0.25
   _hardDropMinVelocity: 2200
   _hardDropMaxDuration: 0.3
   _hardDropMinDistance: 120
   _softDropActivatePixels: 30
+  _softDropInHorizontalAxis: 1
   _softDropVerticalDominance: 1.4
   _softDropSlowInterval: 0.234
   _softDropFastInterval: 0.039
@@ -12647,7 +12648,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: -0.17238235}
+  m_AnchoredPosition: {x: 0, y: -0.1723938}
   m_SizeDelta: {x: 0, y: -9.3559}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1482652592
@@ -14797,8 +14798,6 @@ MonoBehaviour:
   _completedCardFade: 2.5
   _tutorialCard: {fileID: 1778261249}
   _editorAlwaysShow: 0
-  _classicPlayButtonName: B_Play
-  _extendedPlayButtonName: B_PlayExtended
 --- !u!114 &1823291282
 MonoBehaviour:
   m_ObjectHideFlags: 0
