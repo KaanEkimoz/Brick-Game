@@ -52,7 +52,7 @@ namespace Scene
             no.onClick.AddListener(() => _root.SetActive(false));
         }
 
-        private static GameObject CreateBackdrop(Transform panel)
+        public static GameObject CreateBackdrop(Transform panel)
         {
             GameObject go = new GameObject("ConfirmDialog", typeof(RectTransform), typeof(Image));
             go.transform.SetParent(panel, false);

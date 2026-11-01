@@ -407,6 +407,14 @@
   {
    "en": "Land a piece on a fruit\nfor bonus points before it fades",
    "text": "Coloca una pieza sobre la fruta antes\nde que desaparezca y gana puntos"
+  },
+  {
+   "en": "Paused",
+   "text": "En pausa"
+  },
+  {
+   "en": "How to Play",
+   "text": "Cómo jugar"
   }
  ]
 }

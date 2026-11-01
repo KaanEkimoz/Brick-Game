@@ -407,6 +407,14 @@
   {
    "en": "Land a piece on a fruit\nfor bonus points before it fades",
    "text": "Meyve kaybolmadan üstüne parça\nkoy, bonus puan kazan"
+  },
+  {
+   "en": "Paused",
+   "text": "Duraklatıldı"
+  },
+  {
+   "en": "How to Play",
+   "text": "Nasıl Oynanır"
   }
  ]
 }
