@@ -17,12 +17,13 @@ namespace Leaderboard
         private const string IconPath = "Icons/icon_leaderboard_neon";
         private const float RankFontSize = 26f;
         private const float RestartFontSize = 24f;
+        private const float HighScoreWidth = 1200f; // keeps a long translated label on one line
         private const float EndScoreY = 30f;
         private const float HighScoreY = -115f;
         private const float RankY = -190f;
-        private const float IconY = -262f;
-        private const float RestartY = -360f;
-        private const float MainMenuY = -455f;
+        private const float IconY = -256f;
+        private const float RestartY = -348f;
+        private const float MainMenuY = -438f;
         private static readonly Vector2 RankSize = new Vector2(540f, 60f);
         private static readonly Vector2 IconSize = new Vector2(96f, 96f);
 
@@ -36,7 +37,9 @@ namespace Leaderboard
             Transform restart = panel.Find(RestartButtonName);
 
             MoveTo(panel.Find(EndScoreName), EndScoreY);
-            MoveTo(panel.Find(HighScoreName), HighScoreY);
+            Transform highScore = panel.Find(HighScoreName);
+            MoveTo(highScore, HighScoreY);
+            ((RectTransform)highScore).sizeDelta = new Vector2(HighScoreWidth, ((RectTransform)highScore).sizeDelta.y);
             MoveTo(restart, RestartY);
             MoveTo(mainMenu.transform, MainMenuY);
 
