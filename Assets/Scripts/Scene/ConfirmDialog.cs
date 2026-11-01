@@ -38,7 +38,12 @@ namespace Scene
 
             Button.ButtonClickedEvent guardedChain = guardedButton.onClick;
             guardedButton.onClick = new Button.ButtonClickedEvent();
-            guardedButton.onClick.AddListener(() => _root.SetActive(true));
+            guardedButton.onClick.AddListener(() =>
+            {
+                // The panel can gain children after this dialog is built.
+                _root.transform.SetAsLastSibling();
+                _root.SetActive(true);
+            });
 
             Button template = PanelStyle.FindButton();
             Button yes = CreateButton(template, yesText, new Vector2(0f, -30f));
