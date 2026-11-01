@@ -20,6 +20,13 @@ namespace Themes
         private const string LogoObjectName = "I_Logo";
         private static readonly string[] ExplosionTextures = { "explosion_one_texture", "spritesheet" };
         private const string PieceLetters = "IJLOSTZ";
+        private const string FrameObjectName = "I_GridFrame";
+        private const string NextBoxObjectName = "I_NextPiece";
+        private const string PauseObjectName = "B_Pause";
+        private const string RemoveAdsObjectName = "B_RemoveAds_Game";
+        private const float PanelBorderDensity = 1.6f;
+        private const float FrameBorderDensity = 1.5f;
+        private static readonly Vector2 HolderPadding = new Vector2(16f, 18f);
 
         /// <summary>The theme's asset name, or empty for the standard look.</summary>
         public static string Selected
@@ -65,6 +72,15 @@ namespace Themes
 
                 if (image.sprite.texture.name == BackgroundTextureName && theme.Background != null)
                     image.sprite = theme.Background;
+                else if (image.name == FrameObjectName && theme.FrameSprite != null)
+                    ApplyPanel(image, theme.FrameSprite, FrameBorderDensity);
+                else if (image.name == NextBoxObjectName && theme.NextBoxSprite != null)
+                {
+                    image.sprite = theme.NextBoxSprite;
+                    image.color = Color.white;
+                }
+                else if (image.sprite.name == PanelSpriteName && theme.PanelSprite != null)
+                    ApplyPanel(image, theme.PanelSprite, PanelBorderDensity);
                 else if (image.name == LogoObjectName && theme.Logo != null)
                     image.sprite = theme.Logo;
                 else if (image.sprite.name == ButtonSpriteName)
@@ -75,6 +91,43 @@ namespace Themes
                     image.color = theme.FrameTint;
             }
 
+        }
+
+        private static void ApplyPanel(Image image, Sprite sprite, float borderDensity)
+        {
+            image.sprite = sprite;
+            image.type = Image.Type.Sliced;
+            image.pixelsPerUnitMultiplier = borderDensity;
+            image.color = Color.white;
+        }
+
+        // Placed once the canvas has its final layout, behind both buttons.
+        private static void AddButtonHolder(Sprite sprite)
+        {
+            GameObject pause = GameObject.Find(PauseObjectName);
+            GameObject removeAds = GameObject.Find(RemoveAdsObjectName);
+            if (sprite == null || pause == null || removeAds == null) return;
+
+            Canvas.ForceUpdateCanvases();
+            Vector3[] corners = new Vector3[4];
+            Vector3[] others = new Vector3[4];
+            ((RectTransform)pause.transform).GetWorldCorners(corners);
+            ((RectTransform)removeAds.transform).GetWorldCorners(others);
+
+            Transform parent = pause.transform.parent;
+            GameObject holder = new GameObject("I_ButtonHolder", typeof(RectTransform), typeof(Image));
+            holder.transform.SetParent(parent, false);
+            holder.transform.SetSiblingIndex(pause.transform.GetSiblingIndex());
+            holder.GetComponent<Image>().sprite = sprite;
+            holder.GetComponent<Image>().raycastTarget = false;
+
+            Vector3 lower = parent.InverseTransformPoint(Vector3.Min(corners[0], others[0]));
+            Vector3 upper = parent.InverseTransformPoint(Vector3.Max(corners[2], others[2]));
+            RectTransform rect = (RectTransform)holder.transform;
+            rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.sizeDelta = (Vector2)(upper - lower) + HolderPadding * 2f;
+            rect.localPosition = (lower + upper) * 0.5f;
         }
 
         /// <summary>The board builds its grid in Start, after the theme is applied.</summary>
@@ -91,6 +144,8 @@ namespace Themes
                 if (theme.GridSprite != null) renderer.sprite = theme.GridSprite;
                 renderer.color = theme.GridTint;
             }
+
+            AddButtonHolder(theme.ButtonHolderSprite);
         }
 
         private static void ApplyEffects(Color color)
