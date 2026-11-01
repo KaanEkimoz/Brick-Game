@@ -111,10 +111,11 @@ namespace Levels
             }
 
             bool owned = purchases != null && purchases.PremiumOwned;
-            Button action = owned
-                ? CreateMenuStyleButton(panel, "Themes", OpenThemesFromPremium)
-                : CreateMenuStyleButton(panel, BuyPremiumLabel(purchases), BuyPremium);
-            Place((RectTransform)action.transform, new Vector2(0f, PremiumActionY), WinButtonSize);
+            if (!owned)
+            {
+                Button buy = CreateMenuStyleButton(panel, BuyPremiumLabel(purchases), BuyPremium);
+                Place((RectTransform)buy.transform, new Vector2(0f, PremiumActionY), WinButtonSize);
+            }
 
             _premiumStatus = CreatePlainText(panel, owned ? Loc.T("Premium is active") : string.Empty, 34f, Accent);
             Place(_premiumStatus.rectTransform, new Vector2(0f, PremiumStatusY), new Vector2(740f, 56f));
@@ -165,12 +166,6 @@ namespace Levels
         private void HandlePremiumFailed(string reason)
         {
             if (_premiumStatus != null) _premiumStatus.text = Loc.T("Purchase failed");
-        }
-
-        private void OpenThemesFromPremium()
-        {
-            StopPremiumEvents();
-            ShowThemes();
         }
 
         private void ClosePremium()
