@@ -241,8 +241,8 @@
    "text": "Habilidad: {0}/{1}"
   },
   {
-   "en": "Tetrises: {0}/{1}",
-   "text": "Tetris: {0}/{1}"
+   "en": "Quads: {0}/{1}",
+   "text": "Cuádruples: {0}/{1}"
   },
   {
    "en": "Combo: {0}/{1}",
@@ -265,12 +265,12 @@
    "text": "Golpea {0} celdas con habilidades"
   },
   {
-   "en": "Clear a Tetris",
-   "text": "Haz un Tetris"
+   "en": "Clear a Quad",
+   "text": "Haz un cuádruple"
   },
   {
-   "en": "Clear {0} Tetrises",
-   "text": "Haz {0} Tetris"
+   "en": "Clear {0} Quads",
+   "text": "Haz {0} cuádruples"
   },
   {
    "en": "Clear lines {0} pieces in a row",

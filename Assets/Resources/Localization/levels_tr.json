@@ -52,7 +52,7 @@
     },
     {
       "id": 11,
-      "name": "Tetris Zamanı",
+      "name": "Dörtlü Zamanı",
       "hint": "Dördüncü satırı ekle, uzun parça dördünü birden temizlesin."
     },
     {
@@ -148,7 +148,7 @@
     {
       "id": 30,
       "name": "Kuyu",
-      "hint": "Yeni: Sadece Tetris. Dördüncü satırı yap, I'yı kuyuya at."
+      "hint": "Yeni: Sadece dörtlü. Dördüncü satırı yap, I'yı kuyuya at."
     },
     {
       "id": 31,
@@ -297,8 +297,8 @@
     },
     {
       "id": 60,
-      "name": "Çifte Tetris",
-      "hint": "İki Tetris. İlkinden sonra kuyuyu yeniden kur."
+      "name": "Çifte Dörtlü",
+      "hint": "İki dörtlü. İlkinden sonra kuyuyu yeniden kur."
     },
     {
       "id": 61,
@@ -448,7 +448,7 @@
     {
       "id": 90,
       "name": "Büyük Smaç",
-      "hint": "66 parçada üç Tetris. Kuyuyu temiz tut."
+      "hint": "66 parçada üç dörtlü. Kuyuyu temiz tut."
     },
     {
       "id": 91,

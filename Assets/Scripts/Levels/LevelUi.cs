@@ -258,7 +258,7 @@ namespace Levels
                 case "Lines": return Objective("Clear lines: {0}/{1}", value, level.target);
                 case "Score": return Objective("Reach score: {0}/{1}", value, level.target);
                 case "AbilityCells": return Objective("Ability cells: {0}/{1}", value, level.target);
-                case "Tetrises": return Objective("Tetrises: {0}/{1}", value, level.target);
+                case "Tetrises": return Objective("Quads: {0}/{1}", value, level.target);
                 case "Combo": return Objective("Combo: {0}/{1}", value, level.target);
                 case "Gold": return Objective("Gold left: {0}", value, level.target);
                 default: return Loc.F("Tiles left: {0}", value);
@@ -519,7 +519,7 @@ namespace Levels
                 case "Lines": return Loc.F("Clear {0} lines", level.target);
                 case "Score": return Loc.F("Reach {0} points", level.target);
                 case "AbilityCells": return Loc.F("Hit {0} cells with abilities", level.target);
-                case "Tetrises": return level.target == 1 ? Loc.T("Clear a Tetris") : Loc.F("Clear {0} Tetrises", level.target);
+                case "Tetrises": return level.target == 1 ? Loc.T("Clear a Quad") : Loc.F("Clear {0} Quads", level.target);
                 case "Combo": return Loc.F("Clear lines {0} pieces in a row", level.target);
                 case "Gold": return Loc.T("Clear all the gold");
                 default: return Loc.T("Clear the board");

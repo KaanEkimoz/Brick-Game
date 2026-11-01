@@ -52,7 +52,7 @@
     },
     {
       "id": 11,
-      "name": "Hora del Tetris",
+      "name": "Hora del cuádruple",
       "hint": "Añade una cuarta fila y una pieza larga limpiará cuatro a la vez."
     },
     {
@@ -148,7 +148,7 @@
     {
       "id": 30,
       "name": "El pozo",
-      "hint": "Nuevo: solo Tetris. Haz una cuarta fila y suelta la I en el pozo."
+      "hint": "Nuevo: solo cuádruples. Haz una cuarta fila y suelta la I en el pozo."
     },
     {
       "id": 31,
@@ -298,7 +298,7 @@
     {
       "id": 60,
       "name": "Doble o nada",
-      "hint": "Dos Tetris. Reconstruye el pozo tras el primero."
+      "hint": "Dos cuádruples. Reconstruye el pozo tras el primero."
     },
     {
       "id": 61,
@@ -448,7 +448,7 @@
     {
       "id": 90,
       "name": "Gran remate",
-      "hint": "Tres Tetris en 66 piezas. Mantén limpio el pozo."
+      "hint": "Tres cuádruples en 66 piezas. Mantén limpio el pozo."
     },
     {
       "id": 91,

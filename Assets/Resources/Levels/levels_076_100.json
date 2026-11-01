@@ -342,7 +342,7 @@
     {
       "id": 90,
       "name": "Grand Slam",
-      "hint": "Three Tetrises in 66 pieces. Keep the well clean.",
+      "hint": "Three Quads in 66 pieces. Keep the well clean.",
       "objective": "Tetrises",
       "target": 3,
       "rows": [

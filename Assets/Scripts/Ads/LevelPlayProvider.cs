@@ -176,14 +176,17 @@ namespace Ekimoz.Ads
             };
             _banner.OnAdLoadFailed += err =>
             {
-                _bannerLoaded = false;
                 if (_config.VerboseLogging) Debug.LogWarning($"[Ads] Banner load failed: {err}");
+                // A failed refresh keeps the current ad on screen and the SDK retries by itself.
+                if (_bannerLoaded) return;
                 // LevelPlay does NOT auto-retry a failed initial load (only auto-refreshes
                 // AFTER a successful one). Hand the retry to the host so a single startup
                 // miss doesn't leave the banner absent for the whole session.
                 if (!_suppressed) OnBannerLoadFailed?.Invoke();
             };
             _banner.OnAdClicked += _ => { if (_config.VerboseLogging) Debug.Log("[Ads] Banner clicked."); };
+            _banner.OnAdDisplayed += _ => { if (_config.VerboseLogging) Debug.Log("[Ads] Banner displayed."); };
+            _banner.OnAdDisplayFailed += (_, err) => Debug.LogWarning($"[Ads] Banner display failed: {err}");
             _banner.LoadAd();
             // Auto-show as soon as it loads — banners stay visible during gameplay by default.
             _bannerVisible = true;
@@ -217,7 +220,11 @@ namespace Ekimoz.Ads
                 return;
             }
             _bannerVisible = true;
-            _banner.LoadAd();
+            // A banner object loads only once, so a failed first load needs a new one.
+            _banner.DestroyAd();
+            _banner = null;
+            _bannerLoaded = false;
+            SetupBanner();
         }
 
         public void SuppressAds()

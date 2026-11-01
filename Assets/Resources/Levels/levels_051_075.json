@@ -185,7 +185,7 @@
     {
       "id": 60,
       "name": "Double Down",
-      "hint": "Two Tetrises. Rebuild the well after the first.",
+      "hint": "Two Quads. Rebuild the well after the first.",
       "objective": "Tetrises",
       "target": 2,
       "rows": [
