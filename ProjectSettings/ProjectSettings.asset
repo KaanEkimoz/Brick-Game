@@ -852,7 +852,8 @@ PlayerSettings:
     Android: 1
     iPhone: 1
   il2cppCompilerConfiguration: {}
-  il2cppCodeGeneration: {}
+  il2cppCodeGeneration:
+    Android: 1
   il2cppStacktraceInformation: {}
   managedStrippingLevel:
     Android: 2
