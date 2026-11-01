@@ -16,7 +16,7 @@ namespace Themes
         private const string FrameSpritePrefix = "!TetrisGameSprites_";
         private const string ButtonSpriteName = "!TetrisGameSprites_3";
         private const string PanelSpriteName = "PanelBackground";
-        private const string GridSpriteName = "ghost";
+        private const string GridSpriteName = "Grid";
 
         /// <summary>The theme's asset name, or empty for the standard look.</summary>
         public static string Selected
