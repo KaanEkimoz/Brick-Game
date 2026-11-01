@@ -21,15 +21,15 @@ namespace Scene
         private const string RestoreName = "B_RestorePurchases";
         private const string DialogName = "ConfirmDialog";
 
-        private const float TitleY = 470f;
-        private const float ScoreY = 398f;
-        private const float ResumeY = 300f;
-        private const float RestartY = 205f;
-        private const float MainMenuY = 120f;
-        private const float HowToPlayY = 35f;
-        private const float SoundY = -190f;
-        private const float RestoreY = -450f;
-        private const float GuideBackY = -440f;
+        private const float TitleY = 432f;
+        private const float ScoreY = 372f;
+        private const float ResumeY = 285f;
+        private const float RestartY = 198f;
+        private const float MainMenuY = 113f;
+        private const float HowToPlayY = 28f;
+        private const float SoundY = -188f;
+        private const float RestoreY = -432f;
+        private const float GuideBackY = -420f;
         private const float SoundScale = 1.85f;
 
         private const float TitleFontSize = 58f;
