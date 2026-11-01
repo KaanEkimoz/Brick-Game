@@ -89,7 +89,7 @@
     {
       "id": 30,
       "name": "The Well",
-      "hint": "New: Tetris only. Build a fourth row, drop I in the well.",
+      "hint": "New: Quad only. Build a fourth row, drop I in the well.",
       "objective": "Tetrises",
       "target": 1,
       "rows": [

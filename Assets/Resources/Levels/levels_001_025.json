@@ -203,7 +203,7 @@
     },
     {
       "id": 11,
-      "name": "Tetris Time",
+      "name": "Quad Time",
       "hint": "Add a fourth row, then a long piece clears four at once.",
       "objective": "Score",
       "target": 3600,

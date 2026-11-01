@@ -241,8 +241,8 @@
    "text": "Yetenek: {0}/{1}"
   },
   {
-   "en": "Tetrises: {0}/{1}",
-   "text": "Tetris: {0}/{1}"
+   "en": "Quads: {0}/{1}",
+   "text": "Dörtlü: {0}/{1}"
   },
   {
    "en": "Combo: {0}/{1}",
@@ -265,12 +265,12 @@
    "text": "Yeteneklerle {0} hücre vur"
   },
   {
-   "en": "Clear a Tetris",
-   "text": "Bir Tetris yap"
+   "en": "Clear a Quad",
+   "text": "Bir dörtlü yap"
   },
   {
-   "en": "Clear {0} Tetrises",
-   "text": "{0} Tetris yap"
+   "en": "Clear {0} Quads",
+   "text": "{0} dörtlü yap"
   },
   {
    "en": "Clear lines {0} pieces in a row",

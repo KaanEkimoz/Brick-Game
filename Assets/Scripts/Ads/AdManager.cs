@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Ekimoz.Ads
 {
@@ -71,6 +72,17 @@ namespace Ekimoz.Ads
             StartProvider();
         }
 
+        private void OnEnable() => SceneManager.sceneLoaded += HandleSceneLoaded;
+        private void OnDisable() => SceneManager.sceneLoaded -= HandleSceneLoaded;
+
+        private void HandleSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode) => ShowBanner();
+
+        // Coming back from a full-screen ad or another app must not leave the banner hidden.
+        private void OnApplicationPause(bool paused)
+        {
+            if (!paused) ShowBanner();
+        }
+
         private void StartProvider()
         {
             if (_provider != null) return;
@@ -83,7 +95,9 @@ namespace Ekimoz.Ads
             _provider.OnInterstitialLoadFailed += () => StartCoroutine(RetryAfterDelay(++_interstitialRetryCount, () => _provider.LoadInterstitial()));
             _provider.OnInterstitialClosed += () => _interstitialRetryCount = 0;
             _provider.OnInterstitialClosed += () => OnInterstitialClosed?.Invoke();
+            _provider.OnInterstitialClosed += ShowBanner;
             _provider.OnRewardedClosed += earned => OnRewardedClosed?.Invoke(earned);
+            _provider.OnRewardedClosed += _ => ShowBanner();
             _provider.OnBannerLoaded += HandleBannerLoaded;
             _provider.OnBannerLoadFailed += HandleBannerLoadFailed;
             _provider.Initialize(_config);
