@@ -3,6 +3,7 @@ using UnityEngine;
 #if UNITY_ANDROID && !UNITY_EDITOR
 using System.Text;
 using GooglePlayGames;
+using GooglePlayGames.BasicApi;
 using GooglePlayGames.BasicApi.SavedGame;
 using Leaderboard;
 #endif
