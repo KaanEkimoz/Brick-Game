@@ -65,7 +65,17 @@ namespace Themes
                     image.color = theme.FrameTint;
             }
 
-            foreach (SpriteRenderer renderer in FindAll<SpriteRenderer>())
+        }
+
+        /// <summary>The board builds its grid in Start, after the theme is applied.</summary>
+        public static void TintGrid(Transform board)
+        {
+            if (string.IsNullOrEmpty(Selected)) return;
+
+            GameTheme theme = Resources.Load<GameTheme>(ResourceFolder + Selected);
+            if (theme == null) return;
+
+            foreach (SpriteRenderer renderer in board.GetComponentsInChildren<SpriteRenderer>(true))
                 if (renderer.sprite != null && renderer.sprite.name == GridSpriteName)
                     renderer.color = theme.GridTint;
         }

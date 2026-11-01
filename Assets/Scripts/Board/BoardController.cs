@@ -61,6 +61,7 @@ namespace Board
         void Start()
         {
             CreateGrid();
+            Themes.ThemeManager.TintGrid(transform);
             tetrisText.SetActive(false);
         }
         private void CreateGrid()
