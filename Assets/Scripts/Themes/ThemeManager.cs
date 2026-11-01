@@ -13,6 +13,10 @@ namespace Themes
         private const string ThemeKey = "game_theme";
         private const string ResourceFolder = "Themes/";
         private const string BackgroundTextureName = "Background";
+        private const float MinBackgroundHeight = 1000f; // Unity's built-in UI sprite shares the name
+        private const string PopupSpriteName = "!TetrisGameSprites_2";
+        private const string ChargeBarObjectName = "AbilityChargeBar";
+        private const float PopupBorderDensity = 1f;
         private const string FrameSpritePrefix = "!TetrisGameSprites_";
         private const string ButtonSpriteName = "!TetrisGameSprites_3";
         private const string PanelSpriteName = "PanelBackground";
@@ -72,8 +76,12 @@ namespace Themes
             {
                 if (!image.gameObject.scene.IsValid() || image.sprite == null) continue;
 
-                if (image.sprite.texture.name == BackgroundTextureName && theme.Background != null)
+                if (image.sprite.texture.name == BackgroundTextureName
+                    && image.sprite.rect.height > MinBackgroundHeight && theme.Background != null)
+                {
                     image.sprite = theme.Background;
+                    image.color = Color.white;
+                }
                 else if (image.name == FrameObjectName && theme.FrameSprite != null)
                     image.color = Color.clear;
                 else if (image.name == NextBoxObjectName && theme.NextBoxSprite != null)
@@ -88,6 +96,8 @@ namespace Themes
                 }
                 else if (image.name == LogoObjectName && theme.Logo != null)
                     image.sprite = theme.Logo;
+                else if (image.sprite.name == PopupSpriteName && image.name != ChargeBarObjectName && theme.FrameSprite != null)
+                    ApplyPanel(image, theme.FrameSprite, PopupBorderDensity);
                 else if (image.sprite.name == ButtonSpriteName)
                     image.color = theme.ButtonTint;
                 else if (image.sprite.name == PanelSpriteName)
