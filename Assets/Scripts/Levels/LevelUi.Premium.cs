@@ -24,8 +24,8 @@ namespace Levels
 
         private TextMeshProUGUI _premiumStatus;
 
-        // Sits under the no-ads icon, in the same size and column.
-        private void CreatePremiumIcon()
+        // The left column stacks under the no-ads icon, in the same size.
+        private void CreateLeftMenuIcon(string name, string spritePath, int slot, UnityEngine.Events.UnityAction onClick)
         {
             RectTransform removeAds = null;
             Button template = null;
@@ -37,18 +37,18 @@ namespace Levels
             }
             if (removeAds == null || template == null) return;
 
-            Button premium = Instantiate(template, removeAds.parent);
-            premium.name = "B_PremiumIcon";
-            premium.onClick = new Button.ButtonClickedEvent();
-            premium.onClick.AddListener(ShowPremium);
-            premium.GetComponent<Image>().sprite = Resources.Load<Sprite>(PremiumIconPath);
+            Button icon = Instantiate(template, removeAds.parent);
+            icon.name = name;
+            icon.onClick = new Button.ButtonClickedEvent();
+            icon.onClick.AddListener(onClick);
+            icon.GetComponent<Image>().sprite = Resources.Load<Sprite>(spritePath);
 
-            RectTransform rect = (RectTransform)premium.transform;
+            RectTransform rect = (RectTransform)icon.transform;
             rect.anchorMin = removeAds.anchorMin;
             rect.anchorMax = removeAds.anchorMax;
             rect.pivot = removeAds.pivot;
             rect.sizeDelta = removeAds.sizeDelta;
-            rect.anchoredPosition = removeAds.anchoredPosition + Vector2.down * (removeAds.rect.height + LanguageIconGap);
+            rect.anchoredPosition = removeAds.anchoredPosition + Vector2.down * ((removeAds.rect.height + LanguageIconGap) * slot);
         }
 
         private void ShowPremium()
