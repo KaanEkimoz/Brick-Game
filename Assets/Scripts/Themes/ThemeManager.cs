@@ -33,7 +33,7 @@ namespace Themes
             SceneManager.sceneLoaded += HandleSceneLoaded;
         }
 
-        private static void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
+        private static void HandleSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
         {
             if (string.IsNullOrEmpty(Selected)) return;
 
