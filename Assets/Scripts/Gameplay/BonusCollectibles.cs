@@ -30,6 +30,8 @@ namespace Gameplay
         private const int HighestRow = 7;
         private const int SortingOrder = 9; // one above the target preview
 
+        public static System.Action OnFruitCollected;
+
         private static readonly string[] SpritePaths = { "Collectibles/cherry", "Collectibles/strawberry", "Collectibles/orange" };
         private static readonly int[] BasePoints = { 50, 75, 100 };
 
@@ -151,6 +153,7 @@ namespace Gameplay
 
             Destroy(fruit.gameObject);
             _score.AddBonusScore(points);
+            OnFruitCollected?.Invoke();
         }
 
         private Vector3 ScoreWorldPosition()

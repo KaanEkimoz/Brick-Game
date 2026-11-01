@@ -28,6 +28,21 @@ public static class GPGSIds
         public const string leaderboard_extended = "CgkIgY3R0rsKEAIQAg"; // <GPGSID>
         public const string leaderboard_classic_monthly = "CgkIgY3R0rsKEAIQAw"; // <GPGSID>
         public const string leaderboard_extended_monthly = "CgkIgY3R0rsKEAIQBA"; // <GPGSID>
+        public const string achievement_first_line = "CgkIgY3R0rsKEAIQDg"; // <GPGSID>
+        public const string achievement_four_at_once = "CgkIgY3R0rsKEAIQEA"; // <GPGSID>
+        public const string achievement_picking_up_speed = "CgkIgY3R0rsKEAIQDw"; // <GPGSID>
+        public const string achievement_five_digits = "CgkIgY3R0rsKEAIQBw"; // <GPGSID>
+        public const string achievement_big_bang = "CgkIgY3R0rsKEAIQEg"; // <GPGSID>
+        public const string achievement_demolition_crew = "CgkIgY3R0rsKEAIQCw"; // <GPGSID>
+        public const string achievement_fruit_picker = "CgkIgY3R0rsKEAIQCQ"; // <GPGSID>
+        public const string achievement_warmed_up = "CgkIgY3R0rsKEAIQBQ"; // <GPGSID>
+        public const string achievement_getting_serious = "CgkIgY3R0rsKEAIQDQ"; // <GPGSID>
+        public const string achievement_high_roller = "CgkIgY3R0rsKEAIQDA"; // <GPGSID>
+        public const string achievement_top_speed = "CgkIgY3R0rsKEAIQCg"; // <GPGSID>
+        public const string achievement_line_worker = "CgkIgY3R0rsKEAIQEw"; // <GPGSID>
+        public const string achievement_halfway_there = "CgkIgY3R0rsKEAIQCA"; // <GPGSID>
+        public const string achievement_line_legend = "CgkIgY3R0rsKEAIQBg"; // <GPGSID>
+        public const string achievement_level_master = "CgkIgY3R0rsKEAIQEQ"; // <GPGSID>
 
 }
 

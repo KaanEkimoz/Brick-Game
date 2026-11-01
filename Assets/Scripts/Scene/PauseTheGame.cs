@@ -36,6 +36,7 @@ public class PauseTheGame : MonoBehaviour
             .Build(restartButton, resumeButton, "Restart?", "Your current game will be lost", ConfirmDialog.ConfirmText);
         GuardMainMenu(canvas.Find(PauseMainMenuButtonPath), resumeButton);
         GuardMainMenu(canvas.Find(GameOverMainMenuButtonPath), resumeButton);
+        resumeButton.transform.parent.gameObject.AddComponent<PauseMenuLayout>();
     }
 
     private void GuardMainMenu(Transform mainMenuButton, Button cancelTemplate)

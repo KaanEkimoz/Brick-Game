@@ -26,6 +26,8 @@ apply from: '../shared/common.gradle'
 **APPLY_PLUGINS**
 
 dependencies {
+    // play-services-base pulls 1.1.0, which Play flags as outdated. A plain dependency also reaches the launcher module.
+    implementation 'androidx.fragment:fragment:1.2.5'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 // Android Resolver Dependencies Start
     implementation 'com.google.android.gms:play-services-ads-identifier:18.1.0' // Assets/LevelPlay/Editor/IronSourceSDKDependencies.xml:12
@@ -40,7 +42,6 @@ dependencies {
 // Kept outside the resolver blocks, which the External Dependency Manager rewrites.
 configurations.all {
     exclude group: 'com.unity3d.ads-mediation', module: 'adquality-sdk' // missing from maven
-    resolutionStrategy.force 'androidx.fragment:fragment:1.2.5' // play-services-base pulls 1.1.0, which Play flags as outdated
 }
 
 // Android Resolver Exclusions Start

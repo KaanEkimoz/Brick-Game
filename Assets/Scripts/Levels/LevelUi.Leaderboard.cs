@@ -13,6 +13,7 @@ namespace Levels
         private const string LeaderboardIconPath = "Icons/icon_leaderboard_neon";
         private const string GameOverPanelName = "GOM_Panel";
         private const string MainMenuButtonName = "B_MainMenu";
+        private const string AchievementsIconPath = "Icons/icon_achievements_neon";
         private const int LeaderboardRowCount = 10;
         private const float LeaderboardTop = 610f;
         private const float LeaderboardToggleY = 480f;
@@ -41,6 +42,7 @@ namespace Levels
         private void BuildLeaderboardButton()
         {
             CreateMenuIcon("B_LeaderboardIcon", LeaderboardIconPath, 2, () => OpenLeaderboard(LeaderboardBoard.Classic));
+            CreateMenuIcon("B_AchievementsIcon", AchievementsIconPath, 3, Achievements.AchievementService.Show);
         }
 
         private void BuildGameOverLeaderboard()
