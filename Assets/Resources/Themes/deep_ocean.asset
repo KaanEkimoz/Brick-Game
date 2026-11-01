@@ -23,6 +23,11 @@ MonoBehaviour:
   _background: {fileID: 21300000, guid: d9ec3a8921f434a0c913db34b39ddafb, type: 3}
   _gridSprite: {fileID: 21300000, guid: cccf0444927474a2ca885ded034045fb, type: 3}
   _logo: {fileID: 21300000, guid: e9817cff9ba8f424aa08356acd9c310f, type: 3}
+  _panelSprite: {fileID: 21300000, guid: da82cbd78f05a438f93a8bc577cfd38c, type: 3}
+  _frameSprite: {fileID: 21300000, guid: 4686a0838b7da40288ab26c30fe950b1, type: 3}
+  _nextBoxSprite: {fileID: 21300000, guid: 9d550c2a7a8764c7bac7ab0931c64e6d, type: 3}
+  _buttonHolderSprite: {fileID: 21300000, guid: dcea0be300dd94e66a1cca494ec0e1b3,
+    type: 3}
   _particleFrames:
   - {fileID: -9136834448258697486, guid: 5ddbc8db4e481481392eff50e3eeefc6, type: 3}
   - {fileID: 1762854388791719718, guid: 5ddbc8db4e481481392eff50e3eeefc6, type: 3}
@@ -34,8 +39,8 @@ MonoBehaviour:
   - {fileID: -8647914586829890496, guid: 5ddbc8db4e481481392eff50e3eeefc6, type: 3}
   _frameTint: {r: 0.45, g: 0.85, b: 0.85, a: 1}
   _buttonTint: {r: 0.72, g: 1, b: 0.96, a: 1}
-  _panelTint: {r: 0.35, g: 0.95, b: 0.85, a: 0.75}
-  _gridTint: {r: 0.5, g: 1, b: 0.9, a: 0.7}
+  _panelTint: {r: 1, g: 1, b: 1, a: 1}
+  _gridTint: {r: 0.6, g: 1, b: 0.92, a: 0.32}
   _effectColor: {r: 0.6, g: 1, b: 0.95, a: 1}
   _lineClearClip: {fileID: 8300000, guid: e1b4382d0deae4bf3a03b6c47bd4a987, type: 3}
   _landingClip: {fileID: 8300000, guid: da896ad55cc7b4153b0f31e7b81e1772, type: 3}
