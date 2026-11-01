@@ -43,7 +43,8 @@ namespace Levels
         {
             CreateMenuIcon("B_LeaderboardIcon", LeaderboardIconPath, 2, () => OpenLeaderboard(LeaderboardBoard.Classic));
             CreateMenuIcon("B_AchievementsIcon", AchievementsIconPath, 3, Achievements.AchievementService.Show);
-            CreateMenuIcon("B_PremiumIcon", PremiumIconPath, 4, ShowPremium);
+            CreateMenuIcon("B_ThemesIcon", ThemesIconPath, 4, ShowThemes);
+            CreatePremiumIcon();
         }
 
         private void BuildGameOverLeaderboard()

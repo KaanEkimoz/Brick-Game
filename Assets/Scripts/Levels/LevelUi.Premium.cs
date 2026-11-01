@@ -9,8 +9,8 @@ namespace Levels
 {
     public partial class LevelUi
     {
-        private const string PremiumIconPath = "Icons/icon_premium_neon";
-        private const string PremiumTheme = "deep_ocean";
+        private const string PremiumIconPath = "Icons/icon_diamond_neon";
+        private const string RemoveAdsIconName = "B_RemoveAds";
         private const float PremiumPanelHeight = 980f;
         private const float PremiumFeatureHeight = 74f;
         private const float PremiumHeadingY = 370f;
@@ -20,9 +20,36 @@ namespace Levels
         private const float PremiumRestoreY = -275f;
         private const float PremiumBackY = -375f;
 
-        private static readonly string[] PremiumFeatures = { "Play without ads", "Deep Ocean theme" };
+        private static readonly string[] PremiumFeatures = { "Play without ads", "New game themes" };
 
         private TextMeshProUGUI _premiumStatus;
+
+        // Sits under the no-ads icon, in the same size and column.
+        private void CreatePremiumIcon()
+        {
+            RectTransform removeAds = null;
+            Button template = null;
+            foreach (Button button in Resources.FindObjectsOfTypeAll<Button>())
+            {
+                if (!button.gameObject.scene.IsValid()) continue;
+                if (button.name == RemoveAdsIconName) removeAds = (RectTransform)button.transform;
+                if (button.name == SettingsIconName) template = button;
+            }
+            if (removeAds == null || template == null) return;
+
+            Button premium = Instantiate(template, removeAds.parent);
+            premium.name = "B_PremiumIcon";
+            premium.onClick = new Button.ButtonClickedEvent();
+            premium.onClick.AddListener(ShowPremium);
+            premium.GetComponent<Image>().sprite = Resources.Load<Sprite>(PremiumIconPath);
+
+            RectTransform rect = (RectTransform)premium.transform;
+            rect.anchorMin = removeAds.anchorMin;
+            rect.anchorMax = removeAds.anchorMax;
+            rect.pivot = removeAds.pivot;
+            rect.sizeDelta = removeAds.sizeDelta;
+            rect.anchoredPosition = removeAds.anchoredPosition + Vector2.down * (removeAds.rect.height + LanguageIconGap);
+        }
 
         private void ShowPremium()
         {
@@ -42,7 +69,7 @@ namespace Levels
 
             bool owned = purchases != null && purchases.PremiumOwned;
             Button action = owned
-                ? CreateMenuStyleButton(panel, ThemeButtonLabel(), TogglePremiumTheme)
+                ? CreateMenuStyleButton(panel, "Themes", OpenThemesFromPremium)
                 : CreateMenuStyleButton(panel, BuyPremiumLabel(purchases), BuyPremium);
             Place((RectTransform)action.transform, new Vector2(0f, PremiumActionY), WinButtonSize);
 
@@ -69,11 +96,6 @@ namespace Levels
             return string.IsNullOrEmpty(price) ? "Buy" : Loc.Caps("Buy") + " " + price;
         }
 
-        private static string ThemeButtonLabel()
-        {
-            return ThemeManager.Selected == PremiumTheme ? "Use Neon theme" : "Use Deep Ocean theme";
-        }
-
         private void BuyPremium()
         {
             PurchaseManager purchases = PurchaseManager.Instance;
@@ -92,7 +114,7 @@ namespace Levels
 
         private void HandlePremiumChanged(bool owned)
         {
-            if (owned) ThemeManager.Selected = PremiumTheme;
+            if (owned) ThemeManager.Selected = OceanThemeName;
             StopPremiumEvents();
             _session.ReturnToMenu();
         }
@@ -102,11 +124,10 @@ namespace Levels
             if (_premiumStatus != null) _premiumStatus.text = Loc.T("Purchase failed");
         }
 
-        private void TogglePremiumTheme()
+        private void OpenThemesFromPremium()
         {
-            ThemeManager.Selected = ThemeManager.Selected == PremiumTheme ? string.Empty : PremiumTheme;
             StopPremiumEvents();
-            _session.ReturnToMenu();
+            ShowThemes();
         }
 
         private void ClosePremium()

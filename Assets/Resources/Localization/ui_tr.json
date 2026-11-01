@@ -507,6 +507,26 @@
   {
    "en": "Purchase failed",
    "text": "Satın alma tamamlanamadı"
+  },
+  {
+   "en": "Themes",
+   "text": "Temalar"
+  },
+  {
+   "en": "New game themes",
+   "text": "Yeni oyun temaları"
+  },
+  {
+   "en": "Neon",
+   "text": "Neon"
+  },
+  {
+   "en": "Deep Ocean",
+   "text": "Derin Okyanus"
+  },
+  {
+   "en": "Selected",
+   "text": "Seçili"
   }
  ]
 }

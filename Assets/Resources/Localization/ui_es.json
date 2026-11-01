@@ -507,6 +507,26 @@
   {
    "en": "Purchase failed",
    "text": "No se pudo completar la compra"
+  },
+  {
+   "en": "Themes",
+   "text": "Temas"
+  },
+  {
+   "en": "New game themes",
+   "text": "Nuevos temas de juego"
+  },
+  {
+   "en": "Neon",
+   "text": "Neón"
+  },
+  {
+   "en": "Deep Ocean",
+   "text": "Océano Profundo"
+  },
+  {
+   "en": "Selected",
+   "text": "Seleccionado"
   }
  ]
 }
