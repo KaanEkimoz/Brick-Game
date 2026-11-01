@@ -471,6 +471,42 @@
   {
    "en": "Finish it before the limit",
    "text": "Limit dolmadan tamamla"
+  },
+  {
+   "en": "Premium",
+   "text": "Premium"
+  },
+  {
+   "en": "Play without ads",
+   "text": "Reklamsız oyna"
+  },
+  {
+   "en": "Deep Ocean theme",
+   "text": "Derin Okyanus teması"
+  },
+  {
+   "en": "Buy",
+   "text": "Satın al"
+  },
+  {
+   "en": "Use Neon theme",
+   "text": "Neon temaya geç"
+  },
+  {
+   "en": "Use Deep Ocean theme",
+   "text": "Derin Okyanus'a geç"
+  },
+  {
+   "en": "Premium is active",
+   "text": "Premium aktif"
+  },
+  {
+   "en": "Store is not ready",
+   "text": "Mağaza henüz hazır değil"
+  },
+  {
+   "en": "Purchase failed",
+   "text": "Satın alma tamamlanamadı"
   }
  ]
 }

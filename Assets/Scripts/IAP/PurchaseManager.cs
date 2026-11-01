@@ -17,6 +17,12 @@ namespace Ekimoz.IAP
 
         /// <summary>Google Play / App Store product id. Must match the Play Console product.</summary>
         public const string RemoveAdsProductId = "remove_ads";
+        public const string PremiumProductId = "premium";
+
+        /// <summary>Persisted so the theme and ad state are right before the store answers.</summary>
+        public const string PremiumPrefKey = "premium_owned";
+
+        private static readonly string[] ProductIds = { RemoveAdsProductId, PremiumProductId };
 
         [Tooltip("Verbose [IAP] logging. Turn off for release if noisy.")]
         [SerializeField] private bool _verboseLogging = true;
@@ -29,11 +35,17 @@ namespace Ekimoz.IAP
         /// <summary>True once Remove Ads is owned (purchased or restored).</summary>
         public bool RemoveAdsOwned { get; private set; }
 
+        /// <summary>True once Premium is owned. Premium includes Remove Ads.</summary>
+        public bool PremiumOwned { get; private set; }
+
         /// <summary>True once the billing SDK has finished initializing.</summary>
         public bool IsInitialized => _service != null && _service.IsInitialized;
 
         /// <summary>Fired whenever ownership state changes (so the Remove Ads button can refresh).</summary>
         public event Action<bool> OnRemoveAdsOwnedChanged;
+
+        /// <summary>Fired whenever Premium ownership changes.</summary>
+        public event Action<bool> OnPremiumOwnedChanged;
 
         /// <summary>Fired when a purchase attempt fails or is cancelled. string = reason.</summary>
         public event Action<string> OnPurchaseFailed;
@@ -54,6 +66,7 @@ namespace Ekimoz.IAP
             // Optimistic initial state from the persisted flag, so the UI shows "owned"
             // instantly on relaunch without waiting for the store round-trip.
             RemoveAdsOwned = PlayerPrefs.GetInt(AdManager.AdsRemovedPrefKey, 0) == 1;
+            PremiumOwned = PlayerPrefs.GetInt(PremiumPrefKey, 0) == 1;
 
             _service = new UnityIapService(_verboseLogging);
             _service.OnInitialized += HandleInitialized;
@@ -61,7 +74,7 @@ namespace Ekimoz.IAP
             _service.OnPurchaseSucceeded += HandlePurchaseSucceeded;
             _service.OnPurchaseFailed += HandlePurchaseFailed;
 
-            _service.Initialize(new[] { RemoveAdsProductId });
+            _service.Initialize(ProductIds);
         }
 
         // ---------------- Public API (UI talks to these) ----------------
@@ -78,18 +91,39 @@ namespace Ekimoz.IAP
             _service?.Purchase(RemoveAdsProductId);
         }
 
+        /// <summary>Start the Premium purchase flow.</summary>
+        public void BuyPremium()
+        {
+            if (PremiumOwned)
+            {
+                ApplyPremium();
+                return;
+            }
+            _service?.Purchase(PremiumProductId);
+        }
+
         /// <summary>Restore previously bought purchases (Google Play auto-restores at init).</summary>
         public void RestorePurchases() => _service?.Restore();
 
         /// <summary>Localized price for the Remove Ads button (e.g. "₺24,99"), or null if not ready.</summary>
         public string RemoveAdsPrice => _service?.GetLocalizedPrice(RemoveAdsProductId);
 
+        /// <summary>Localized Premium price, or null if not ready.</summary>
+        public string PremiumPrice => _service?.GetLocalizedPrice(PremiumProductId);
+
         // ---------------- Service callbacks ----------------
 
         private void HandleInitialized()
         {
             // Store may report the product already owned (restore). Sync just in case.
-            bool owned = _service.IsOwned(RemoveAdsProductId);
+            bool premium = _service.IsOwned(PremiumProductId);
+            if (premium && !PremiumOwned)
+                ApplyPremium();
+            else if (!premium && PremiumOwned && Application.platform == RuntimePlatform.Android)
+                RevokePremium();
+
+            // Premium keeps ads off even without the separate Remove Ads product.
+            bool owned = premium || _service.IsOwned(RemoveAdsProductId);
             if (owned && !RemoveAdsOwned)
                 ApplyRemoveAds();
             // Only Google Play reports a refund here. iOS keeps its receipt until a restore.
@@ -109,11 +143,13 @@ namespace Ekimoz.IAP
         {
             if (productId == RemoveAdsProductId)
                 ApplyRemoveAds();
+            else if (productId == PremiumProductId)
+                ApplyPremium();
         }
 
         private void HandlePurchaseFailed(string productId, string reason)
         {
-            if (productId == RemoveAdsProductId)
+            if (productId == RemoveAdsProductId || productId == PremiumProductId)
                 OnPurchaseFailed?.Invoke(reason);
         }
 
@@ -123,10 +159,30 @@ namespace Ekimoz.IAP
             float delay = Mathf.Min(MaxInitRetryDelay, 5f * Mathf.Pow(2f, _initRetryCount));
             _initRetryCount++;
             yield return new WaitForSecondsRealtime(delay);
-            _service.Initialize(new[] { RemoveAdsProductId });
+            _service.Initialize(ProductIds);
         }
 
         // ---------------- Apply ----------------
+
+        private void RevokePremium()
+        {
+            PremiumOwned = false;
+            PlayerPrefs.SetInt(PremiumPrefKey, 0);
+            PlayerPrefs.Save();
+            OnPremiumOwnedChanged?.Invoke(false);
+        }
+
+        private void ApplyPremium()
+        {
+            bool wasOwned = PremiumOwned;
+            PremiumOwned = true;
+            PlayerPrefs.SetInt(PremiumPrefKey, 1);
+            PlayerPrefs.Save();
+            ApplyRemoveAds();
+
+            if (!wasOwned)
+                OnPremiumOwnedChanged?.Invoke(true);
+        }
 
         private void RevokeRemoveAds()
         {

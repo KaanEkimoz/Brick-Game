@@ -46,7 +46,7 @@ namespace Themes
         /// <summary>The theme's asset name, or empty for the standard look.</summary>
         public static string Selected
         {
-            get => PlayerPrefs.GetString(ThemeKey);
+            get => PlayerPrefs.GetInt(Ekimoz.IAP.PurchaseManager.PremiumPrefKey) == 1 ? PlayerPrefs.GetString(ThemeKey) : string.Empty;
             set
             {
                 PlayerPrefs.SetString(ThemeKey, value);
