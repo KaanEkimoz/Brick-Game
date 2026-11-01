@@ -20,11 +20,6 @@ namespace Themes
         private const string PopupSpriteName = "!TetrisGameSprites_2";
         private const string ChargeBarObjectName = "AbilityChargeBar";
         private const float PopupBorderDensity = 1f;
-        private const float ChargeBarBorderDensity = 2.2f;
-        private const string ChargeBarFillName = "Fill";
-        private const string ChargeBarTrackName = "Background";
-        private const string ChargeBarBackName = "I_White_Background";
-        private const string ChargeBarDividerPrefix = "Divider_";
         private const string PlayOneShotMethod = "PlayOneShot";
         private const string HudObjectName = "TopHUD";
         private const string SoundPanelObjectName = "SoundPanel";
@@ -76,7 +71,6 @@ namespace Themes
             _active = theme;
             ApplyVisuals(theme);
             ApplyText(theme);
-            ApplyChargeBar(theme);
             HookGhost();
             ApplyEffects(theme.EffectColor);
             ApplyParticles(theme.ParticleFrames);
@@ -117,9 +111,7 @@ namespace Themes
                     image.sprite = theme.Logo;
                 else if (image.name == SoundPanelObjectName)
                     image.color = theme.SoundPanelTint;
-                else if (image.name == ChargeBarObjectName && theme.FrameSprite != null)
-                    ApplyPanel(image, theme.FrameSprite, ChargeBarBorderDensity);
-                else if (image.sprite.name == PopupSpriteName && theme.PopupSprite != null)
+                else if (image.sprite.name == PopupSpriteName && image.name != ChargeBarObjectName && theme.PopupSprite != null)
                     ApplyPanel(image, theme.PopupSprite, PopupBorderDensity);
                 else if (image.sprite.name == ButtonSpriteName)
                     image.color = theme.ButtonTint;
@@ -136,19 +128,13 @@ namespace Themes
         public static Color PrimaryButtonText(Color standard) => _active != null ? _active.ButtonTextColor : standard;
         public static Color SecondaryButtonTint(Color standard) => _active != null ? _active.SecondaryButtonTint : standard;
 
-        private static void ApplyChargeBar(GameTheme theme)
+        /// <summary>The charge bar draws itself from code, so it asks for each color.</summary>
+        public static Color ChargeColor(System.Func<GameTheme, Color> pick, Color standard)
         {
-            foreach (Image image in Resources.FindObjectsOfTypeAll<Image>())
-            {
-                if (!image.gameObject.scene.IsValid() || image.sprite != null) continue;
-                Transform bar = image.transform;
-                while (bar != null && bar.name != ChargeBarObjectName) bar = bar.parent;
-                if (bar == null) continue;
+            if (string.IsNullOrEmpty(Selected)) return standard;
 
-                if (image.name == ChargeBarFillName) image.color = theme.ChargeFillColor;
-                else if (image.name == ChargeBarTrackName || image.name == ChargeBarBackName) image.color = theme.ChargeTrackColor;
-                else if (image.name.StartsWith(ChargeBarDividerPrefix)) image.color = theme.ChargeDividerColor;
-            }
+            GameTheme theme = _active != null ? _active : Resources.Load<GameTheme>(ResourceFolder + Selected);
+            return theme != null ? pick(theme) : standard;
         }
 
         /// <summary>Swaps a click chain's scene-wired sound. ConfirmDialog keeps chains apart

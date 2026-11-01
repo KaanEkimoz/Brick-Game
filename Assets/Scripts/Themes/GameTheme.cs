@@ -28,7 +28,9 @@ namespace Themes
         [SerializeField] private Color _soundPanelTint = Color.white;
         [SerializeField] private Color _chargeFillColor = Color.white;
         [SerializeField] private Color _chargeTrackColor = Color.black;
-        [SerializeField] private Color _chargeDividerColor = Color.black;
+        [SerializeField] private Color _chargeLowColor = Color.white;
+        [SerializeField] private Color _chargePanelColor = Color.black;
+        [SerializeField] private Color _chargeBorderColor = Color.white;
         [SerializeField] private Color _panelTint = Color.white;
         [SerializeField] private Color _gridTint = Color.white;
         [SerializeField] private Color _effectColor = Color.white;
@@ -61,7 +63,9 @@ namespace Themes
         public Color SoundPanelTint => _soundPanelTint;
         public Color ChargeFillColor => _chargeFillColor;
         public Color ChargeTrackColor => _chargeTrackColor;
-        public Color ChargeDividerColor => _chargeDividerColor;
+        public Color ChargeLowColor => _chargeLowColor;
+        public Color ChargePanelColor => _chargePanelColor;
+        public Color ChargeBorderColor => _chargeBorderColor;
         public Color PanelTint => _panelTint;
         public Color GridTint => _gridTint;
         public Color EffectColor => _effectColor;
