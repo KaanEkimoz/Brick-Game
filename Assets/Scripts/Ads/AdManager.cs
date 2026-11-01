@@ -30,7 +30,6 @@ namespace Ekimoz.Ads
         // C# object with no coroutine host). Reset on a successful load.
         private Coroutine _bannerRetry;
         private int _bannerRetryCount;
-        private const int MaxBannerRetries = 6;
 
         // Interstitial and SDK startup failures keep retrying, slowly, for the whole session.
         private const float MaxRetryDelay = 120f;
@@ -126,9 +125,8 @@ namespace Ekimoz.Ads
 
         private IEnumerator RetryBannerLoad()
         {
-            if (_bannerRetryCount >= MaxBannerRetries) { _bannerRetry = null; yield break; }
             _bannerRetryCount++;
-            // Exponential backoff capped at 60s: 4, 8, 16, 32, 60, 60...
+            // No fill can last for minutes, so keep trying for the whole session: 4, 8, 16, 32, 60, 60...
             float delay = Mathf.Min(60f, 4f * Mathf.Pow(2f, _bannerRetryCount - 1));
             yield return new WaitForSecondsRealtime(delay);
             _bannerRetry = null;
