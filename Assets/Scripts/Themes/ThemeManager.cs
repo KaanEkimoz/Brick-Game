@@ -18,7 +18,7 @@ namespace Themes
         private const string PanelSpriteName = "PanelBackground";
         private const string GridSpriteName = "Grid";
         private const string LogoObjectName = "I_Logo";
-        private const string ExplosionTexturePrefix = "explosion_one";
+        private static readonly string[] ExplosionTextures = { "explosion_one_texture", "spritesheet" };
         private const string PieceLetters = "IJLOSTZ";
 
         /// <summary>The theme's asset name, or empty for the standard look.</summary>
@@ -110,10 +110,15 @@ namespace Themes
             {
                 ParticleSystem.TextureSheetAnimationModule sheet = particles.textureSheetAnimation;
                 if (!sheet.enabled || sheet.mode != ParticleSystemAnimationMode.Sprites || sheet.spriteCount == 0) continue;
-                if (sheet.GetSprite(0) == null || !sheet.GetSprite(0).texture.name.StartsWith(ExplosionTexturePrefix)) continue;
+                if (sheet.GetSprite(0) == null) continue;
+                if (System.Array.IndexOf(ExplosionTextures, sheet.GetSprite(0).texture.name) < 0) continue;
 
                 while (sheet.spriteCount > 0) sheet.RemoveSprite(0);
                 foreach (Sprite frame in frames) sheet.AddSprite(frame);
+
+                // The standard fade colors belong to the explosion art.
+                ParticleSystem.ColorOverLifetimeModule colors = particles.colorOverLifetime;
+                colors.enabled = false;
             }
         }
 
