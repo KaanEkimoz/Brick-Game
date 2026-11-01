@@ -26,7 +26,9 @@ namespace Themes
         private const string RemoveAdsObjectName = "B_RemoveAds_Game";
         private const float PanelBorderDensity = 1.6f;
         private const float FrameBorderDensity = 1.5f;
+        private const float BoardFramePadding = 13f;
         private static readonly Vector2 HolderPadding = new Vector2(16f, 18f);
+        private static readonly Vector2 PanelInset = new Vector2(-18f, -8f);
 
         /// <summary>The theme's asset name, or empty for the standard look.</summary>
         public static string Selected
@@ -73,14 +75,17 @@ namespace Themes
                 if (image.sprite.texture.name == BackgroundTextureName && theme.Background != null)
                     image.sprite = theme.Background;
                 else if (image.name == FrameObjectName && theme.FrameSprite != null)
-                    ApplyPanel(image, theme.FrameSprite, FrameBorderDensity);
+                    image.color = Color.clear;
                 else if (image.name == NextBoxObjectName && theme.NextBoxSprite != null)
                 {
                     image.sprite = theme.NextBoxSprite;
                     image.color = Color.white;
                 }
                 else if (image.sprite.name == PanelSpriteName && theme.PanelSprite != null)
+                {
                     ApplyPanel(image, theme.PanelSprite, PanelBorderDensity);
+                    image.rectTransform.sizeDelta += PanelInset;
+                }
                 else if (image.name == LogoObjectName && theme.Logo != null)
                     image.sprite = theme.Logo;
                 else if (image.sprite.name == ButtonSpriteName)
@@ -99,6 +104,32 @@ namespace Themes
             image.type = Image.Type.Sliced;
             image.pixelsPerUnitMultiplier = borderDensity;
             image.color = Color.white;
+        }
+
+        // The standard frame art has wide empty margins, so this one is fitted to the grid itself.
+        private static void AddBoardFrame(Sprite sprite, Bounds grid)
+        {
+            GameObject standard = GameObject.Find(FrameObjectName);
+            if (sprite == null || standard == null) return;
+
+            RectTransform parent = (RectTransform)standard.transform;
+            Canvas canvas = parent.GetComponentInParent<Canvas>();
+            Camera canvasCamera = canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera;
+            Canvas.ForceUpdateCanvases();
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(parent, Camera.main.WorldToScreenPoint(grid.min), canvasCamera, out Vector2 lower);
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(parent, Camera.main.WorldToScreenPoint(grid.max), canvasCamera, out Vector2 upper);
+
+            GameObject frame = new GameObject("I_ThemeFrame", typeof(RectTransform), typeof(Image));
+            frame.transform.SetParent(parent, false);
+            frame.transform.SetAsFirstSibling();
+            Image image = frame.GetComponent<Image>();
+            image.raycastTarget = false;
+            ApplyPanel(image, sprite, FrameBorderDensity);
+
+            RectTransform rect = (RectTransform)frame.transform;
+            rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.sizeDelta = upper - lower + Vector2.one * BoardFramePadding * 2f;
+            rect.localPosition = (lower + upper) * 0.5f;
         }
 
         // Placed once the canvas has its final layout, behind both buttons.
@@ -138,13 +169,20 @@ namespace Themes
             GameTheme theme = Resources.Load<GameTheme>(ResourceFolder + Selected);
             if (theme == null) return;
 
+            Bounds grid = new Bounds();
+            bool hasGrid = false;
             foreach (SpriteRenderer renderer in board.GetComponentsInChildren<SpriteRenderer>(true))
             {
                 if (renderer.sprite == null || renderer.sprite.name != GridSpriteName) continue;
                 if (theme.GridSprite != null) renderer.sprite = theme.GridSprite;
                 renderer.color = theme.GridTint;
+
+                if (hasGrid) grid.Encapsulate(renderer.bounds);
+                else grid = renderer.bounds;
+                hasGrid = true;
             }
 
+            if (hasGrid) AddBoardFrame(theme.FrameSprite, grid);
             AddButtonHolder(theme.ButtonHolderSprite);
         }
 
