@@ -9,6 +9,8 @@ namespace Themes
         [SerializeField] private Sprite[] _tileSprites;
         [SerializeField] private Sprite _background;
         [SerializeField] private Color _frameTint = Color.white;
+        [SerializeField] private Color _panelTint = Color.white;
+        [SerializeField] private Color _gridTint = Color.white;
         [SerializeField] private Color _effectColor = Color.white;
         [SerializeField] private AudioClip _lineClearClip;
         [SerializeField] private AudioClip _landingClip;
@@ -20,6 +22,8 @@ namespace Themes
         public Sprite[] TileSprites => _tileSprites;
         public Sprite Background => _background;
         public Color FrameTint => _frameTint;
+        public Color PanelTint => _panelTint;
+        public Color GridTint => _gridTint;
         public Color EffectColor => _effectColor;
         public AudioClip LineClearClip => _lineClearClip;
         public AudioClip LandingClip => _landingClip;
