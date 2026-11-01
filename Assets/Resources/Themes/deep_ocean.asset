@@ -57,7 +57,7 @@ MonoBehaviour:
   _chargePanelColor: {r: 0.06, g: 0.27, b: 0.32, a: 0.72}
   _chargeBorderColor: {r: 0.72, g: 0.95, b: 0.95, a: 0.75}
   _panelTint: {r: 1, g: 1, b: 1, a: 1}
-  _gridTint: {r: 0.6, g: 1, b: 0.92, a: 0.32}
+  _gridTint: {r: 0.65, g: 1, b: 0.95, a: 0.45}
   _effectColor: {r: 0.6, g: 1, b: 0.95, a: 1}
   _lineClearClip: {fileID: 8300000, guid: e1b4382d0deae4bf3a03b6c47bd4a987, type: 3}
   _landingClip: {fileID: 8300000, guid: da896ad55cc7b4153b0f31e7b81e1772, type: 3}
