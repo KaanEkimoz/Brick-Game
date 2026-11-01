@@ -65,6 +65,13 @@ namespace Leaderboard
             if (data.PlayerScore != null && !scores.Exists(score => score.userID == playerId))
                 scores.Add(data.PlayerScore);
 
+            // LoadUsers never calls back for an empty list.
+            if (scores.Count == 0)
+            {
+                done(new List<LeaderboardRow>());
+                return;
+            }
+
             string[] ids = new string[scores.Count];
             for (int i = 0; i < ids.Length; i++) ids[i] = scores[i].userID;
 
