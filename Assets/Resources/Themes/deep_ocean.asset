@@ -22,6 +22,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: d657913c6b6fc4a1d8dd7472da6b176c, type: 3}
   _background: {fileID: 21300000, guid: d9ec3a8921f434a0c913db34b39ddafb, type: 3}
   _gridSprite: {fileID: 21300000, guid: cccf0444927474a2ca885ded034045fb, type: 3}
+  _font: {fileID: 11400000, guid: c1e796525aecc40e7bb6f6c188fae67c, type: 2}
   _logo: {fileID: 21300000, guid: e9817cff9ba8f424aa08356acd9c310f, type: 3}
   _panelSprite: {fileID: 21300000, guid: da82cbd78f05a438f93a8bc577cfd38c, type: 3}
   _frameSprite: {fileID: 21300000, guid: 4686a0838b7da40288ab26c30fe950b1, type: 3}
