@@ -12,6 +12,7 @@ namespace Themes
         [SerializeField] private Sprite _gridSprite;
         [SerializeField] private TMP_FontAsset _font;
         [SerializeField] private Sprite _logo;
+        [SerializeField] private Texture2D[] _modeImages;
         [SerializeField] private Sprite _panelSprite;
         [SerializeField] private Sprite _frameSprite;
         [SerializeField] private Sprite _popupSprite;
@@ -47,6 +48,7 @@ namespace Themes
         public Sprite GridSprite => _gridSprite;
         public TMP_FontAsset Font => _font;
         public Sprite Logo => _logo;
+        public Texture2D[] ModeImages => _modeImages;
         public Sprite PanelSprite => _panelSprite;
         public Sprite FrameSprite => _frameSprite;
         public Sprite PopupSprite => _popupSprite;

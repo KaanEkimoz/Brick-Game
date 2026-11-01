@@ -128,6 +128,16 @@ namespace Themes
         public static Color PrimaryButtonText(Color standard) => _active != null ? _active.ButtonTextColor : standard;
         public static Color SecondaryButtonTint(Color standard) => _active != null ? _active.SecondaryButtonTint : standard;
 
+        /// <summary>The mode screen's art, matched by the standard image's name inside the file name.</summary>
+        public static Texture2D ModeImage(string imageName, Texture2D standard)
+        {
+            if (_active == null || _active.ModeImages == null) return standard;
+
+            foreach (Texture2D image in _active.ModeImages)
+                if (image != null && image.name.EndsWith(imageName)) return image;
+            return standard;
+        }
+
         /// <summary>The charge bar draws itself from code, so it asks for each color.</summary>
         public static Color ChargeColor(System.Func<GameTheme, Color> pick, Color standard)
         {

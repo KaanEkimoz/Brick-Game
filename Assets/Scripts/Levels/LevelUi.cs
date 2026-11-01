@@ -342,7 +342,7 @@ namespace Levels
 
         private void CreateModeSlice(Transform screen, string image, Vector2[] corners, Action onClick)
         {
-            DiagonalSlice slice = CreateSlice(screen, Resources.Load<Texture2D>(ModeImageFolder + image), corners, ModeImageTint);
+            DiagonalSlice slice = CreateSlice(screen, Themes.ThemeManager.ModeImage(image, Resources.Load<Texture2D>(ModeImageFolder + image)), corners, ModeImageTint);
             Button button = slice.gameObject.AddComponent<Button>();
             button.targetGraphic = slice;
             button.onClick.AddListener(() => onClick());
