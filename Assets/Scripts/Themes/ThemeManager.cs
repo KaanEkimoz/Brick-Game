@@ -126,8 +126,29 @@ namespace Themes
         public static Color PrimaryButtonText(Color standard) => _active != null ? _active.ButtonTextColor : standard;
         public static Color SecondaryButtonTint(Color standard) => _active != null ? _active.SecondaryButtonTint : standard;
 
+        /// <summary>The theme's font. LevelUi reads it in Awake, before the scene finishes loading.</summary>
+        public static TMP_FontAsset ThemeFont(TMP_FontAsset standard)
+        {
+            if (string.IsNullOrEmpty(Selected)) return standard;
+
+            GameTheme theme = Resources.Load<GameTheme>(ResourceFolder + Selected);
+            return theme != null && theme.Font != null ? theme.Font : standard;
+        }
+
+        // The plain font stays for long sentences in dialogs.
+        private static void ApplyFont(TMP_FontAsset font)
+        {
+            if (font == null) return;
+
+            foreach (TMP_Text label in Resources.FindObjectsOfTypeAll<TMP_Text>())
+                if (label.gameObject.scene.IsValid() && label.font != Levels.PlainFont.Asset)
+                    label.font = font;
+        }
+
         private static void ApplyText(GameTheme theme)
         {
+            ApplyFont(theme.Font);
+
             GameObject hud = GameObject.Find(HudObjectName);
             if (hud != null)
                 foreach (TMP_Text label in hud.GetComponentsInChildren<TMP_Text>(true))

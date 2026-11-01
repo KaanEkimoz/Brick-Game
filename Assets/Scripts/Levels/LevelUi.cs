@@ -79,7 +79,7 @@ namespace Levels
         private void Awake()
         {
             _session = GetComponent<LevelSession>();
-            _font = FindAnyObjectByType<ScoreController>(FindObjectsInactive.Include)?.scoreText.font;
+            _font = Themes.ThemeManager.ThemeFont(FindAnyObjectByType<ScoreController>(FindObjectsInactive.Include)?.scoreText.font);
             _plainFont = PlainFont.Asset;
             _panelFrame = Scene.PanelStyle.FindFrame();
             BuildCanvas();

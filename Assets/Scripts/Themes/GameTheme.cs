@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 namespace Themes
@@ -9,6 +10,7 @@ namespace Themes
         [SerializeField] private Sprite[] _tileSprites;
         [SerializeField] private Sprite _background;
         [SerializeField] private Sprite _gridSprite;
+        [SerializeField] private TMP_FontAsset _font;
         [SerializeField] private Sprite _logo;
         [SerializeField] private Sprite _panelSprite;
         [SerializeField] private Sprite _frameSprite;
@@ -37,6 +39,7 @@ namespace Themes
         public Sprite[] TileSprites => _tileSprites;
         public Sprite Background => _background;
         public Sprite GridSprite => _gridSprite;
+        public TMP_FontAsset Font => _font;
         public Sprite Logo => _logo;
         public Sprite PanelSprite => _panelSprite;
         public Sprite FrameSprite => _frameSprite;
