@@ -9,7 +9,10 @@ namespace Themes
         [SerializeField] private Sprite[] _tileSprites;
         [SerializeField] private Sprite _background;
         [SerializeField] private Sprite _gridSprite;
+        [SerializeField] private Sprite _logo;
+        [SerializeField] private Sprite[] _particleFrames;
         [SerializeField] private Color _frameTint = Color.white;
+        [SerializeField] private Color _buttonTint = Color.white;
         [SerializeField] private Color _panelTint = Color.white;
         [SerializeField] private Color _gridTint = Color.white;
         [SerializeField] private Color _effectColor = Color.white;
@@ -23,7 +26,10 @@ namespace Themes
         public Sprite[] TileSprites => _tileSprites;
         public Sprite Background => _background;
         public Sprite GridSprite => _gridSprite;
+        public Sprite Logo => _logo;
+        public Sprite[] ParticleFrames => _particleFrames;
         public Color FrameTint => _frameTint;
+        public Color ButtonTint => _buttonTint;
         public Color PanelTint => _panelTint;
         public Color GridTint => _gridTint;
         public Color EffectColor => _effectColor;

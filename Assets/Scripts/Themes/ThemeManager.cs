@@ -17,6 +17,9 @@ namespace Themes
         private const string ButtonSpriteName = "!TetrisGameSprites_3";
         private const string PanelSpriteName = "PanelBackground";
         private const string GridSpriteName = "Grid";
+        private const string LogoObjectName = "I_Logo";
+        private const string ExplosionTexturePrefix = "explosion_one";
+        private const string PieceLetters = "IJLOSTZ";
 
         /// <summary>The theme's asset name, or empty for the standard look.</summary>
         public static string Selected
@@ -44,6 +47,9 @@ namespace Themes
 
             ApplyVisuals(theme);
             ApplyEffects(theme.EffectColor);
+            ApplyParticles(theme.ParticleFrames);
+            foreach (NextPiece preview in FindAll<NextPiece>())
+                preview.OnImageInstantiated += image => ThemePreview(image, theme);
             ApplySounds(theme);
         }
 
@@ -59,6 +65,10 @@ namespace Themes
 
                 if (image.sprite.texture.name == BackgroundTextureName && theme.Background != null)
                     image.sprite = theme.Background;
+                else if (image.name == LogoObjectName && theme.Logo != null)
+                    image.sprite = theme.Logo;
+                else if (image.sprite.name == ButtonSpriteName)
+                    image.color = theme.ButtonTint;
                 else if (image.sprite.name == PanelSpriteName)
                     image.color = theme.PanelTint;
                 else if (image.sprite.name.StartsWith(FrameSpritePrefix) && image.sprite.name != ButtonSpriteName)
@@ -90,6 +100,32 @@ namespace Themes
             foreach (HardDropSparkEffect effect in FindAll<HardDropSparkEffect>()) effect.SetColor(color);
             foreach (HardDropStreakEffect effect in FindAll<HardDropStreakEffect>()) effect.SetColor(color);
             foreach (BombExplosionEffect effect in FindAll<BombExplosionEffect>()) effect.SetColor(color);
+        }
+
+        private static void ApplyParticles(Sprite[] frames)
+        {
+            if (frames == null || frames.Length == 0) return;
+
+            foreach (ParticleSystem particles in FindAll<ParticleSystem>())
+            {
+                ParticleSystem.TextureSheetAnimationModule sheet = particles.textureSheetAnimation;
+                if (!sheet.enabled || sheet.mode != ParticleSystemAnimationMode.Sprites || sheet.spriteCount == 0) continue;
+                if (sheet.GetSprite(0) == null || !sheet.GetSprite(0).texture.name.StartsWith(ExplosionTexturePrefix)) continue;
+
+                while (sheet.spriteCount > 0) sheet.RemoveSprite(0);
+                foreach (Sprite frame in frames) sheet.AddSprite(frame);
+            }
+        }
+
+        // The preview prefabs show the standard tiles, named after their piece.
+        private static void ThemePreview(GameObject preview, GameTheme theme)
+        {
+            foreach (Image image in preview.GetComponentsInChildren<Image>(true))
+            {
+                if (image.sprite == null || image.sprite.name.Length != 1) continue;
+                int index = PieceLetters.IndexOf(image.sprite.name[0]);
+                if (index >= 0 && index < theme.TileSprites.Length) image.sprite = theme.TileSprites[index];
+            }
         }
 
         private static void ApplySounds(GameTheme theme)
