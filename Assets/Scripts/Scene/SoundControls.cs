@@ -75,27 +75,27 @@ namespace Scene
             Place(rect, new Vector2(0f, SliderOffsetY), new Vector2(RowWidth, HandleSize + 4f));
 
             Image track = rect.Find("Background").GetComponent<Image>();
-            Fit(track, new Color(1f, 1f, 1f, OffAlpha));
+            Fit(track, new Color(1f, 1f, 1f, OffAlpha), TrackHeight);
             CenterTrack((RectTransform)track.transform);
 
             RectTransform fillArea = (RectTransform)rect.Find("Fill Area");
             CenterTrack(fillArea);
             fillArea.offsetMin = new Vector2(0f, fillArea.offsetMin.y);
             fillArea.offsetMax = new Vector2(0f, fillArea.offsetMax.y);
-            Fit(slider.fillRect.GetComponent<Image>(), accent);
+            Fit(slider.fillRect.GetComponent<Image>(), accent, TrackHeight);
 
             slider.handleRect.sizeDelta = new Vector2(HandleSize, 0f);
             RectTransform handleArea = (RectTransform)slider.handleRect.parent;
             handleArea.offsetMin = new Vector2(HandleSize * 0.5f, handleArea.offsetMin.y);
             handleArea.offsetMax = new Vector2(-HandleSize * 0.5f, handleArea.offsetMax.y);
-            Fit(slider.handleRect.GetComponent<Image>(), Color.white);
+            Fit(slider.handleRect.GetComponent<Image>(), Color.white, HandleSize);
         }
 
         private static void StyleSwitch(Transform row, float y, Color accent)
         {
             StyleLabel(row, y);
             Toggle toggle = row.GetComponentInChildren<Toggle>(true);
-            toggle.gameObject.AddComponent<ToggleSwitch>().Build(toggle, RowWidth, Pill, accent, OffAlpha);
+            toggle.gameObject.AddComponent<ToggleSwitch>().Build(toggle, RowWidth, accent, OffAlpha);
         }
 
         private static void CenterTrack(RectTransform rect)
@@ -106,10 +106,12 @@ namespace Scene
             rect.anchoredPosition = new Vector2(rect.anchoredPosition.x, 0f);
         }
 
-        private static void Fit(Image image, Color color)
+        /// <summary>Makes the image a pill of the given height, with fully round ends.</summary>
+        public static void Fit(Image image, Color color, float height)
         {
             image.sprite = Pill;
             image.type = Image.Type.Sliced;
+            image.pixelsPerUnitMultiplier = CircleSize / height;
             image.color = color;
         }
 

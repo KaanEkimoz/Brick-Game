@@ -19,7 +19,7 @@ namespace Scene
         private Color _offColor;
         private float _position;
 
-        public void Build(Toggle toggle, float rowWidth, Sprite pill, Color onColor, float offAlpha)
+        public void Build(Toggle toggle, float rowWidth, Color onColor, float offAlpha)
         {
             _toggle = toggle;
             _onColor = onColor;
@@ -36,17 +36,15 @@ namespace Scene
             rect.anchoredPosition = new Vector2((rowWidth - Width) * 0.5f, 0f);
 
             _track = GetComponent<Image>();
-            _track.sprite = pill;
-            _track.type = Image.Type.Sliced;
+            SoundControls.Fit(_track, _offColor, Height);
 
             Image knobImage = (Image)knob;
-            knobImage.sprite = pill;
-            knobImage.type = Image.Type.Sliced;
-            knobImage.color = Color.white;
+            float knobSize = Height - KnobInset * 2f;
+            SoundControls.Fit(knobImage, Color.white, knobSize);
             knobImage.canvasRenderer.SetAlpha(1f);
             _knob = knobImage.rectTransform;
             _knob.anchorMin = _knob.anchorMax = _knob.pivot = new Vector2(0.5f, 0.5f);
-            _knob.sizeDelta = Vector2.one * (Height - KnobInset * 2f);
+            _knob.sizeDelta = Vector2.one * knobSize;
 
             _position = toggle.isOn ? 1f : 0f;
             Show();
