@@ -6,7 +6,7 @@ namespace Scene
 {
     /// <summary>
     /// Plain sound rows for the Settings and Pause panels. The scene's slider and toggles keep
-    /// their wiring; only their look changes. Colors come from the panel's themed heading, so
+    /// their wiring; only their look changes. Colors come from the themed Settings title, so
     /// every theme fits without its own art.
     /// </summary>
     public static class SoundControls
@@ -14,6 +14,7 @@ namespace Scene
         private const string SoundPanelName = "SoundPanel";
         private const string HolderName = "Holder";
         private const string HeadingName = "T_SoundSettings";
+        private const string AccentTextName = "T_Settings";
         private const string VolumeName = "T_Volume";
         private const string MusicName = "T_BG_Music";
         private const string EffectsName = "T_SFX";
@@ -34,17 +35,25 @@ namespace Scene
 
         public static void RestyleAll()
         {
+            Color accent = FindAccent();
             foreach (Image panel in Resources.FindObjectsOfTypeAll<Image>())
                 if (panel.gameObject.scene.IsValid() && panel.name == SoundPanelName)
-                    Restyle(panel);
+                    Restyle(panel, accent);
         }
 
-        private static void Restyle(Image panel)
+        // The Settings title is the one heading every theme colors; others can stay white.
+        private static Color FindAccent()
+        {
+            foreach (TMP_Text text in Resources.FindObjectsOfTypeAll<TMP_Text>())
+                if (text.gameObject.scene.IsValid() && text.name == AccentTextName)
+                    return text.color;
+            return Color.cyan;
+        }
+
+        private static void Restyle(Image panel, Color accent)
         {
             Transform holder = panel.transform.Find(HolderName);
-            Transform heading = holder.Find(HeadingName);
-            Color accent = heading.GetComponent<TMP_Text>().color;
-            heading.gameObject.SetActive(false);
+            holder.Find(HeadingName).gameObject.SetActive(false);
             panel.enabled = false;
             Place((RectTransform)holder, Vector2.zero, ((RectTransform)holder).rect.size);
 
