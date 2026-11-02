@@ -307,8 +307,8 @@ namespace Board
             return count;
         }
 
-        /// <summary>Tiles that still have to go for the board to count as cleared.</summary>
-        public int CountClearableTiles() => CountTiles(TileKind.Normal) + CountTiles(TileKind.Gold);
+        /// <summary>Starting tiles that still have to go for the board to count as cleared.</summary>
+        public int CountClearableTiles() => CountTiles(TileKind.Goal) + CountTiles(TileKind.Gold);
 
         // === Persistence hooks ===
 

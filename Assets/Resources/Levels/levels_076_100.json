@@ -120,7 +120,7 @@
     {
       "id": 81,
       "name": "Blind Sweep",
-      "hint": "Clear the whole board with no preview. Use the O.",
+      "hint": "Clear the blue tiles with no preview. Use the O.",
       "objective": "ClearBoard",
       "target": 0,
       "rows": [
@@ -561,15 +561,15 @@
     {
       "id": 98,
       "name": "Demolition",
-      "hint": "Every 2nd piece is a bomb. Clear it all; gray stones stay.",
+      "hint": "Every 2nd piece is a bomb. Clear the blue; gray stones stay.",
       "objective": "ClearBoard",
       "target": 0,
       "rows": [
+        "XX#X.XX#XX",
         "XXXX.XXXXX",
         "XXXX.XXXXX",
         "XXXX.XXXXX",
-        "XXXX.XXXXX",
-        "XX#X.XX#XX"
+        "XXXX.XXXXX"
       ],
       "pieces": "IOJL",
       "abilityMode": "bomb",

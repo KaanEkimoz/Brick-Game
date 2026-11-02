@@ -23,8 +23,10 @@ namespace Levels
         private const char GoldChar = '*';
         private const char NormalChar = 'X';
         private const float SolidTilePixelsPerUnit = 4f; // Unity's white texture is 4x4
+        private const string ClearBoardObjective = "ClearBoard";
         private static readonly Color FixedTint = new Color(0.5f, 0.53f, 0.6f, 1f);
         private static readonly Color GoldTint = new Color(1f, 0.82f, 0.15f, 1f);
+        private static readonly Color GoalTint = new Color(0.45f, 0.8f, 1f, 1f);
 
         public static LevelSession Instance { get; private set; }
 
@@ -218,7 +220,7 @@ namespace Levels
 
         private bool IsObjectiveMet()
         {
-            if (Current.objective == "Gold" || Current.objective == "ClearBoard")
+            if (Current.objective == "Gold" || Current.objective == ClearBoardObjective)
                 return Progress == 0;
             return Progress >= Current.target;
         }
@@ -309,7 +311,8 @@ namespace Levels
                     char cell = row[x];
                     Vector2Int coords = new Vector2Int(x, y);
                     Sprite normal = palette[(x + y) % palette.Length];
-                    if (cell == NormalChar) _board.PlaceTile(coords, template, normal, Color.white, TileKind.Normal);
+                    if (cell == NormalChar && Current.objective == ClearBoardObjective) _board.PlaceTile(coords, template, _solidTile, GoalTint, TileKind.Goal);
+                    else if (cell == NormalChar) _board.PlaceTile(coords, template, normal, Color.white, TileKind.Normal);
                     else if (cell == FixedChar) _board.PlaceTile(coords, template, _solidTile, FixedTint, TileKind.Fixed);
                     else if (cell == GoldChar) _board.PlaceTile(coords, template, _solidTile, GoldTint, TileKind.Gold);
                 }

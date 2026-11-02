@@ -33,8 +33,8 @@ as `{ "levels": [ ... ] }`. Every field below is required on every level (JsonUt
   A row counts as full when all 10 cells are occupied; clearing it removes everything
   except fixed tiles. Tiles above fall until blocked.
 - A gold tile behaves like a normal tile. The `Gold` objective is won when every `*` is gone.
-- `ClearBoard` is won when only `#` tiles remain on the board, so tiles the player placed
-  must also be gone.
+- `ClearBoard` is won when every starting `X` and `*` is gone. Its `X` tiles show as blue, and
+  tiles the player placed never count.
 
 ## Abilities
 

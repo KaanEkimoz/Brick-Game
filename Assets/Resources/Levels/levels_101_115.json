@@ -56,7 +56,7 @@
     {
       "id": 103,
       "name": "Clean Slate",
-      "hint": "Leave nothing behind. Plan every last tile.",
+      "hint": "Every blue tile must go. Plan your stack.",
       "objective": "ClearBoard",
       "target": 0,
       "rows": [
@@ -209,7 +209,7 @@
     {
       "id": 109,
       "name": "Last Pieces",
-      "hint": "30 pieces to clear it all. Waste none.",
+      "hint": "30 pieces to clear the blue tiles. Waste none.",
       "objective": "ClearBoard",
       "target": 0,
       "rows": [
@@ -305,7 +305,7 @@
     {
       "id": 113,
       "name": "Dark Blast",
-      "hint": "Every 2nd piece is a bomb, and no ghost. Clear it all.",
+      "hint": "Every 2nd piece is a bomb, and no ghost. Clear the blue.",
       "objective": "ClearBoard",
       "target": 0,
       "rows": [

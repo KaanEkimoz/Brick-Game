@@ -284,7 +284,7 @@ namespace Levels
                 case "Tetrises": return Objective("Quads: {0}/{1}", value, level.target);
                 case "Combo": return Objective("Combo: {0}/{1}", value, level.target);
                 case "Gold": return Objective("Gold left: {0}", value, level.target);
-                default: return Loc.F("Tiles left: {0}", value);
+                default: return Loc.F("Blue tiles left: {0}", value);
             }
         }
 
@@ -551,7 +551,7 @@ namespace Levels
                 case "Tetrises": return level.target == 1 ? Loc.T("Clear a Quad") : Loc.F("Clear {0} Quads", level.target);
                 case "Combo": return Loc.F("Clear lines {0} pieces in a row", level.target);
                 case "Gold": return Loc.T("Clear all the gold");
-                default: return Loc.T("Clear the board");
+                default: return Loc.T("Clear the blue tiles");
             }
         }
 
