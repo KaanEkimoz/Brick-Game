@@ -60,8 +60,8 @@ namespace Scene
             Transform volume = holder.Find(VolumeName);
             StyleLabel(volume, VolumeY);
             StyleSlider(volume.GetComponentInChildren<Slider>(true), accent);
-            StyleSwitch(holder.Find(MusicName), MusicY, accent);
-            StyleSwitch(holder.Find(EffectsName), EffectsY, accent);
+            StyleSwitch(holder.Find(MusicName), MusicY);
+            StyleSwitch(holder.Find(EffectsName), EffectsY);
         }
 
         private static void StyleLabel(Transform row, float y)
@@ -100,11 +100,11 @@ namespace Scene
             Fit(slider.handleRect.GetComponent<Image>(), Color.white, HandleSize);
         }
 
-        private static void StyleSwitch(Transform row, float y, Color accent)
+        private static void StyleSwitch(Transform row, float y)
         {
             StyleLabel(row, y);
             Toggle toggle = row.GetComponentInChildren<Toggle>(true);
-            toggle.gameObject.AddComponent<ToggleSwitch>().Build(toggle, RowWidth, accent, OffAlpha);
+            toggle.gameObject.AddComponent<ToggleSwitch>().Build(toggle, RowWidth);
         }
 
         private static void CenterTrack(RectTransform rect)
