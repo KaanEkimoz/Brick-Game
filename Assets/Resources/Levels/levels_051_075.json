@@ -80,7 +80,7 @@
     {
       "id": 55,
       "name": "Spotless",
-      "hint": "Clear the board fast. Leave nothing behind.",
+      "hint": "Clear the blue tiles fast.",
       "objective": "ClearBoard",
       "target": 0,
       "rows": [
@@ -438,13 +438,15 @@
     {
       "id": 72,
       "name": "Shadow Sweep",
-      "hint": "No ghost. Clear the leftover tiles carefully.",
+      "hint": "No ghost. Clear the blue tiles carefully.",
       "objective": "ClearBoard",
       "target": 0,
       "rows": [
-        "XXXX..XXXX",
-        "XXXX..XXXX",
-        "XXXX..XXXX"
+        "XXX..XXXXX",
+        "XXX..XXXXX",
+        "XXX..XXXXX",
+        "XXX..XXXXX",
+        "XXX..XXXXX"
       ],
       "pieces": "IOJL",
       "abilityMode": "none",

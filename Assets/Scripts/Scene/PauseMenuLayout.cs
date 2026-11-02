@@ -29,7 +29,7 @@ namespace Scene
         private const float HowToPlayY = 28f;
         private const float SoundY = -188f;
         private const float RestoreY = -432f;
-        private const float GuideBackY = -420f;
+        private const float GuideBackY = -385f;
         private const float SoundScale = 1.85f;
 
         private const float TitleFontSize = 58f;
@@ -197,6 +197,7 @@ namespace Scene
             _guideRows = rows.transform;
 
             Button back = CreateButton(_guide.transform, "Back", new Vector2(0f, GuideBackY), SecondarySize, SecondaryFontSize, true);
+            PanelStyle.MakeBackLink(back);
             back.onClick.AddListener(() => _guide.SetActive(false));
         }
 

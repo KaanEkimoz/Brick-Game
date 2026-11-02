@@ -38,7 +38,7 @@
     {
       "id": 8,
       "name": "A ordenar",
-      "hint": "Pon tres piezas largas de pie en el hueco y limpia el tablero."
+      "hint": "Pon tres piezas largas en el hueco para limpiar lo azul."
     },
     {
       "id": 9,
@@ -68,17 +68,17 @@
     {
       "id": 14,
       "name": "Pozo profundo",
-      "hint": "Suelta cuadrados en el pozo hasta que no quede nada."
+      "hint": "Suelta cuadrados en el pozo hasta quitar lo azul."
     },
     {
       "id": 15,
       "name": "Escalones",
-      "hint": "Cuadrados y piezas largas llenan cada escalón."
+      "hint": "Cuadrados y piezas largas llenan cada escalón azul."
     },
     {
       "id": 16,
       "name": "Gran sonrisa",
-      "hint": "Llena el cuenco de la sonrisa para limpiar el tablero."
+      "hint": "Llena la sonrisa para borrar los bloques azules."
     },
     {
       "id": 17,
@@ -103,7 +103,7 @@
     {
       "id": 21,
       "name": "Copa de piedra",
-      "hint": "Limpia las fichas normales. Las piedras grises pueden quedar."
+      "hint": "Limpia los bloques azules. Las piedras grises se quedan."
     },
     {
       "id": 22,
@@ -183,7 +183,7 @@
     {
       "id": 37,
       "name": "Barrido limpio",
-      "hint": "Vacía el tablero en 30 piezas. Llena ambos huecos."
+      "hint": "Limpia lo azul en 30 piezas. Llena ambos huecos."
     },
     {
       "id": 38,
@@ -223,7 +223,7 @@
     {
       "id": 45,
       "name": "Pack de seis",
-      "hint": "El parche tapa seis huecos a la vez. Luego limpia el tablero."
+      "hint": "El parche llena seis huecos. Luego limpia lo azul."
     },
     {
       "id": 46,
@@ -273,7 +273,7 @@
     {
       "id": 55,
       "name": "Impecable",
-      "hint": "Limpia el tablero rápido. No dejes nada atrás."
+      "hint": "Limpia los bloques azules rápido."
     },
     {
       "id": 56,
@@ -358,7 +358,7 @@
     {
       "id": 72,
       "name": "Barrido en sombras",
-      "hint": "Sin pieza fantasma. Limpia con cuidado las fichas restantes."
+      "hint": "Sin fantasma. Limpia lo azul con cuidado."
     },
     {
       "id": 73,
@@ -403,7 +403,7 @@
     {
       "id": 81,
       "name": "Barrido a ciegas",
-      "hint": "Limpia todo el tablero sin vista previa. Usa la O."
+      "hint": "Limpia lo azul sin vista previa. Usa la O."
     },
     {
       "id": 82,
@@ -488,7 +488,7 @@
     {
       "id": 98,
       "name": "Demolición",
-      "hint": "Cada 2.ª pieza es una bomba. Límpialo todo; las piedras quedan."
+      "hint": "Cada 2.ª pieza es bomba. Limpia lo azul; lo gris queda."
     },
     {
       "id": 99,
@@ -513,7 +513,7 @@
     {
       "id": 103,
       "name": "Borrón y cuenta",
-      "hint": "No dejes nada. Planea cada pieza."
+      "hint": "Todo lo azul debe irse. Planea tu pila."
     },
     {
       "id": 104,
@@ -543,7 +543,7 @@
     {
       "id": 109,
       "name": "Últimas piezas",
-      "hint": "30 piezas para limpiarlo todo. No malgastes."
+      "hint": "30 piezas para limpiar lo azul. No malgastes."
     },
     {
       "id": 110,
@@ -563,7 +563,7 @@
     {
       "id": 113,
       "name": "Explosión oscura",
-      "hint": "Cada 2.ª pieza es bomba, sin fantasma. Límpialo."
+      "hint": "Cada 2.ª pieza es bomba, sin fantasma. Limpia lo azul."
     },
     {
       "id": 114,

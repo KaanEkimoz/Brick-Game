@@ -281,8 +281,8 @@
    "text": "Tüm altınları temizle"
   },
   {
-   "en": "Clear the board",
-   "text": "Tahtayı temizle"
+   "en": "Clear the blue tiles",
+   "text": "Mavi taşları temizle"
   },
   {
    "en": "NEW BEST!",
@@ -369,8 +369,8 @@
    "text": "Süre: {0}"
   },
   {
-   "en": "Tiles left: {0}",
-   "text": "Kalan blok: {0}"
+   "en": "Blue tiles left: {0}",
+   "text": "Kalan mavi taş: {0}"
   },
   {
    "en": "Could not load the leaderboard",

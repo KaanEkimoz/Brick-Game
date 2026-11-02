@@ -23,8 +23,13 @@ namespace Levels
         private const char GoldChar = '*';
         private const char NormalChar = 'X';
         private const float SolidTilePixelsPerUnit = 4f; // Unity's white texture is 4x4
+        private const string ClearBoardObjective = "ClearBoard";
+        private const int GoalTileSize = 32;
+        private const int GoalTileEdge = 3;
         private static readonly Color FixedTint = new Color(0.5f, 0.53f, 0.6f, 1f);
         private static readonly Color GoldTint = new Color(1f, 0.82f, 0.15f, 1f);
+        private static readonly Color GoalTint = new Color(0.45f, 0.8f, 1f, 1f);
+        private static readonly Color GoalEdgeShade = new Color(0.45f, 0.5f, 0.6f, 1f);
 
         public static LevelSession Instance { get; private set; }
 
@@ -44,6 +49,7 @@ namespace Levels
         private GameObject _nextPiece;
 
         private Sprite _solidTile;
+        private Sprite _goalTile;
         private bool _layoutPending;
         private int _linesCleared;
         private int _tetrises;
@@ -218,7 +224,7 @@ namespace Levels
 
         private bool IsObjectiveMet()
         {
-            if (Current.objective == "Gold" || Current.objective == "ClearBoard")
+            if (Current.objective == "Gold" || Current.objective == ClearBoardObjective)
                 return Progress == 0;
             return Progress >= Current.target;
         }
@@ -309,10 +315,34 @@ namespace Levels
                     char cell = row[x];
                     Vector2Int coords = new Vector2Int(x, y);
                     Sprite normal = palette[(x + y) % palette.Length];
-                    if (cell == NormalChar) _board.PlaceTile(coords, template, normal, Color.white, TileKind.Normal);
+                    if (cell == NormalChar && Current.objective == ClearBoardObjective) _board.PlaceTile(coords, template, GoalSprite, GoalTint, TileKind.Goal);
+                    else if (cell == NormalChar) _board.PlaceTile(coords, template, normal, Color.white, TileKind.Normal);
                     else if (cell == FixedChar) _board.PlaceTile(coords, template, _solidTile, FixedTint, TileKind.Fixed);
                     else if (cell == GoldChar) _board.PlaceTile(coords, template, _solidTile, GoldTint, TileKind.Gold);
                 }
+            }
+        }
+
+        // A shaded edge keeps neighbouring goal tiles apart, which a flat color would merge.
+        private Sprite GoalSprite
+        {
+            get
+            {
+                if (_goalTile != null) return _goalTile;
+
+                Texture2D texture = new Texture2D(GoalTileSize, GoalTileSize, TextureFormat.RGBA32, false);
+                texture.filterMode = FilterMode.Point;
+                for (int y = 0; y < GoalTileSize; y++)
+                {
+                    for (int x = 0; x < GoalTileSize; x++)
+                    {
+                        bool edge = Mathf.Min(x, y, GoalTileSize - 1 - x, GoalTileSize - 1 - y) < GoalTileEdge;
+                        texture.SetPixel(x, y, edge ? GoalEdgeShade : Color.white);
+                    }
+                }
+                texture.Apply();
+                _goalTile = Sprite.Create(texture, new Rect(0f, 0f, GoalTileSize, GoalTileSize), new Vector2(0.5f, 0.5f), GoalTileSize);
+                return _goalTile;
             }
         }
 

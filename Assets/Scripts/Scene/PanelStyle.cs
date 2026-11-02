@@ -13,6 +13,8 @@ namespace Scene
         public const string FramePanelName = "SettingsPanel";
         public const string ButtonName = "B_Play";
 
+        private const string BackPrefix = "< ";
+
         private const float MinFontSizeRatio = 0.55f;
         private const float ButtonGlowRatio = 0.16f; // the button sprite's glow, per side
 
@@ -41,6 +43,18 @@ namespace Scene
             Color color = frame.color;
             color.a = 1f;
             panel.color = color;
+        }
+
+        /// <summary>Turns a button into the plain "< Back" text every panel leaves through.</summary>
+        public static void MakeBackLink(Button back)
+        {
+            back.transition = Selectable.Transition.None;
+            foreach (Animator animator in back.GetComponentsInChildren<Animator>(true)) animator.enabled = false;
+            foreach (Image image in back.GetComponentsInChildren<Image>(true)) image.color = Color.clear;
+
+            TMP_Text label = back.GetComponentInChildren<TMP_Text>(true);
+            if (!label.text.StartsWith(BackPrefix)) label.text = BackPrefix + label.text;
+            label.color = Color.white;
         }
 
         /// <summary>Keeps a heading or button label on one line, shrinking long translations.</summary>

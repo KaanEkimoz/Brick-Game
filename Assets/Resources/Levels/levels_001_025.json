@@ -141,7 +141,7 @@
     {
       "id": 8,
       "name": "Tidy Up",
-      "hint": "Stand three long pieces in the gap to clear the board.",
+      "hint": "Stand three long pieces in the gap to clear the blue tiles.",
       "objective": "ClearBoard",
       "target": 0,
       "rows": [
@@ -264,7 +264,7 @@
     {
       "id": 14,
       "name": "Deep Well",
-      "hint": "Drop squares into the well until nothing is left.",
+      "hint": "Drop squares into the well until the blue tiles are gone.",
       "objective": "ClearBoard",
       "target": 0,
       "rows": [
@@ -289,7 +289,7 @@
     {
       "id": 15,
       "name": "Stair Steps",
-      "hint": "Squares and long pieces fill every step.",
+      "hint": "Squares and long pieces fill every blue step.",
       "objective": "ClearBoard",
       "target": 0,
       "rows": [
@@ -312,7 +312,7 @@
     {
       "id": 16,
       "name": "Big Smile",
-      "hint": "Fill the bowl of the smile to wipe the board.",
+      "hint": "Fill the bowl of the smile to wipe the blue tiles.",
       "objective": "ClearBoard",
       "target": 0,
       "rows": [
@@ -423,7 +423,7 @@
     {
       "id": 21,
       "name": "Stone Cup",
-      "hint": "Clear every normal tile. Gray stones may stay.",
+      "hint": "Clear every blue tile. Gray stones stay.",
       "objective": "ClearBoard",
       "target": 0,
       "rows": [

@@ -14,7 +14,7 @@ namespace Levels
         private const string GameRemoveAdsName = "B_RemoveAds_Game";
         private const string GamePauseName = "B_Pause";
         private const float GameIconStep = 0.075f; // screen share between the left column's icons
-        private const float PremiumPanelHeight = 980f;
+        private const float PremiumPanelHeight = 1060f;
         private const float PremiumFeatureHeight = 74f;
         private const float PremiumHeadingY = 370f;
         private const float PremiumFeaturesY = 225f;
@@ -23,8 +23,8 @@ namespace Levels
         private const float PremiumLockFeaturesY = 185f;
         private const float PremiumActionY = -80f;
         private const float PremiumStatusY = -185f;
-        private const float PremiumRestoreY = -275f;
-        private const float PremiumBackY = -375f;
+        private const float PremiumRestoreY = -255f;
+        private const float PremiumBackY = -345f;
 
         private static readonly string[] PremiumFeatures = { "Remove all ads", "100 more levels", "All themes unlocked" };
 
@@ -144,7 +144,7 @@ namespace Levels
                 Place((RectTransform)restore.transform, new Vector2(0f, PremiumRestoreY), WinButtonSize);
             }
 
-            Button back = CreateMenuStyleButton(panel, "Back", ClosePremium);
+            Button back = CreateBackLink(panel, ClosePremium);
             Place((RectTransform)back.transform, new Vector2(0f, PremiumBackY), WinButtonSize);
 
             if (purchases == null) return;

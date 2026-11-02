@@ -38,7 +38,7 @@
     {
       "id": 8,
       "name": "Toparlanma",
-      "hint": "Üç uzun parçayı boşluğa dik yerleştir, tahtayı temizle."
+      "hint": "Mavi taşları temizlemek için boşluğa üç uzun parça dik."
     },
     {
       "id": 9,
@@ -68,17 +68,17 @@
     {
       "id": 14,
       "name": "Derin Kuyu",
-      "hint": "Hiçbir şey kalmayana dek kareleri kuyuya bırak."
+      "hint": "Mavi taşlar bitene kadar kuyuya kare at."
     },
     {
       "id": 15,
       "name": "Basamaklar",
-      "hint": "Kareler ve uzun parçalar her basamağı doldurur."
+      "hint": "Kareler ve uzun parçalar mavi basamakları doldurur."
     },
     {
       "id": 16,
       "name": "Kocaman Gülümseme",
-      "hint": "Gülümsemenin kasesini doldurup tahtayı temizle."
+      "hint": "Mavi taşları silmek için gülümsemenin içini doldur."
     },
     {
       "id": 17,
@@ -103,7 +103,7 @@
     {
       "id": 21,
       "name": "Taş Kupa",
-      "hint": "Tüm normal karoları temizle. Gri taşlar kalabilir."
+      "hint": "Tüm mavi taşları temizle. Gri taşlar kalır."
     },
     {
       "id": 22,
@@ -183,7 +183,7 @@
     {
       "id": 37,
       "name": "Temiz Sayfa",
-      "hint": "30 parçada tahtayı boşalt. İki boşluğu da doldur."
+      "hint": "30 parçada mavi taşları temizle. İki boşluğu da doldur."
     },
     {
       "id": 38,
@@ -223,7 +223,7 @@
     {
       "id": 45,
       "name": "Altılı Paket",
-      "hint": "Yama altı deliği birden doldurur. Sonra tahtayı temizle."
+      "hint": "Yama altı deliği birden doldurur. Sonra mavileri temizle."
     },
     {
       "id": 46,
@@ -273,7 +273,7 @@
     {
       "id": 55,
       "name": "Lekesiz",
-      "hint": "Tahtayı hızlıca temizle. Geride hiçbir şey bırakma."
+      "hint": "Mavi taşları hızlıca temizle."
     },
     {
       "id": 56,
@@ -358,7 +358,7 @@
     {
       "id": 72,
       "name": "Gölge Süpürme",
-      "hint": "Hayalet parça yok. Kalan karoları dikkatle temizle."
+      "hint": "Hayalet yok. Mavi taşları dikkatle temizle."
     },
     {
       "id": 73,
@@ -403,7 +403,7 @@
     {
       "id": 81,
       "name": "Kör Süpürme",
-      "hint": "Tüm tahtayı önizleme olmadan temizle. O'yu kullan."
+      "hint": "Sıradakini görmeden mavileri temizle. O'yu kullan."
     },
     {
       "id": 82,
@@ -488,7 +488,7 @@
     {
       "id": 98,
       "name": "Yıkım",
-      "hint": "Her 2. parça bomba. Hepsini temizle; gri taşlar kalır."
+      "hint": "Her 2. parça bomba. Mavileri temizle; griler kalır."
     },
     {
       "id": 99,
@@ -513,7 +513,7 @@
     {
       "id": 103,
       "name": "Temiz Sayfa",
-      "hint": "Geride hiçbir şey bırakma. Her taşı planla."
+      "hint": "Tüm mavi taşlar gitmeli. Yığınını planla."
     },
     {
       "id": 104,
@@ -543,7 +543,7 @@
     {
       "id": 109,
       "name": "Son Parçalar",
-      "hint": "Hepsini temizlemek için 30 parça. Boşa harcama."
+      "hint": "Mavi taşlar için 30 parça. Boşa harcama."
     },
     {
       "id": 110,
@@ -563,7 +563,7 @@
     {
       "id": 113,
       "name": "Karanlık Patlama",
-      "hint": "Her 2. parça bomba, hayalet yok. Hepsini temizle."
+      "hint": "Her 2. parça bomba, hayalet yok. Mavileri temizle."
     },
     {
       "id": 114,

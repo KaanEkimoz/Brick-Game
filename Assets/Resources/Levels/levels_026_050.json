@@ -243,7 +243,7 @@
     {
       "id": 37,
       "name": "Clean Sweep",
-      "hint": "Empty the board in 30 pieces. Fill both gaps.",
+      "hint": "Clear the blue tiles in 30 pieces. Fill both gaps.",
       "objective": "ClearBoard",
       "target": 0,
       "rows": [
@@ -416,7 +416,7 @@
     {
       "id": 45,
       "name": "Six Pack",
-      "hint": "Patch fills six holes at once. Then clear the board.",
+      "hint": "Patch fills six holes at once. Then clear the blue tiles.",
       "objective": "ClearBoard",
       "target": 0,
       "rows": [
@@ -425,7 +425,7 @@
       ],
       "pieces": "IO",
       "abilityMode": "patch",
-      "abilityEvery": 2,
+      "abilityEvery": 3,
       "noLineClears": false,
       "dropLevel": 8,
       "pieceLimit": 0,

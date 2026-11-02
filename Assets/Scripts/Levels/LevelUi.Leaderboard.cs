@@ -21,7 +21,7 @@ namespace Levels
         private const float LeaderboardResetY = 290f;
         private const float LeaderboardRowsY = 225f;
         private const float LeaderboardRowHeight = 66f;
-        private const float LeaderboardBackY = -560f;
+        private const float LeaderboardBackY = -545f;
         private const float ToggleOptionOffset = 148f; // half of the visible track, inside its glow
         private const float PeriodFontSize = 25f;
         private const float PeriodLineHeight = 5f;
@@ -82,7 +82,7 @@ namespace Levels
             CreatePeriodTab(panel, board, LeaderboardPeriod.Weekly, "Weekly", PeriodSpacing, period);
             CreateResetLabel(panel, period);
 
-            Button back = CreateMenuStyleButton(panel, "Back", CloseScreen);
+            Button back = CreateBackLink(panel, CloseScreen);
             Place((RectTransform)back.transform, new Vector2(0f, LeaderboardBackY), WinButtonSize);
 
             TextMeshProUGUI status = CreatePlainText(panel, Loc.T("Loading..."), 40f, Color.white);

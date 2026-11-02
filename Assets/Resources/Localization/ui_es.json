@@ -281,8 +281,8 @@
    "text": "Limpia todo el oro"
   },
   {
-   "en": "Clear the board",
-   "text": "Limpia el tablero"
+   "en": "Clear the blue tiles",
+   "text": "Limpia los bloques azules"
   },
   {
    "en": "NEW BEST!",
@@ -369,8 +369,8 @@
    "text": "Tiempo: {0}"
   },
   {
-   "en": "Tiles left: {0}",
-   "text": "Bloques restantes: {0}"
+   "en": "Blue tiles left: {0}",
+   "text": "Bloques azules: {0}"
   },
   {
    "en": "Could not load the leaderboard",

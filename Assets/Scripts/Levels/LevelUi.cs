@@ -18,6 +18,8 @@ namespace Levels
         private const string PlayButtonName = "B_Play";
         private const string ExtendedButtonName = "B_PlayExtended";
         private const string SettingsIconName = "B_SettingsIcon";
+        private const string SettingsBackName = "B_Back";
+        private const float SettingsBackY = -335f;
         private const string LanguageIconPath = "Icons/icon_language_neon";
         private const string MenuButtonText = "Play";
         private const string ModeImageFolder = "ModeSelect/";
@@ -92,6 +94,19 @@ namespace Levels
             gameObject.AddComponent<LevelsScoreHud>();
             gameObject.AddComponent<Gameplay.BonusCollectibles>();
             BuildObjectiveLine();
+        }
+
+        // After the scene labels are translated, which replaces their text.
+        private void Start()
+        {
+            foreach (Button button in Resources.FindObjectsOfTypeAll<Button>())
+            {
+                if (button.name != SettingsBackName || button.transform.parent.name != Scene.PanelStyle.FramePanelName) continue;
+                Scene.PanelStyle.MakeBackLink(button);
+                RectTransform rect = (RectTransform)button.transform;
+                rect.anchoredPosition = new Vector2(rect.anchoredPosition.x, SettingsBackY);
+            }
+            Scene.SoundControls.RestyleAll();
         }
 
         private void OnEnable()
@@ -183,7 +198,7 @@ namespace Levels
 
             Language[] languages = (Language[])Enum.GetValues(typeof(Language));
             int rows = languages.Length + 1;
-            float height = LanguageHeadingHeight + rows * LanguageRowHeight + LanguageRowHeight * 0.5f;
+            float height = LanguageHeadingHeight + rows * LanguageRowHeight + LanguageRowHeight * 0.8f;
             RectTransform panel = CreatePanel(screen, new Vector2(WinPanelSize.x, height));
 
             float top = height * 0.5f;
@@ -195,7 +210,7 @@ namespace Levels
                 float y = top - LanguageHeadingHeight - LanguageRowHeight * (i + 0.5f);
                 Button row = i < languages.Length
                     ? CreateLanguageRow(panel, languages[i])
-                    : CreateBackLink(panel);
+                    : CreateBackLink(panel, CloseScreen);
                 Place((RectTransform)row.transform, new Vector2(0f, y), WinButtonSize);
             }
         }
@@ -209,17 +224,11 @@ namespace Levels
             return row;
         }
 
-        // Plain text, so the way out does not read as one more language.
-        private Button CreateBackLink(Transform panel)
+        // Plain text, so the way out does not read as one more choice.
+        private Button CreateBackLink(Transform panel, Action onClick)
         {
-            Button back = CreateMenuStyleButton(panel, "Back", CloseScreen);
-            back.transition = Selectable.Transition.None;
-            foreach (Animator animator in back.GetComponentsInChildren<Animator>(true)) animator.enabled = false;
-            foreach (Image image in back.GetComponentsInChildren<Image>(true)) image.color = Color.clear;
-
-            TMP_Text label = back.GetComponentInChildren<TMP_Text>(true);
-            label.text = "< " + label.text;
-            label.color = Color.white;
+            Button back = CreateMenuStyleButton(panel, "Back", onClick);
+            Scene.PanelStyle.MakeBackLink(back);
             return back;
         }
 
@@ -275,7 +284,7 @@ namespace Levels
                 case "Tetrises": return Objective("Quads: {0}/{1}", value, level.target);
                 case "Combo": return Objective("Combo: {0}/{1}", value, level.target);
                 case "Gold": return Objective("Gold left: {0}", value, level.target);
-                default: return Loc.F("Tiles left: {0}", value);
+                default: return Loc.F("Blue tiles left: {0}", value);
             }
         }
 
@@ -542,7 +551,7 @@ namespace Levels
                 case "Tetrises": return level.target == 1 ? Loc.T("Clear a Quad") : Loc.F("Clear {0} Quads", level.target);
                 case "Combo": return Loc.F("Clear lines {0} pieces in a row", level.target);
                 case "Gold": return Loc.T("Clear all the gold");
-                default: return Loc.T("Clear the board");
+                default: return Loc.T("Clear the blue tiles");
             }
         }
 

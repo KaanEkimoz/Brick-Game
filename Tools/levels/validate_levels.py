@@ -28,7 +28,7 @@ BOMB_SEARCH_WIDTH = 400    # beam width of the bomb-level winnability proof
 PATCH_CELLS = 6
 TOP_ROW = 20               # a piece resting at or above this row tops out
 
-EMPTY, NORMAL, FIXED, GOLD = 0, 1, 2, 3
+EMPTY, NORMAL, FIXED, GOLD, GOAL = 0, 1, 2, 3, 4
 CELL = {".": EMPTY, "X": NORMAL, "#": FIXED, "*": GOLD}
 SHAPES = {
     "O": ((0, 0), (1, 0), (0, 1), (1, 1)),
@@ -184,7 +184,15 @@ class Board:
         if objective == "Tetrises": return self.tetrises >= target
         if objective == "Combo": return self.best_combo >= target
         if objective == "Gold": return self.count(GOLD) == 0
-        return self.count(NORMAL, GOLD) == 0
+        return self.count(GOAL, GOLD) == 0
+
+
+def starting_board(level):
+    """Marks a ClearBoard level's starting tiles: tiles the player places never count."""
+    board = Board(level["rows"])
+    if level["objective"] == "ClearBoard":
+        board.cells = [[GOAL if cell == NORMAL else cell for cell in row] for row in board.cells]
+    return board
 
 
 def abilities_for(level, piece_number):
@@ -213,7 +221,7 @@ def can_win_within_two(level):
     """Bag order is ignored, so this also rejects levels that only a lucky deal wins this fast."""
     if cannot_finish_in_two(level):
         return 0
-    start = Board(level["rows"])
+    start = starting_board(level)
     second_ply = {}
     for board in moves(start, level, 1):
         if board.won(level):
@@ -240,7 +248,7 @@ def cannot_finish_in_two(level):
 def solve_bomb_level(level):
     """Fewest bombs found to win a level where every piece is a bomb (a beam search, so an upper
     bound). Bag order and tile choice do not matter here, so a result is a proof of winnability."""
-    start = Board(level["rows"])
+    start = starting_board(level)
     frontier = [start]
     if start.won(level):
         return 0
@@ -260,8 +268,8 @@ def solve_bomb_level(level):
 def bomb_rank(board, level):
     if level["objective"] == "AbilityCells":
         return -board.ability_cells
-    tiles = board.count(NORMAL, GOLD)
-    height = max((y for y in range(BOARD_HEIGHT) if any(c in (NORMAL, GOLD) for c in board.cells[y])), default=0)
+    tiles = board.count(GOAL, GOLD)
+    height = max((y for y in range(BOARD_HEIGHT) if any(c in (GOAL, GOLD) for c in board.cells[y])), default=0)
     return tiles * 3 + height
 
 
