@@ -144,7 +144,7 @@ namespace Levels
                 Place((RectTransform)restore.transform, new Vector2(0f, PremiumRestoreY), WinButtonSize);
             }
 
-            Button back = CreateMenuStyleButton(panel, "Back", ClosePremium);
+            Button back = CreateBackLink(panel, ClosePremium);
             Place((RectTransform)back.transform, new Vector2(0f, PremiumBackY), WinButtonSize);
 
             if (purchases == null) return;

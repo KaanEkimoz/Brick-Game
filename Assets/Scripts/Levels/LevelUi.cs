@@ -18,6 +18,7 @@ namespace Levels
         private const string PlayButtonName = "B_Play";
         private const string ExtendedButtonName = "B_PlayExtended";
         private const string SettingsIconName = "B_SettingsIcon";
+        private const string SettingsBackName = "B_Back";
         private const string LanguageIconPath = "Icons/icon_language_neon";
         private const string MenuButtonText = "Play";
         private const string ModeImageFolder = "ModeSelect/";
@@ -92,6 +93,14 @@ namespace Levels
             gameObject.AddComponent<LevelsScoreHud>();
             gameObject.AddComponent<Gameplay.BonusCollectibles>();
             BuildObjectiveLine();
+        }
+
+        // After the scene labels are translated, which replaces their text.
+        private void Start()
+        {
+            foreach (Button button in Resources.FindObjectsOfTypeAll<Button>())
+                if (button.gameObject.scene.IsValid() && button.name == SettingsBackName)
+                    Scene.PanelStyle.MakeBackLink(button);
         }
 
         private void OnEnable()
@@ -195,7 +204,7 @@ namespace Levels
                 float y = top - LanguageHeadingHeight - LanguageRowHeight * (i + 0.5f);
                 Button row = i < languages.Length
                     ? CreateLanguageRow(panel, languages[i])
-                    : CreateBackLink(panel);
+                    : CreateBackLink(panel, CloseScreen);
                 Place((RectTransform)row.transform, new Vector2(0f, y), WinButtonSize);
             }
         }
@@ -209,17 +218,11 @@ namespace Levels
             return row;
         }
 
-        // Plain text, so the way out does not read as one more language.
-        private Button CreateBackLink(Transform panel)
+        // Plain text, so the way out does not read as one more choice.
+        private Button CreateBackLink(Transform panel, Action onClick)
         {
-            Button back = CreateMenuStyleButton(panel, "Back", CloseScreen);
-            back.transition = Selectable.Transition.None;
-            foreach (Animator animator in back.GetComponentsInChildren<Animator>(true)) animator.enabled = false;
-            foreach (Image image in back.GetComponentsInChildren<Image>(true)) image.color = Color.clear;
-
-            TMP_Text label = back.GetComponentInChildren<TMP_Text>(true);
-            label.text = "< " + label.text;
-            label.color = Color.white;
+            Button back = CreateMenuStyleButton(panel, "Back", onClick);
+            Scene.PanelStyle.MakeBackLink(back);
             return back;
         }
 

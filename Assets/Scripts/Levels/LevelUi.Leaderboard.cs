@@ -82,7 +82,7 @@ namespace Levels
             CreatePeriodTab(panel, board, LeaderboardPeriod.Weekly, "Weekly", PeriodSpacing, period);
             CreateResetLabel(panel, period);
 
-            Button back = CreateMenuStyleButton(panel, "Back", CloseScreen);
+            Button back = CreateBackLink(panel, CloseScreen);
             Place((RectTransform)back.transform, new Vector2(0f, LeaderboardBackY), WinButtonSize);
 
             TextMeshProUGUI status = CreatePlainText(panel, Loc.T("Loading..."), 40f, Color.white);

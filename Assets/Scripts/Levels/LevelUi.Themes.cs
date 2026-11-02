@@ -35,7 +35,7 @@ namespace Levels
             CreateThemeCard(panel, NeonPreviewName, "Neon", string.Empty, -ThemeCardX);
             CreateThemeCard(panel, OceanThemeName, "Deep Ocean", OceanThemeName, ThemeCardX);
 
-            Button back = CreateMenuStyleButton(panel, "Back", CloseScreen);
+            Button back = CreateBackLink(panel, CloseScreen);
             Place((RectTransform)back.transform, new Vector2(0f, ThemesBackY), WinButtonSize);
         }
 

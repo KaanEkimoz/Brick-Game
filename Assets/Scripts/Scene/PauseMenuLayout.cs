@@ -197,6 +197,7 @@ namespace Scene
             _guideRows = rows.transform;
 
             Button back = CreateButton(_guide.transform, "Back", new Vector2(0f, GuideBackY), SecondarySize, SecondaryFontSize, true);
+            PanelStyle.MakeBackLink(back);
             back.onClick.AddListener(() => _guide.SetActive(false));
         }
 
