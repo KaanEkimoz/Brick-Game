@@ -319,6 +319,7 @@ def check(level):
     charging = level["abilityMode"] in CHARGING
     if charging != (level["abilityEvery"] > 0): errors.append("abilityEvery does not match abilityMode")
     if not charging and reachable_errors(rows): errors.append(f"sealed holes {reachable_errors(rows)[:4]}")
+    if has_overhang(level): errors.append("ClearBoard board has an overhang")
     if level["noLineClears"] and not charging: errors.append("noLineClears needs a charging abilityMode")
 
     objective, target = level["objective"], level["target"]
@@ -357,6 +358,15 @@ def check(level):
     if drops:
         errors.append(f"won in {drops} straight drop(s), needs at least {MIN_PIECES_TO_WIN} pieces")
     return errors
+
+
+def has_overhang(level):
+    """A ClearBoard level without abilities can only be filled from above: pieces lock on landing."""
+    if level["objective"] != "ClearBoard" or level["abilityMode"] != "none":
+        return False
+    rows = level["rows"]
+    return any(rows[y][x] == "." and any(row[x] != "." for row in rows[y + 1:])
+               for y in range(len(rows)) for x in range(10))
 
 
 def is_fun(level):

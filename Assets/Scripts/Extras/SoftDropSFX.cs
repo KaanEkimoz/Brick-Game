@@ -14,6 +14,11 @@ namespace Extras
         [SerializeField] [Range(0.5f, 2.5f)] private float _pitch = 1.55f;
         [SerializeField] [Range(0f, 1f)] private float _volume = 0.06f;
 
+        public void SetClip(AudioClip clip)
+        {
+            if (clip != null) _softDropClip = clip;
+        }
+
         private void OnEnable()
         {
             PiecesController.OnSoftDrop += PlayTick;

@@ -12,6 +12,8 @@ namespace Extras
 
         private ParticleSystem _particles;
 
+        public void SetColor(Color color) => _cellColor = color;
+
         private void Awake()
         {
             _particles = GetComponent<ParticleSystem>();

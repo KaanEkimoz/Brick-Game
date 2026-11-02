@@ -45,10 +45,10 @@ namespace Gameplay
             if (rootImage != null)
             {
                 rootImage.sprite = null;
-                rootImage.color = PanelColor;
+                rootImage.color = Themes.ThemeManager.ChargeColor(theme => theme.ChargePanelColor, PanelColor);
                 rootImage.raycastTarget = false;
                 Outline border = gameObject.AddComponent<Outline>();
-                border.effectColor = BorderColor;
+                border.effectColor = Themes.ThemeManager.ChargeColor(theme => theme.ChargeBorderColor, BorderColor);
                 border.effectDistance = new Vector2(2f, 2f);
             }
 
@@ -94,7 +94,7 @@ namespace Gameplay
             Image bolt = CreateImage("Bolt");
             bolt.sprite = boltSprite;
             bolt.preserveAspect = true;
-            bolt.color = BoltColor;
+            bolt.color = Themes.ThemeManager.ChargeColor(theme => theme.ChargeFillColor, BoltColor);
             bolt.rectTransform.anchorMin = new Vector2(SidePadding + BoltOffset, SegmentsTop + SegmentGap);
             bolt.rectTransform.anchorMax = new Vector2(1f - SidePadding + BoltOffset, 0.98f);
         }
@@ -129,8 +129,10 @@ namespace Gameplay
             {
                 bool lit = i < charge;
                 float t = (float)i / (_segments.Length - 1);
-                Color litColor = Color.Lerp(BottomColor, TopColor, t);
-                _segments[i].color = lit ? litColor : EmptyColor;
+                Color litColor = Color.Lerp(
+                    Themes.ThemeManager.ChargeColor(theme => theme.ChargeLowColor, BottomColor),
+                    Themes.ThemeManager.ChargeColor(theme => theme.ChargeFillColor, TopColor), t);
+                _segments[i].color = lit ? litColor : Themes.ThemeManager.ChargeColor(theme => theme.ChargeTrackColor, EmptyColor);
                 _segments[i].rectTransform.localScale = Vector3.one;
                 _glows[i].enabled = lit;
                 litColor.a = 0.45f;

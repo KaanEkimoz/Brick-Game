@@ -16,6 +16,11 @@ namespace Extras
 
         private AudioSource _source;
 
+        public void SetClip(AudioClip clip)
+        {
+            if (clip != null) _bombClip = clip;
+        }
+
         private void Awake()
         {
             _source = GetComponent<AudioSource>();

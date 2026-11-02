@@ -25,6 +25,8 @@ namespace Extras
 
         private Material _runtimeMat;
 
+        public void SetColor(Color color) => _streakColor = color;
+
         private void OnEnable()
         {
             PieceMovement.OnHardDrop += HandleHardDrop;

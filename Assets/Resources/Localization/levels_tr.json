@@ -73,7 +73,7 @@
     {
       "id": 15,
       "name": "Basamaklar",
-      "hint": "Tahtayı temizlemek için her boşluğu kancalarla doldur."
+      "hint": "Kareler ve uzun parçalar her basamağı doldurur."
     },
     {
       "id": 16,
@@ -183,7 +183,7 @@
     {
       "id": 37,
       "name": "Temiz Sayfa",
-      "hint": "Tahtayı 30 parçada boşalt. Merdiveni doldur."
+      "hint": "30 parçada tahtayı boşalt. İki boşluğu da doldur."
     },
     {
       "id": 38,
@@ -499,6 +499,81 @@
       "id": 100,
       "name": "Büyük Patlama",
       "hint": "En hızlısı, hayalet yok, 15 bomba, 45 saniye. Hepsini indir."
+    },
+    {
+      "id": 101,
+      "name": "Bis",
+      "hint": "Final sadece başlangıçtı. 10 satır temizle."
+    },
+    {
+      "id": 102,
+      "name": "Banka Baskını",
+      "hint": "Tek kuyu, büyük puan. Yığ ve I'yı indir."
+    },
+    {
+      "id": 103,
+      "name": "Temiz Sayfa",
+      "hint": "Geride hiçbir şey bırakma. Her taşı planla."
+    },
+    {
+      "id": 104,
+      "name": "Altın Işını",
+      "hint": "Her 3. parça lazer atar. Altınları yak."
+    },
+    {
+      "id": 105,
+      "name": "Hızlı Zincir",
+      "hint": "Son hızda geniş boşluk. 5 temizlemeyi zincirle."
+    },
+    {
+      "id": 106,
+      "name": "Saat Gibi",
+      "hint": "İki dakika, 12 satır. Düşünmek için durma."
+    },
+    {
+      "id": 107,
+      "name": "Saha Tamiri",
+      "hint": "Her 3. parça delikleri yamar. 30 hücre doldur."
+    },
+    {
+      "id": 108,
+      "name": "İki Şekil",
+      "hint": "Sadece I ve O, hayalet yok. Yüksek puan yap."
+    },
+    {
+      "id": 109,
+      "name": "Son Parçalar",
+      "hint": "Hepsini temizlemek için 30 parça. Boşa harcama."
+    },
+    {
+      "id": 110,
+      "name": "Lazer Şov",
+      "hint": "Her parça lazer. 16 atışta 50 taş yok et."
+    },
+    {
+      "id": 111,
+      "name": "Yükselen Sular",
+      "hint": "Her 8 parçada çöp yükselir. 10 satır temizle."
+    },
+    {
+      "id": 112,
+      "name": "Kör Talih",
+      "hint": "Sonraki parçayı görmeden altınları çıkar."
+    },
+    {
+      "id": 113,
+      "name": "Karanlık Patlama",
+      "hint": "Her 2. parça bomba, hayalet yok. Hepsini temizle."
+    },
+    {
+      "id": 114,
+      "name": "Kusursuz Fırtına",
+      "hint": "Karışık güçler, yükselen çöp. Puana ulaş."
+    },
+    {
+      "id": 115,
+      "name": "Büyük Bis",
+      "hint": "Altın, çöp, hayalet yok, sıradaki yok. Gerçek final."
     }
   ]
 }

@@ -79,7 +79,7 @@ namespace Levels
         private void Awake()
         {
             _session = GetComponent<LevelSession>();
-            _font = FindAnyObjectByType<ScoreController>(FindObjectsInactive.Include)?.scoreText.font;
+            _font = Themes.ThemeManager.ThemeFont(FindAnyObjectByType<ScoreController>(FindObjectsInactive.Include)?.scoreText.font);
             _plainFont = PlainFont.Asset;
             _panelFrame = Scene.PanelStyle.FindFrame();
             BuildCanvas();
@@ -342,7 +342,7 @@ namespace Levels
 
         private void CreateModeSlice(Transform screen, string image, Vector2[] corners, Action onClick)
         {
-            DiagonalSlice slice = CreateSlice(screen, Resources.Load<Texture2D>(ModeImageFolder + image), corners, ModeImageTint);
+            DiagonalSlice slice = CreateSlice(screen, Themes.ThemeManager.ModeImage(image, Resources.Load<Texture2D>(ModeImageFolder + image)), corners, ModeImageTint);
             Button button = slice.gameObject.AddComponent<Button>();
             button.targetGraphic = slice;
             button.onClick.AddListener(() => onClick());
@@ -456,6 +456,12 @@ namespace Levels
         // shrinks into the objective line and play starts by itself.
         private void ShowIntro(LevelDefinition level)
         {
+            if (!LevelAccess.CanPlay(level.id))
+            {
+                ShowPremiumLock();
+                return;
+            }
+
             Transform screen = OpenScreen();
             Image dim = screen.GetComponent<Image>();
             dim.color = IntroDim;

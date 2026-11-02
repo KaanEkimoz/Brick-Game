@@ -1,6 +1,6 @@
 # Brick Game Levels spec
 
-100 hand-designed levels. A new mechanic arrives every 5 levels. Level text is English.
+115 hand-designed levels; level 16 onward needs Premium. A new mechanic arrives every 5 levels. Level text is English.
 Board: 10 columns, 22 rows. Levels live in `Assets/Resources/Levels/levels_XXX_YYY.json`
 as `{ "levels": [ ... ] }`. Every field below is required on every level (JsonUtility).
 
@@ -8,7 +8,7 @@ as `{ "levels": [ ... ] }`. Every field below is required on every level (JsonUt
 
 | Field | Type | Meaning |
 |---|---|---|
-| `id` | int | 1-100 |
+| `id` | int | 1-115 |
 | `name` | string | Short title, max 18 chars |
 | `hint` | string | Max 60 chars, shown before the level. On a tier's first level, explain the new mechanic |
 | `objective` | string | `Lines`, `Score`, `ClearBoard`, `AbilityCells`, `Tetrises`, `Gold`, `Combo` |
@@ -92,6 +92,7 @@ Neighbouring non-fun levels differ by at most 3. Fun levels may sit a step below
 | 86-90 | Combo | `Combo`: N pieces in a row that each clear a line |
 | 91-95 | Remix | 2 earlier mechanics per level |
 | 96-100 | Finale | 3 or more mechanics, level 100 the hardest |
+| 101-115 | Encore | Earlier mechanics at top speed, level 115 the hardest |
 
 Earlier mechanics may return in later levels. Mix objectives inside a tier when the table allows.
 Each tier opens easy and ends harder. Levels must stay fair on a phone.
@@ -104,6 +105,7 @@ level files; the rules that compare levels only see the files passed in.
 - No row starts full. Prefilled stack is at most 14 rows.
 - Every empty cell inside the stack must connect to the top through empty cells, unless the
   level has `patch`, `bomb`, `laser` or `mixed` abilities.
+- A `ClearBoard` level without abilities has no overhangs: pieces lock on landing and cannot slide under tiles.
 - `pieceLimit`, when set, must allow for the goal: at least 3 pieces per line needed plus 4.
   Levels with `abilityEvery: 1` are exempt, because abilities do the clearing there.
 - `Lines` target at most 40, `Tetrises` at most 5, `Combo` at most 8.

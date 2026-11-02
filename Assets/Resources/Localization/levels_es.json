@@ -73,7 +73,7 @@
     {
       "id": 15,
       "name": "Escalones",
-      "hint": "Llena cada hueco con ganchos para limpiar el tablero."
+      "hint": "Cuadrados y piezas largas llenan cada escalón."
     },
     {
       "id": 16,
@@ -183,7 +183,7 @@
     {
       "id": 37,
       "name": "Barrido limpio",
-      "hint": "Vacía el tablero en 30 piezas. Rellena la escalera."
+      "hint": "Vacía el tablero en 30 piezas. Llena ambos huecos."
     },
     {
       "id": 38,
@@ -499,6 +499,81 @@
       "id": 100,
       "name": "Gran explosión",
       "hint": "Máxima velocidad, sin fantasma, 15 bombas, 45 s. Derríbalo todo."
+    },
+    {
+      "id": 101,
+      "name": "Bis",
+      "hint": "El final solo era el comienzo. Limpia 10 líneas."
+    },
+    {
+      "id": 102,
+      "name": "Corrida bancaria",
+      "hint": "Un pozo, muchos puntos. Apila y suelta la I."
+    },
+    {
+      "id": 103,
+      "name": "Borrón y cuenta",
+      "hint": "No dejes nada. Planea cada pieza."
+    },
+    {
+      "id": 104,
+      "name": "Rayo de oro",
+      "hint": "Cada 3.ª pieza dispara láser. Quema el oro."
+    },
+    {
+      "id": 105,
+      "name": "Cadena veloz",
+      "hint": "Un hueco ancho a toda velocidad. Encadena 5."
+    },
+    {
+      "id": 106,
+      "name": "Mecanismo",
+      "hint": "Dos minutos, 12 líneas. No te pares a pensar."
+    },
+    {
+      "id": 107,
+      "name": "Reparación",
+      "hint": "Cada 3.ª pieza tapa huecos. Rellena 30 celdas."
+    },
+    {
+      "id": 108,
+      "name": "Dos formas",
+      "hint": "Solo I y O, sin fantasma. Suma puntos."
+    },
+    {
+      "id": 109,
+      "name": "Últimas piezas",
+      "hint": "30 piezas para limpiarlo todo. No malgastes."
+    },
+    {
+      "id": 110,
+      "name": "Show láser",
+      "hint": "Cada pieza es láser. Destruye 50 en 16 tiros."
+    },
+    {
+      "id": 111,
+      "name": "Marea alta",
+      "hint": "Sube basura cada 8 piezas. Limpia 10 líneas."
+    },
+    {
+      "id": 112,
+      "name": "Fortuna ciega",
+      "hint": "Saca el oro sin ver la siguiente pieza."
+    },
+    {
+      "id": 113,
+      "name": "Explosión oscura",
+      "hint": "Cada 2.ª pieza es bomba, sin fantasma. Límpialo."
+    },
+    {
+      "id": 114,
+      "name": "Tormenta perfecta",
+      "hint": "Poderes mezclados y basura. Llega a la meta."
+    },
+    {
+      "id": 115,
+      "name": "Gran bis",
+      "hint": "Oro, basura, sin fantasma ni siguiente. El final real."
     }
   ]
 }

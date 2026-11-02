@@ -133,7 +133,9 @@ namespace Scene
             Image pill = _template.GetComponent<Image>();
             image.sprite = pill.sprite;
             image.type = pill.type;
-            image.color = primary ? Color.white : SecondaryColor;
+            image.color = primary
+                ? Themes.ThemeManager.PrimaryButtonTint(Color.white)
+                : Themes.ThemeManager.SecondaryButtonTint(SecondaryColor);
             button.targetGraphic = image;
 
             RectTransform rect = (RectTransform)button.transform;
@@ -141,7 +143,7 @@ namespace Scene
             Place(rect, position, size);
 
             TMP_Text label = button.GetComponentInChildren<TMP_Text>(true);
-            label.color = primary ? PanelStyle.ButtonTextColor : Color.white;
+            label.color = primary ? Themes.ThemeManager.PrimaryButtonText(PanelStyle.ButtonTextColor) : Color.white;
             label.alignment = TextAlignmentOptions.Center;
             PanelStyle.FitButtonLabel(label, fontSize, size.x);
             label.rectTransform.localScale = Vector3.one;

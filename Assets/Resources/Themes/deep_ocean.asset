@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db53c4a55e6af4792bebf55db8fd1d53, type: 3}
+  m_Name: deep_ocean
+  m_EditorClassIdentifier: Assembly-CSharp::Themes.GameTheme
+  _tileSprites:
+  - {fileID: 21300000, guid: 7c0b7a670ec7b4bda917f6dbe4105780, type: 3}
+  - {fileID: 21300000, guid: 09d906a9f77094c5090628a1c8a655e9, type: 3}
+  - {fileID: 21300000, guid: e40a3feae84cf4178bb166e8dd978640, type: 3}
+  - {fileID: 21300000, guid: bf6cbe5bf056b4d65a04376f0dce4081, type: 3}
+  - {fileID: 21300000, guid: 57af6d7f11bd749dda6baff5411a3642, type: 3}
+  - {fileID: 21300000, guid: cdb1232d33e8046dba3f991940c9cf52, type: 3}
+  - {fileID: 21300000, guid: d657913c6b6fc4a1d8dd7472da6b176c, type: 3}
+  _background: {fileID: 21300000, guid: d9ec3a8921f434a0c913db34b39ddafb, type: 3}
+  _gridSprite: {fileID: 21300000, guid: cccf0444927474a2ca885ded034045fb, type: 3}
+  _font: {fileID: 11400000, guid: c1e796525aecc40e7bb6f6c188fae67c, type: 2}
+  _logo: {fileID: 21300000, guid: e9817cff9ba8f424aa08356acd9c310f, type: 3}
+  _modeImages:
+  - {fileID: 2800000, guid: 948c08f8bc2d244a3bd9299b17f23b00, type: 3}
+  - {fileID: 2800000, guid: aa381a4b6d22f42f29d8d68580b7d3db, type: 3}
+  - {fileID: 2800000, guid: 5c94fbc1870814526995e5391632a524, type: 3}
+  _panelSprite: {fileID: 21300000, guid: da82cbd78f05a438f93a8bc577cfd38c, type: 3}
+  _frameSprite: {fileID: 21300000, guid: 4686a0838b7da40288ab26c30fe950b1, type: 3}
+  _popupSprite: {fileID: 21300000, guid: 3b3f55bf2a72b40e0ad433817d4b114a, type: 3}
+  _ghostSprite: {fileID: 21300000, guid: 445985049196349bda7b7a6a31705fcd, type: 3}
+  _nextBoxSprite: {fileID: 21300000, guid: 9d550c2a7a8764c7bac7ab0931c64e6d, type: 3}
+  _buttonHolderSprite: {fileID: 21300000, guid: dcea0be300dd94e66a1cca494ec0e1b3,
+    type: 3}
+  _particleFrames:
+  - {fileID: -9136834448258697486, guid: 5ddbc8db4e481481392eff50e3eeefc6, type: 3}
+  - {fileID: 1762854388791719718, guid: 5ddbc8db4e481481392eff50e3eeefc6, type: 3}
+  - {fileID: -8014315233242688854, guid: 5ddbc8db4e481481392eff50e3eeefc6, type: 3}
+  - {fileID: 4509215315611281716, guid: 5ddbc8db4e481481392eff50e3eeefc6, type: 3}
+  - {fileID: -3401168524788556149, guid: 5ddbc8db4e481481392eff50e3eeefc6, type: 3}
+  - {fileID: -2915209898500093834, guid: 5ddbc8db4e481481392eff50e3eeefc6, type: 3}
+  - {fileID: -3159963330678721857, guid: 5ddbc8db4e481481392eff50e3eeefc6, type: 3}
+  - {fileID: -8647914586829890496, guid: 5ddbc8db4e481481392eff50e3eeefc6, type: 3}
+  _frameTint: {r: 0.45, g: 0.85, b: 0.85, a: 1}
+  _buttonTint: {r: 0.72, g: 1, b: 0.96, a: 1}
+  _buttonTextColor: {r: 0.03, g: 0.19, b: 0.27, a: 1}
+  _secondaryButtonTint: {r: 0.14, g: 0.5, b: 0.54, a: 0.95}
+  _panelTextColor: {r: 0.03, g: 0.19, b: 0.27, a: 1}
+  _ghostTint: {r: 0.6, g: 1, b: 0.95, a: 0.7}
+  _soundPanelTint: {r: 0.05, g: 0.2, b: 0.27, a: 0.9}
+  _chargeFillColor: {r: 0.6, g: 1, b: 0.92, a: 1}
+  _chargeTrackColor: {r: 0.03, g: 0.16, b: 0.2, a: 0.85}
+  _chargeLowColor: {r: 0.2, g: 0.75, b: 0.8, a: 1}
+  _chargePanelColor: {r: 0.06, g: 0.27, b: 0.32, a: 0.72}
+  _chargeBorderColor: {r: 0.72, g: 0.95, b: 0.95, a: 0.75}
+  _panelTint: {r: 1, g: 1, b: 1, a: 1}
+  _gridTint: {r: 0.75, g: 1, b: 0.98, a: 0.6}
+  _effectColor: {r: 0.6, g: 1, b: 0.95, a: 1}
+  _lineClearClip: {fileID: 8300000, guid: e1b4382d0deae4bf3a03b6c47bd4a987, type: 3}
+  _landingClip: {fileID: 8300000, guid: da896ad55cc7b4153b0f31e7b81e1772, type: 3}
+  _softDropClip: {fileID: 8300000, guid: 52648aa3b4c2a4c809f1234adbc42ab9, type: 3}
+  _bombClip: {fileID: 8300000, guid: 15431f0f051da47cb9ce0e360a711d42, type: 3}
+  _laserClip: {fileID: 8300000, guid: 8399ef41ef0b5418f9ee40114856b55f, type: 3}
+  _buttonClip: {fileID: 8300000, guid: d6050d5e9bc234e22a0882df1a7d4207, type: 3}
+  _musicCutoff: 1400

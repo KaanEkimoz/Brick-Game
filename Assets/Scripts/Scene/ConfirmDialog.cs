@@ -37,6 +37,7 @@ namespace Scene
             CreateText(Localization.Loc.T(message), Levels.PlainFont.Asset, MessageFontSize, Color.white, new Vector2(0f, 105f));
 
             Button.ButtonClickedEvent guardedChain = guardedButton.onClick;
+            Themes.ThemeManager.ThemeClickSound(guardedChain);
             guardedButton.onClick = new Button.ButtonClickedEvent();
             guardedButton.onClick.AddListener(() =>
             {
