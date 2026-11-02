@@ -213,10 +213,10 @@
       "objective": "ClearBoard",
       "target": 0,
       "rows": [
-        "XXXXX..XXX",
-        "XXXXX..XXX",
-        "XXX....XXX",
-        "XXX....XXX"
+        "XXXXXX..XX",
+        "XXXXXX..XX",
+        "XXXX....XX",
+        "XXXX....XX"
       ],
       "pieces": "IO",
       "abilityMode": "none",
