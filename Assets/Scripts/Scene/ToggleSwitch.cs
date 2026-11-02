@@ -12,18 +12,18 @@ namespace Scene
         private const float KnobInset = 4f;
         private const float KnobSpeed = 12f;
 
-        // Fixed in every theme: green and red read as on and off anywhere.
-        private static readonly Color OnColor = new Color(0.16f, 0.75f, 0.35f);
-        private static readonly Color OffColor = new Color(0.86f, 0.22f, 0.22f);
-
         private Toggle _toggle;
         private Image _track;
         private RectTransform _knob;
+        private Color _onColor;
+        private Color _offColor;
         private float _position;
 
-        public void Build(Toggle toggle, float rowWidth)
+        public void Build(Toggle toggle, float rowWidth, Color onColor, float offAlpha)
         {
             _toggle = toggle;
+            _onColor = onColor;
+            _offColor = new Color(1f, 1f, 1f, offAlpha);
 
             toggle.transition = Selectable.Transition.None;
             Graphic knob = toggle.graphic;
@@ -36,7 +36,7 @@ namespace Scene
             rect.anchoredPosition = new Vector2((rowWidth - Width) * 0.5f, 0f);
 
             _track = GetComponent<Image>();
-            SoundControls.Fit(_track, OffColor, Height);
+            SoundControls.Fit(_track, _offColor, Height);
 
             Image knobImage = (Image)knob;
             float knobSize = Height - KnobInset * 2f;
@@ -61,7 +61,7 @@ namespace Scene
         {
             float travel = (Width - Height) * 0.5f;
             _knob.anchoredPosition = new Vector2(Mathf.Lerp(-travel, travel, _position), 0f);
-            _track.color = Color.Lerp(OffColor, OnColor, _position);
+            _track.color = Color.Lerp(_offColor, _onColor, _position);
         }
     }
 }
