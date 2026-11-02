@@ -106,6 +106,7 @@ namespace Levels
                 RectTransform rect = (RectTransform)button.transform;
                 rect.anchoredPosition = new Vector2(rect.anchoredPosition.x, SettingsBackY);
             }
+            Scene.SoundControls.RestyleAll();
         }
 
         private void OnEnable()
