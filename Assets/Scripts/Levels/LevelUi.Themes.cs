@@ -13,13 +13,13 @@ namespace Levels
         private const string ThemePreviewFolder = "ThemePreviews/";
         private const string OceanThemeName = "deep_ocean";
         private const string NeonPreviewName = "neon";
-        private const float ThemesPanelHeight = 1180f;
-        private const float ThemesHeadingY = 490f;
+        private const float ThemesPanelHeight = 1300f;
+        private const float ThemesHeadingY = 550f;
         private const float ThemeCardX = 200f;
-        private const float ThemeCardY = 60f;
+        private const float ThemeCardY = 120f;
         private const float ThemeNameY = -310f;
         private const float ThemeBadgeY = -362f;
-        private const float ThemesBackY = -480f;
+        private const float ThemesBackY = -450f;
         private const float ThemeOutlineSize = 6f;
         private static readonly Vector2 ThemeCardSize = new Vector2(340f, 580f);
 

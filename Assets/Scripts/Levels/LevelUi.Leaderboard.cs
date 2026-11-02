@@ -21,7 +21,7 @@ namespace Levels
         private const float LeaderboardResetY = 290f;
         private const float LeaderboardRowsY = 225f;
         private const float LeaderboardRowHeight = 66f;
-        private const float LeaderboardBackY = -560f;
+        private const float LeaderboardBackY = -545f;
         private const float ToggleOptionOffset = 148f; // half of the visible track, inside its glow
         private const float PeriodFontSize = 25f;
         private const float PeriodLineHeight = 5f;

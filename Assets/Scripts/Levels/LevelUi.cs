@@ -19,6 +19,7 @@ namespace Levels
         private const string ExtendedButtonName = "B_PlayExtended";
         private const string SettingsIconName = "B_SettingsIcon";
         private const string SettingsBackName = "B_Back";
+        private const float SettingsBackY = -335f;
         private const string LanguageIconPath = "Icons/icon_language_neon";
         private const string MenuButtonText = "Play";
         private const string ModeImageFolder = "ModeSelect/";
@@ -99,8 +100,12 @@ namespace Levels
         private void Start()
         {
             foreach (Button button in Resources.FindObjectsOfTypeAll<Button>())
-                if (button.gameObject.scene.IsValid() && button.name == SettingsBackName)
-                    Scene.PanelStyle.MakeBackLink(button);
+            {
+                if (button.name != SettingsBackName || button.transform.parent.name != Scene.PanelStyle.FramePanelName) continue;
+                Scene.PanelStyle.MakeBackLink(button);
+                RectTransform rect = (RectTransform)button.transform;
+                rect.anchoredPosition = new Vector2(rect.anchoredPosition.x, SettingsBackY);
+            }
         }
 
         private void OnEnable()
@@ -192,7 +197,7 @@ namespace Levels
 
             Language[] languages = (Language[])Enum.GetValues(typeof(Language));
             int rows = languages.Length + 1;
-            float height = LanguageHeadingHeight + rows * LanguageRowHeight + LanguageRowHeight * 0.5f;
+            float height = LanguageHeadingHeight + rows * LanguageRowHeight + LanguageRowHeight * 0.8f;
             RectTransform panel = CreatePanel(screen, new Vector2(WinPanelSize.x, height));
 
             float top = height * 0.5f;

@@ -29,7 +29,7 @@ namespace Scene
         private const float HowToPlayY = 28f;
         private const float SoundY = -188f;
         private const float RestoreY = -432f;
-        private const float GuideBackY = -420f;
+        private const float GuideBackY = -385f;
         private const float SoundScale = 1.85f;
 
         private const float TitleFontSize = 58f;
