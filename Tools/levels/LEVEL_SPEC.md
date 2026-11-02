@@ -105,6 +105,7 @@ level files; the rules that compare levels only see the files passed in.
 - No row starts full. Prefilled stack is at most 14 rows.
 - Every empty cell inside the stack must connect to the top through empty cells, unless the
   level has `patch`, `bomb`, `laser` or `mixed` abilities.
+- A `ClearBoard` level without abilities has no overhangs: pieces lock on landing and cannot slide under tiles.
 - `pieceLimit`, when set, must allow for the goal: at least 3 pieces per line needed plus 4.
   Levels with `abilityEvery: 1` are exempt, because abilities do the clearing there.
 - `Lines` target at most 40, `Tetrises` at most 5, `Combo` at most 8.

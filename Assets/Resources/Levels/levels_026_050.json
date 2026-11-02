@@ -243,16 +243,16 @@
     {
       "id": 37,
       "name": "Clean Sweep",
-      "hint": "Empty the board in 30 pieces. Fill the staircase.",
+      "hint": "Empty the board in 30 pieces. Fill both gaps.",
       "objective": "ClearBoard",
       "target": 0,
       "rows": [
-        "XXXXXXX...",
-        "XXXXX.....",
-        "XXX.......",
-        "X........."
+        "XXX..XXXXX",
+        "XXX..XXXXX",
+        "XXX....XXX",
+        "XXX....XXX"
       ],
-      "pieces": "IOJL",
+      "pieces": "IO",
       "abilityMode": "none",
       "abilityEvery": 0,
       "noLineClears": false,
@@ -423,9 +423,9 @@
         "X...XX...X",
         "XXXXXXXXX."
       ],
-      "pieces": "IOJL",
+      "pieces": "IO",
       "abilityMode": "patch",
-      "abilityEvery": 3,
+      "abilityEvery": 2,
       "noLineClears": false,
       "dropLevel": 8,
       "pieceLimit": 0,

@@ -60,11 +60,12 @@
       "objective": "ClearBoard",
       "target": 0,
       "rows": [
-        "XXXXXXX...",
-        "XXXXX.....",
-        "XXX......."
+        "XXXXXXXX..",
+        "XXXXXXXX..",
+        "XXXX......",
+        "XXXX......"
       ],
-      "pieces": "",
+      "pieces": "IO",
       "abilityMode": "none",
       "abilityEvery": 0,
       "noLineClears": false,
@@ -212,12 +213,12 @@
       "objective": "ClearBoard",
       "target": 0,
       "rows": [
-        "XXXXXX.XXX",
         "XXXXX..XXX",
-        "XXXX...XXX",
+        "XXXXX..XXX",
+        "XXX....XXX",
         "XXX....XXX"
       ],
-      "pieces": "",
+      "pieces": "IO",
       "abilityMode": "none",
       "abilityEvery": 0,
       "noLineClears": false,

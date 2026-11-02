@@ -73,7 +73,7 @@
     {
       "id": 15,
       "name": "Basamaklar",
-      "hint": "Tahtayı temizlemek için her boşluğu kancalarla doldur."
+      "hint": "Kareler ve uzun parçalar her basamağı doldurur."
     },
     {
       "id": 16,
@@ -183,7 +183,7 @@
     {
       "id": 37,
       "name": "Temiz Sayfa",
-      "hint": "Tahtayı 30 parçada boşalt. Merdiveni doldur."
+      "hint": "30 parçada tahtayı boşalt. İki boşluğu da doldur."
     },
     {
       "id": 38,

@@ -124,10 +124,10 @@
       "objective": "ClearBoard",
       "target": 0,
       "rows": [
-        "XX.....XXX",
-        "XX.....XXX"
+        "XX......XX",
+        "XX......XX"
       ],
-      "pieces": "OIJL",
+      "pieces": "OI",
       "abilityMode": "none",
       "abilityEvery": 0,
       "noLineClears": false,

@@ -73,7 +73,7 @@
     {
       "id": 15,
       "name": "Escalones",
-      "hint": "Llena cada hueco con ganchos para limpiar el tablero."
+      "hint": "Cuadrados y piezas largas llenan cada escalón."
     },
     {
       "id": 16,
@@ -183,7 +183,7 @@
     {
       "id": 37,
       "name": "Barrido limpio",
-      "hint": "Vacía el tablero en 30 piezas. Rellena la escalera."
+      "hint": "Vacía el tablero en 30 piezas. Llena ambos huecos."
     },
     {
       "id": 38,

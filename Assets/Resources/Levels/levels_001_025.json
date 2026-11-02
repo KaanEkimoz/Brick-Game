@@ -289,15 +289,16 @@
     {
       "id": 15,
       "name": "Stair Steps",
-      "hint": "Fill every gap with hooks to clear the board.",
+      "hint": "Squares and long pieces fill every step.",
       "objective": "ClearBoard",
       "target": 0,
       "rows": [
-        "XXXX......",
+        "XXXXXXXX..",
+        "XXXXXXXX..",
         "XXXXXX....",
-        "XXXXXXXX.."
+        "XXXXXX...."
       ],
-      "pieces": "JLO",
+      "pieces": "IO",
       "abilityMode": "none",
       "abilityEvery": 0,
       "noLineClears": false,
@@ -315,7 +316,8 @@
       "objective": "ClearBoard",
       "target": 0,
       "rows": [
-        "XXX....XXX",
+        "XXXX..XXXX",
+        "XXXX..XXXX",
         "XX......XX",
         "XX......XX"
       ],
