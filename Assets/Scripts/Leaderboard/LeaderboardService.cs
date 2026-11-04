@@ -88,6 +88,7 @@ namespace Leaderboard
         {
             if (!Provider.IsSignedIn || !PendingScores.TryGet(board, out long score, out DateTime earned))
             {
+                if (!Provider.IsSignedIn) UnityEngine.Debug.Log($"[Leaderboard] Not signed in, {board} score kept for later.");
                 done();
                 return;
             }
@@ -96,6 +97,7 @@ namespace Leaderboard
             {
                 if (!utcNow.HasValue)
                 {
+                    UnityEngine.Debug.LogWarning("[Leaderboard] No server time, score kept for later.");
                     done();
                     return;
                 }
@@ -105,6 +107,7 @@ namespace Leaderboard
                 long monthlyScore = sameMonth ? LeaderboardSchedule.StampMonth(score, utcNow.Value) : -1;
                 Provider.Submit(board, score, monthlyScore, accepted =>
                 {
+                    UnityEngine.Debug.Log($"[Leaderboard] {board} {score} accepted={accepted}");
                     if (accepted) PendingScores.Clear(board, score);
                     done();
                 });
