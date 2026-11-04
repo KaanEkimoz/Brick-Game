@@ -188,7 +188,11 @@ namespace Levels
 
         private void HandlePremiumChanged(bool owned)
         {
-            if (owned) ThemeManager.Selected = OceanThemeName;
+            if (owned)
+            {
+                ThemeManager.Selected = OceanThemeName;
+                Scene.PremiumCelebration.Request();
+            }
             StopPremiumEvents();
             _session.ReturnToMenu();
         }

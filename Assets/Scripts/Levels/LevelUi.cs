@@ -504,6 +504,7 @@ namespace Levels
             if (_panelFrame != null) Scene.PanelStyle.ApplyFrame(image, _panelFrame);
             RectTransform panel = (RectTransform)go.transform;
             Place(panel, Vector2.zero, size);
+            Scene.PanelPop.Add(go, Scene.PanelPop.Style.Pop);
             return panel;
         }
 
@@ -715,12 +716,13 @@ namespace Levels
             rect.offsetMin = Vector2.zero;
             rect.offsetMax = Vector2.zero;
             _screen.GetComponent<Image>().color = Backdrop;
+            Scene.PanelPop.Add(_screen, Scene.PanelPop.Style.Fade);
             return _screen.transform;
         }
 
         private void CloseScreen()
         {
-            if (_screen != null) Destroy(_screen);
+            Scene.PanelPop.CloseAndDestroy(_screen);
             _screen = null;
         }
 

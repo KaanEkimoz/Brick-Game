@@ -32,14 +32,14 @@ namespace Levels
             TextMeshProUGUI heading = CreateHeading(panel, Loc.Caps("Themes"), 72f);
             Place(heading.rectTransform, new Vector2(0f, ThemesHeadingY), new Vector2(740f, 100f));
 
-            CreateThemeCard(panel, NeonPreviewName, "Neon", string.Empty, -ThemeCardX);
-            CreateThemeCard(panel, OceanThemeName, "Deep Ocean", OceanThemeName, ThemeCardX);
+            CreateThemeCard(panel, NeonPreviewName, "Neon", string.Empty, -ThemeCardX, 0);
+            CreateThemeCard(panel, OceanThemeName, "Deep Ocean", OceanThemeName, ThemeCardX, 1);
 
             Button back = CreateBackLink(panel, CloseScreen);
             Place((RectTransform)back.transform, new Vector2(0f, ThemesBackY), WinButtonSize);
         }
 
-        private void CreateThemeCard(Transform panel, string preview, string label, string theme, float x)
+        private void CreateThemeCard(Transform panel, string preview, string label, string theme, float x, int index)
         {
             bool free = string.IsNullOrEmpty(theme);
             bool premium = PurchaseManager.Instance != null && PurchaseManager.Instance.PremiumOwned;
@@ -63,6 +63,10 @@ namespace Levels
             string state = selected ? Loc.T("Selected") : free || premium ? string.Empty : Loc.T("Premium");
             TextMeshProUGUI badge = CreatePlainText(panel, state, 30f, Accent);
             Place(badge.rectTransform, new Vector2(x, ThemeBadgeY), new Vector2(360f, 44f));
+
+            Scene.StaggerIn.Add(card.transform, index * 2);
+            Scene.StaggerIn.Add(name, index * 2);
+            Scene.StaggerIn.Add(badge, index * 2);
         }
 
         private void SelectTheme(string theme, bool available)
