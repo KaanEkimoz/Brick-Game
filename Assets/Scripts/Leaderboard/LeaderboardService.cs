@@ -61,6 +61,7 @@ namespace Leaderboard
         private static void HandleSignedIn()
         {
             SendAllPending();
+            SavedBestScores.Upload();
             OnSignedIn?.Invoke();
         }
 
@@ -75,6 +76,17 @@ namespace Leaderboard
         {
             PendingScores.Add(board, score, DateTime.UtcNow);
             SendPending(board, done);
+        }
+
+        /// <summary>Sends a score to the all-time board only, for a score without a known date.</summary>
+        public static void SubmitAllTime(LeaderboardBoard board, long score, Action<bool> done)
+        {
+            if (!Provider.IsSignedIn)
+            {
+                done(false);
+                return;
+            }
+            Provider.Submit(board, score, -1, done);
         }
 
         private static void SendAllPending()

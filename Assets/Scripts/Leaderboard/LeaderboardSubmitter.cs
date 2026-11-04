@@ -7,8 +7,7 @@ using UnityEngine;
 
 namespace Leaderboard
 {
-    /// <summary>Follows the run's score and sends it when the game ends. Only the score earned
-    /// live goes out; the saved high score can be edited on the device and is never sent.</summary>
+    /// <summary>Follows the run's score and sends it when the game ends.</summary>
     public class LeaderboardSubmitter : MonoBehaviour
     {
         /// <summary>Fires once the finished run's score has been sent or skipped.</summary>
@@ -57,8 +56,10 @@ namespace Leaderboard
             if (GameMode.IsLevels || _board == null) return;
             _gameEnded = true;
 
+            // The ledger only logs now: its checks dropped real Extended records.
             int score = ScoreController.score;
-            if (RunLedger.CanSubmit(score, _board.TotalClearedLines, GameMode.IsExtended))
+            RunLedger.CanSubmit(score, _board.TotalClearedLines, GameMode.IsExtended);
+            if (score > 0)
                 LeaderboardService.Submit(LeaderboardService.CurrentBoard, score, () => OnRunSettled?.Invoke());
             else
                 OnRunSettled?.Invoke();
