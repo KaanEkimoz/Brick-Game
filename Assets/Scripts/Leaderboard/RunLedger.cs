@@ -27,8 +27,11 @@ namespace Leaderboard
             }
 
             _total += points;
-            if (_total != newScore || points > MaxGainPerLevel * (LevelController.CurrentLevel + 1))
+            if (Ranked && (_total != newScore || points > MaxGainPerLevel * (LevelController.CurrentLevel + 1)))
+            {
                 Ranked = false;
+                UnityEngine.Debug.LogWarning($"[Leaderboard] Run unranked: +{points} -> {newScore}, ledger {_total}, level {LevelController.CurrentLevel}");
+            }
         }
 
         public static void Restore(int score, float seconds, bool ranked)
@@ -46,10 +49,17 @@ namespace Leaderboard
         /// <summary>True when the finished run's numbers could come from real play.</summary>
         public static bool CanSubmit(int score, int clearedLines, bool hasAbilities)
         {
-            if (!Ranked || score <= 0 || score != _total) return false;
-            if (clearedLines * MinSecondsPerLine > Seconds) return false;
+            if (!Ranked || score <= 0 || score != _total) return Reject($"ranked={Ranked} score={score} ledger={_total}");
+            if (clearedLines * MinSecondsPerLine > Seconds) return Reject($"lines={clearedLines} seconds={Seconds}");
             if (hasAbilities) return true;
-            return score <= clearedLines * MaxPointsPerLineAndLevel * (LevelController.CurrentLevel + 1);
+            if (score <= clearedLines * MaxPointsPerLineAndLevel * (LevelController.CurrentLevel + 1)) return true;
+            return Reject($"score={score} lines={clearedLines} level={LevelController.CurrentLevel}");
+        }
+
+        private static bool Reject(string reason)
+        {
+            UnityEngine.Debug.LogWarning("[Leaderboard] Run not sent: " + reason);
+            return false;
         }
     }
 }

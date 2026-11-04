@@ -40,6 +40,9 @@ namespace Gameplay
             BoardController.OnLinesCleared -= HandleLinesCleared;
         }
 
+        // Patch only appears in levels that ask for it by name.
+        private static readonly AbilityType[] BarAbilities = { AbilityType.Bomb, AbilityType.Laser, AbilityType.Dynamite };
+
         private void HandleLinesCleared(int count)
         {
             if (!GameMode.IsExtended) return;
@@ -51,7 +54,7 @@ namespace Gameplay
 
             if (_charge >= MaxCharge)
             {
-                _pending = (AbilityType)UnityEngine.Random.Range(0, Enum.GetValues(typeof(AbilityType)).Length);
+                _pending = BarAbilities[UnityEngine.Random.Range(0, BarAbilities.Length)];
                 OnAbilityArmed?.Invoke(_pending.Value);
             }
         }

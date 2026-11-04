@@ -34,8 +34,10 @@ namespace Gameplay
 
         private static readonly string[] SpritePaths = { "Collectibles/cherry", "Collectibles/strawberry", "Collectibles/orange" };
         private static readonly int[] BasePoints = { 50, 75, 100 };
+        private const string PickupSoundPath = "Sounds/fruit_pickup";
 
         private ScoreController _score;
+        private AudioClip _pickupSound;
         private SpriteRenderer _fruit;
         private SpriteRenderer _flying;
         private Vector2Int _cell;
@@ -47,6 +49,7 @@ namespace Gameplay
         private void Awake()
         {
             _score = FindAnyObjectByType<ScoreController>(FindObjectsInactive.Include);
+            _pickupSound = Resources.Load<AudioClip>(PickupSoundPath);
             _spawnTimer = Random.Range(MinSpawnDelay, MaxSpawnDelay);
         }
 
@@ -134,6 +137,7 @@ namespace Gameplay
                 // Paid on landing: the flight stops if the next piece ends the run.
                 _score.AddBonusScore(_points);
                 OnFruitCollected?.Invoke();
+                Scene.ButtonClickSounds.PlayEffect(_pickupSound);
                 StartCoroutine(FlyToScore(_flying));
                 return;
             }

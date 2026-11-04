@@ -167,6 +167,17 @@ namespace Themes
             }
         }
 
+        /// <summary>The theme's click sound, or null for the standard one.</summary>
+        public static AudioClip ButtonClip
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(Selected)) return null;
+                GameTheme theme = Resources.Load<GameTheme>(ResourceFolder + Selected);
+                return theme != null ? theme.ButtonClip : null;
+            }
+        }
+
         /// <summary>The theme's font. LevelUi reads it in Awake, before the scene finishes loading.</summary>
         public static TMP_FontAsset ThemeFont(TMP_FontAsset standard)
         {

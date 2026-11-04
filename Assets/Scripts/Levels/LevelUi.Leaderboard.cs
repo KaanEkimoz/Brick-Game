@@ -43,8 +43,9 @@ namespace Levels
         {
             CreateMenuIcon("B_LeaderboardIcon", LeaderboardIconPath, 2, () => OpenLeaderboard(LeaderboardBoard.Classic));
             CreateMenuIcon("B_AchievementsIcon", AchievementsIconPath, 3, Achievements.AchievementService.Show);
+            CreateLeftMenuIcon("B_ThemesIcon", ThemesIconPath, 0, ShowThemes);
             CreateLeftMenuIcon("B_PremiumIcon", PremiumIconPath, 1, ShowPremium);
-            CreateLeftMenuIcon("B_ThemesIcon", ThemesIconPath, 2, ShowThemes);
+            MoveRemoveAdsIcon(2);
             CreateGamePremiumIcon();
         }
 
@@ -171,10 +172,10 @@ namespace Levels
 
             status.gameObject.SetActive(false);
             for (int i = 0; i < rows.Count; i++)
-                CreateLeaderboardRow(panel, rows[i], LeaderboardRowsY - i * LeaderboardRowHeight);
+                CreateLeaderboardRow(panel, rows[i], LeaderboardRowsY - i * LeaderboardRowHeight, i);
         }
 
-        private void CreateLeaderboardRow(Transform panel, LeaderboardRow row, float y)
+        private void CreateLeaderboardRow(Transform panel, LeaderboardRow row, float y, int index)
         {
             Color color = row.IsPlayer ? Accent : Color.white;
 
@@ -191,6 +192,10 @@ namespace Levels
             TextMeshProUGUI score = CreatePlainText(panel, row.Score.ToString("N0", Loc.Culture), 36f, color);
             score.alignment = TextAlignmentOptions.Right;
             Place(score.rectTransform, new Vector2(270f, y), new Vector2(180f, LeaderboardRowSize.y));
+
+            Scene.StaggerIn.Add(rank, index);
+            Scene.StaggerIn.Add(name, index);
+            Scene.StaggerIn.Add(score, index);
         }
     }
 }

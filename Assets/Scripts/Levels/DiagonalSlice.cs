@@ -14,6 +14,9 @@ namespace Levels
         private Texture _texture;
         private Vector2[] _corners; // normalized, in order around the shape
 
+        private float _zoom = 1f;
+        private Vector2 _pan;
+
         public override Texture mainTexture => _texture != null ? _texture : s_WhiteTexture;
 
         public void Setup(Texture texture, Vector2[] corners)
@@ -21,6 +24,15 @@ namespace Levels
             _texture = texture;
             _corners = corners;
             SetAllDirty();
+        }
+
+        /// <summary>Crops the texture further, for a slow drift across the picture. Pan runs
+        /// from -1 to 1 across the room the zoom frees on each axis.</summary>
+        public void SetView(float zoom, Vector2 pan)
+        {
+            _zoom = Mathf.Max(1f, zoom);
+            _pan = pan;
+            SetVerticesDirty();
         }
 
         protected override void OnPopulateMesh(VertexHelper vh)
@@ -47,7 +59,11 @@ namespace Levels
                     ? new Vector2(areaAspect / textureAspect, 1f)
                     : new Vector2(1f, textureAspect / areaAspect);
             }
-            Vector2 uvMin = (Vector2.one - uvSize) * 0.5f;
+            // The drift only uses the room the zoom frees, so the crop stays centered.
+            Vector2 zoomed = uvSize / _zoom;
+            Vector2 room = (uvSize - zoomed) * 0.5f;
+            Vector2 uvMin = (Vector2.one - uvSize) * 0.5f + room + Vector2.Scale(_pan, room);
+            uvSize = zoomed;
 
             foreach (Vector2 corner in _corners)
             {

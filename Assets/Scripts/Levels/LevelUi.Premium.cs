@@ -58,6 +58,18 @@ namespace Levels
             rect.anchoredPosition = removeAds.anchoredPosition + Vector2.down * ((removeAds.rect.height + LanguageIconGap) * slot);
         }
 
+        // No-ads sits last, so hiding it once bought leaves no gap in the column.
+        private void MoveRemoveAdsIcon(int slot)
+        {
+            foreach (Button button in Resources.FindObjectsOfTypeAll<Button>())
+            {
+                if (!button.gameObject.scene.IsValid() || button.name != RemoveAdsIconName) continue;
+                RectTransform rect = (RectTransform)button.transform;
+                rect.anchoredPosition += Vector2.down * ((rect.rect.height + LanguageIconGap) * slot);
+                return;
+            }
+        }
+
         // Hidden for Premium owners, who have nothing left to buy here.
         private void CreateGamePremiumIcon()
         {
@@ -176,7 +188,11 @@ namespace Levels
 
         private void HandlePremiumChanged(bool owned)
         {
-            if (owned) ThemeManager.Selected = OceanThemeName;
+            if (owned)
+            {
+                ThemeManager.Selected = OceanThemeName;
+                Scene.PremiumCelebration.Request();
+            }
             StopPremiumEvents();
             _session.ReturnToMenu();
         }
