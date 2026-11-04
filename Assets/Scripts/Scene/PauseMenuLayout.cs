@@ -81,9 +81,11 @@ namespace Scene
             new GuideRow("Guide/bomb", "Bomb", "Clears a 3x3 area"),
             new GuideRow("Guide/dynamite", "Dynamite", "Clears a 3x4 area"),
             new GuideRow("Guide/laser", "Laser", "Clears a row or column"),
-            new GuideRow("Guide/patch", "Patch", "Fills the holes"),
             new GuideRow("Guide/fruit", "Fruit", "Gives bonus points"),
         };
+
+        // Only levels that name it still hand out Patch.
+        private static readonly GuideRow Patch = new GuideRow("Guide/patch", "Patch", "Fills the holes");
 
         private static readonly GuideRow LevelGoal = new GuideRow("Icons/icon_leaderboard_neon", "Goal", "Finish it before the limit");
 
@@ -216,6 +218,7 @@ namespace Scene
             if (GameMode.IsLevels) rows.Add(LevelGoal);
             rows.AddRange(Controls);
             if (GameMode.IsExtended) rows.AddRange(Pieces);
+            if (GameMode.IsLevels) rows.Add(Patch);
 
             for (int i = 0; i < rows.Count; i++)
                 CreateGuideRow(rows[i], GuideTopY - i * GuideRowHeight);
