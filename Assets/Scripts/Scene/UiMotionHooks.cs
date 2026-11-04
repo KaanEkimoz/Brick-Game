@@ -6,7 +6,7 @@ using UnityEngine.UI;
 namespace Scene
 {
     /// <summary>Adds the menu motion to the scene: every button presses, the scene's panels
-    /// play an entrance, lights drift behind the menu and Play breathes. Buttons built later are found by a
+    /// play an entrance, the menu background moves and Play breathes. Buttons built later are found by a
     /// light periodic scan, the same way their click sound is.</summary>
     public class UiMotionHooks : MonoBehaviour
     {
@@ -61,7 +61,10 @@ namespace Scene
                 }
                 else if (System.Array.IndexOf(PopPanelNames, name) >= 0) PanelPop.Add(rect.gameObject, PanelPop.Style.Pop);
                 else if (name == MenuBackgroundName && rect.parent != null && rect.parent.name == StartMenuName)
-                    MenuAmbience.Over(rect);
+                {
+                    Image background = rect.GetComponent<Image>();
+                    if (background != null && background.sprite != null) MenuBackdropMotion.Attach(background);
+                }
             }
         }
 

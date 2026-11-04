@@ -73,6 +73,7 @@ namespace Levels
         private Image _panelFrame;
         private TextMeshProUGUI _objectiveText;
         private GameObject _screen;
+        private ModeScreenMotion _modeMotion;
         private LevelSession _session;
         private Button _classicButton;
         private Button _extendedButton;
@@ -292,6 +293,7 @@ namespace Levels
         public void ShowModeSelect()
         {
             Transform screen = OpenScreen();
+            _modeMotion = screen.gameObject.AddComponent<ModeScreenMotion>();
             Vector2 upper = UpperBorder;
             Vector2 lower = LowerBorder;
 
@@ -310,7 +312,6 @@ namespace Levels
 
             CreateDivider(screen, upper);
             CreateDivider(screen, lower);
-            Scene.MenuAmbience.Add(screen, -1); // above the art, under the labels
 
             Vector2 classicAnchor = new Vector2(0.5f, 0.84f);
             Vector2 extendedAnchor = new Vector2(0.5f, 0.2f);
@@ -353,6 +354,7 @@ namespace Levels
         private void CreateModeSlice(Transform screen, string image, Vector2[] corners, Action onClick)
         {
             DiagonalSlice slice = CreateSlice(screen, Themes.ThemeManager.ModeImage(image, Resources.Load<Texture2D>(ModeImageFolder + image)), corners, ModeImageTint);
+            if (_modeMotion != null) _modeMotion.AddPicture(slice);
             Button button = slice.gameObject.AddComponent<Button>();
             button.targetGraphic = slice;
             button.onClick.AddListener(() => onClick());
@@ -367,6 +369,7 @@ namespace Levels
                 new Vector2(1f, border.y - half), new Vector2(0f, border.x - half),
             }, Accent);
             divider.raycastTarget = false;
+            if (_modeMotion != null) _modeMotion.AddDivider(divider);
         }
 
         private static DiagonalSlice CreateSlice(Transform parent, Texture texture, Vector2[] corners, Color color)
