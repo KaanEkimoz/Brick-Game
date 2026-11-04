@@ -18,7 +18,7 @@ namespace Scene
         private const float MinLife = 7f;
         private const float MaxLife = 12f;
         private const float SwayAmount = 18f;
-        private const float MaxAlpha = 0.22f;
+        private const float MaxAlpha = 0.3f;
         private const string OceanTheme = "deep_ocean";
         private static readonly Color[] GlowColors =
         {
@@ -47,15 +47,32 @@ namespace Scene
         /// <summary>Fills the parent with drifting lights at the given sibling slot.</summary>
         public static MenuAmbience Add(Transform parent, int siblingIndex)
         {
-            GameObject go = new GameObject(nameof(MenuAmbience), typeof(RectTransform));
-            go.transform.SetParent(parent, false);
-            if (siblingIndex >= 0) go.transform.SetSiblingIndex(siblingIndex);
-            RectTransform rect = (RectTransform)go.transform;
+            RectTransform rect = Create(parent, siblingIndex);
             rect.anchorMin = Vector2.zero;
             rect.anchorMax = Vector2.one;
             rect.offsetMin = Vector2.zero;
             rect.offsetMax = Vector2.zero;
-            return go.AddComponent<MenuAmbience>();
+            return rect.gameObject.AddComponent<MenuAmbience>();
+        }
+
+        /// <summary>Covers the same area as a sibling, for a parent smaller than the screen.</summary>
+        public static MenuAmbience Over(RectTransform area)
+        {
+            RectTransform rect = Create(area.parent, area.GetSiblingIndex() + 1);
+            rect.anchorMin = area.anchorMin;
+            rect.anchorMax = area.anchorMax;
+            rect.pivot = area.pivot;
+            rect.sizeDelta = area.sizeDelta;
+            rect.anchoredPosition = area.anchoredPosition;
+            return rect.gameObject.AddComponent<MenuAmbience>();
+        }
+
+        private static RectTransform Create(Transform parent, int siblingIndex)
+        {
+            GameObject go = new GameObject(nameof(MenuAmbience), typeof(RectTransform));
+            go.transform.SetParent(parent, false);
+            if (siblingIndex >= 0) go.transform.SetSiblingIndex(siblingIndex);
+            return (RectTransform)go.transform;
         }
 
         private void Awake()

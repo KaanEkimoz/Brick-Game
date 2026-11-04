@@ -61,7 +61,7 @@ namespace Scene
                 }
                 else if (System.Array.IndexOf(PopPanelNames, name) >= 0) PanelPop.Add(rect.gameObject, PanelPop.Style.Pop);
                 else if (name == MenuBackgroundName && rect.parent != null && rect.parent.name == StartMenuName)
-                    MenuAmbience.Add(rect.parent, rect.GetSiblingIndex() + 1);
+                    MenuAmbience.Over(rect);
             }
         }
 
