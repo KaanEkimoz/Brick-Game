@@ -23,7 +23,7 @@ namespace Scene
         private const float BreathePeriod = 9f;
 
         private const int RayCount = 4;
-        private const float RayAlpha = 0.09f;
+        private const float RayAlpha = 0.2f;
         private static readonly float[] RayAngles = { -18f, -6f, 7f, 19f };
         private static readonly float[] RayOffsets = { -0.2f, -0.05f, 0.08f, 0.22f };
 
@@ -120,7 +120,7 @@ namespace Scene
                 RectTransform rect = (RectTransform)go.transform;
                 rect.anchorMin = rect.anchorMax = new Vector2(0.5f + RayOffsets[i], 1f);
                 rect.pivot = new Vector2(0.5f, 1f);
-                rect.sizeDelta = new Vector2(area.width * 0.16f, area.height * 0.75f);
+                rect.sizeDelta = new Vector2(area.width * 0.22f, area.height * 0.8f);
                 rect.anchoredPosition = Vector2.up * 20f;
                 rect.localRotation = Quaternion.Euler(0f, 0f, RayAngles[i]);
                 _rays[i] = rect;
