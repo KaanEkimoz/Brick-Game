@@ -28,6 +28,7 @@ namespace Ekimoz.IAP
         [SerializeField] private bool _verboseLogging = true;
 
         private const float MaxInitRetryDelay = 120f;
+        private const int OwnershipChecks = 30;
 
         private IPurchaseService _service;
         private int _initRetryCount;
@@ -115,22 +116,35 @@ namespace Ekimoz.IAP
 
         private void HandleInitialized()
         {
-            // Store may report the product already owned (restore). Sync just in case.
+            SyncOwnership();
+            StartCoroutine(WatchOwnership());
+            OnReady?.Invoke();
+        }
+
+        // Unity IAP 5 calls OnInitialized before it has fetched the owned purchases, and its
+        // transaction log stops ProcessPurchase from firing again for a purchase it has seen.
+        // So ownership is read from the products a few times while the fetch lands, and a
+        // missing receipt is never treated as a refund: that wiped Premium on every launch.
+        private IEnumerator WatchOwnership()
+        {
+            for (int i = 0; i < OwnershipChecks; i++)
+            {
+                yield return new WaitForSecondsRealtime(1f);
+                SyncOwnership();
+            }
+        }
+
+        private void SyncOwnership()
+        {
+            if (_service == null || !_service.IsInitialized) return;
+
             bool premium = _service.IsOwned(PremiumProductId);
             if (premium && !PremiumOwned)
                 ApplyPremium();
-            else if (!premium && PremiumOwned && Application.platform == RuntimePlatform.Android)
-                RevokePremium();
 
             // Premium keeps ads off even without the separate Remove Ads product.
-            bool owned = premium || _service.IsOwned(RemoveAdsProductId);
-            if (owned && !RemoveAdsOwned)
+            if ((premium || _service.IsOwned(RemoveAdsProductId)) && !RemoveAdsOwned)
                 ApplyRemoveAds();
-            // Only Google Play reports a refund here. iOS keeps its receipt until a restore.
-            else if (!owned && RemoveAdsOwned && Application.platform == RuntimePlatform.Android)
-                RevokeRemoveAds();
-
-            OnReady?.Invoke();
         }
 
         private void HandleInitializeFailed(string reason)
@@ -164,14 +178,6 @@ namespace Ekimoz.IAP
 
         // ---------------- Apply ----------------
 
-        private void RevokePremium()
-        {
-            PremiumOwned = false;
-            PlayerPrefs.SetInt(PremiumPrefKey, 0);
-            PlayerPrefs.Save();
-            OnPremiumOwnedChanged?.Invoke(false);
-        }
-
         private void ApplyPremium()
         {
             bool wasOwned = PremiumOwned;
@@ -182,15 +188,6 @@ namespace Ekimoz.IAP
 
             if (!wasOwned)
                 OnPremiumOwnedChanged?.Invoke(true);
-        }
-
-        private void RevokeRemoveAds()
-        {
-            RemoveAdsOwned = false;
-            PlayerPrefs.SetInt(AdManager.AdsRemovedPrefKey, 0);
-            PlayerPrefs.Save();
-            AdManager.Instance?.SetAdsRemoved(false);
-            OnRemoveAdsOwnedChanged?.Invoke(false);
         }
 
         private void ApplyRemoveAds()
