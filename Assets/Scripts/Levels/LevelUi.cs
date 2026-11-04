@@ -310,6 +310,7 @@ namespace Levels
 
             CreateDivider(screen, upper);
             CreateDivider(screen, lower);
+            Scene.MenuAmbience.Add(screen, -1); // above the art, under the labels
 
             Vector2 classicAnchor = new Vector2(0.5f, 0.84f);
             Vector2 extendedAnchor = new Vector2(0.5f, 0.2f);

@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using Extras;
 using Gameplay;
 using InGame;
@@ -8,8 +9,8 @@ using UnityEngine;
 
 namespace Scene
 {
-    /// <summary>On the Game Over panel the score counts up to the final value, and a record
-    /// gets a pulsing "NEW BEST!" above it.</summary>
+    /// <summary>On the Game Over panel the contents arrive top to bottom, the score counts up to
+    /// the final value, and a record gets a pulsing "NEW BEST!" above it.</summary>
     public class GameOverMotion : MonoBehaviour
     {
         private const string EndScoreName = "T_EndScore";
@@ -19,6 +20,10 @@ namespace Scene
         private const float BadgeFontSize = 44f;
         private const float BadgePulse = 0.08f;
         private const float BadgePeriod = 0.9f;
+        private const float CascadeDelay = 0.08f;
+        private const float CascadeStep = 0.06f;
+        private const float CascadeSeconds = 0.3f;
+        private const float CascadeRise = 28f;
         private static readonly Color BadgeColor = new Color(1f, 0.84f, 0.25f, 1f);
 
         private TextMeshProUGUI _endScore;
@@ -57,7 +62,46 @@ namespace Scene
             _recordThisRun = false;
             if (GameMode.IsLevels || _endScore == null) return;
 
+            StartCoroutine(Cascade());
             StartCoroutine(Play(ScoreController.score, record));
+        }
+
+        // Hides every item first, so nothing shows before its turn.
+        private IEnumerator Cascade()
+        {
+            List<RectTransform> items = new List<RectTransform>();
+            foreach (Transform child in _panel)
+                if (child.gameObject.activeSelf && (_badge == null || child != _badge.transform))
+                    items.Add((RectTransform)child);
+            items.Sort((a, b) => b.anchoredPosition.y.CompareTo(a.anchoredPosition.y));
+
+            CanvasGroup[] groups = new CanvasGroup[items.Count];
+            Vector2[] ends = new Vector2[items.Count];
+            for (int i = 0; i < items.Count; i++)
+            {
+                groups[i] = items[i].GetComponent<CanvasGroup>() ?? items[i].gameObject.AddComponent<CanvasGroup>();
+                groups[i].alpha = 0f;
+                ends[i] = items[i].anchoredPosition;
+            }
+
+            float total = CascadeDelay + CascadeStep * items.Count + CascadeSeconds;
+            for (float t = 0f; t <= total; t += Time.unscaledDeltaTime)
+            {
+                for (int i = 0; i < items.Count; i++)
+                {
+                    if (items[i] == null) continue;
+                    float n = Mathf.Clamp01((t - CascadeDelay - i * CascadeStep) / CascadeSeconds);
+                    groups[i].alpha = UiEase.OutCubic(n);
+                    items[i].anchoredPosition = ends[i] + Vector2.down * (CascadeRise * (1f - UiEase.OutCubic(n)));
+                }
+                yield return null;
+            }
+            for (int i = 0; i < items.Count; i++)
+            {
+                if (items[i] == null) continue;
+                groups[i].alpha = 1f;
+                items[i].anchoredPosition = ends[i];
+            }
         }
 
         private IEnumerator Play(int score, bool record)

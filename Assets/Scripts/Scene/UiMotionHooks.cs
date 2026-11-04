@@ -6,12 +6,13 @@ using UnityEngine.UI;
 namespace Scene
 {
     /// <summary>Adds the menu motion to the scene: every button presses, the scene's panels
-    /// play an entrance, the logo floats and Play breathes. Buttons built later are found by a
+    /// play an entrance, lights drift behind the menu and Play breathes. Buttons built later are found by a
     /// light periodic scan, the same way their click sound is.</summary>
     public class UiMotionHooks : MonoBehaviour
     {
         private const float ScanInterval = 0.25f;
-        private const string LogoName = "I_Logo";
+        private const string MenuBackgroundName = "Background";
+        private const string StartMenuName = "StartMenu";
         private const string PlayName = "B_PlayMain"; // the main menu builds this from the scene's B_Play
         private const string GameOverPanelName = "GOM_Panel";
         private static readonly string[] PopPanelNames = { "PausePanel", "SettingsPanel", "ContinuePromptPanel" };
@@ -55,11 +56,12 @@ namespace Scene
                 string name = rect.name;
                 if (name == GameOverPanelName)
                 {
-                    PanelPop.Add(rect.gameObject, PanelPop.Style.SlideUp);
+                    PanelPop.Add(rect.gameObject, PanelPop.Style.Pop);
                     GetComponent<GameOverMotion>().Bind(rect);
                 }
                 else if (System.Array.IndexOf(PopPanelNames, name) >= 0) PanelPop.Add(rect.gameObject, PanelPop.Style.Pop);
-                else if (name == LogoName && rect.GetComponent<LogoFloat>() == null) rect.gameObject.AddComponent<LogoFloat>();
+                else if (name == MenuBackgroundName && rect.parent != null && rect.parent.name == StartMenuName)
+                    MenuAmbience.Add(rect.parent, rect.GetSiblingIndex() + 1);
             }
         }
 

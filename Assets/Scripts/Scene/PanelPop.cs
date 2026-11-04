@@ -3,18 +3,16 @@ using UnityEngine;
 
 namespace Scene
 {
-    /// <summary>Plays an entrance each time a panel is shown: a small pop, a slide up from
-    /// below, or a plain fade for a full-screen backdrop.</summary>
+    /// <summary>Plays an entrance each time a panel is shown: a small pop, or a plain fade for a
+    /// full-screen backdrop.</summary>
     [RequireComponent(typeof(RectTransform))]
     public class PanelPop : MonoBehaviour
     {
-        public enum Style { Pop, SlideUp, Fade }
+        public enum Style { Pop, Fade }
 
         private const float PopSeconds = 0.24f;
-        private const float SlideSeconds = 0.4f;
         private const float FadeSeconds = 0.18f;
         private const float PopStartScale = 0.88f;
-        private const float SlideDistance = 160f;
         private const float CloseSeconds = 0.14f;
 
         private Style _style = Style.Pop;
@@ -90,7 +88,7 @@ namespace Scene
 
         private IEnumerator Open()
         {
-            float seconds = _style == Style.SlideUp ? SlideSeconds : _style == Style.Fade ? FadeSeconds : PopSeconds;
+            float seconds = _style == Style.Fade ? FadeSeconds : PopSeconds;
             for (float t = 0f; t < seconds; t += Time.unscaledDeltaTime)
             {
                 Apply(t / seconds);
@@ -102,15 +100,8 @@ namespace Scene
         private void Apply(float n)
         {
             _group.alpha = UiEase.OutCubic(n * 1.6f);
-            switch (_style)
-            {
-                case Style.Pop:
-                    _rect.localScale = _baseScale * Mathf.LerpUnclamped(PopStartScale, 1f, UiEase.OutBack(n));
-                    break;
-                case Style.SlideUp:
-                    _rect.anchoredPosition = _basePosition + Vector2.down * (SlideDistance * (1f - UiEase.OutBack(n)));
-                    break;
-            }
+            if (_style == Style.Pop)
+                _rect.localScale = _baseScale * Mathf.LerpUnclamped(PopStartScale, 1f, UiEase.OutBack(n));
         }
 
         private IEnumerator Close()
