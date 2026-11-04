@@ -48,6 +48,7 @@ namespace Scene
 
             Button template = PanelStyle.FindButton();
             Button yes = CreateButton(template, yesText, new Vector2(0f, -30f));
+            ButtonClickSounds.Skip(yes); // the guarded chain plays its own sound
             yes.onClick.AddListener(() =>
             {
                 _root.SetActive(false);
