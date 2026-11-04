@@ -11,8 +11,8 @@ namespace Scene
     {
         private const int Count = 14;
         private const int TextureSize = 64;
-        private const float MinSize = 12f;
-        private const float MaxSize = 38f;
+        private const float MinSize = 16f;
+        private const float MaxSize = 48f;
         private const float MinSpeed = 18f;
         private const float MaxSpeed = 42f;
         private const float MinLife = 7f;

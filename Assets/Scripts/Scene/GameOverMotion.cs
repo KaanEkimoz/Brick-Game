@@ -60,10 +60,11 @@ namespace Scene
         {
             bool record = _recordThisRun;
             _recordThisRun = false;
-            if (GameMode.IsLevels || _endScore == null) return;
+            if (_panel == null) return;
 
             StartCoroutine(Cascade());
-            StartCoroutine(Play(ScoreController.score, record));
+            // Levels writes its own result into the score line.
+            if (!GameMode.IsLevels && _endScore != null) StartCoroutine(Play(ScoreController.score, record));
         }
 
         // Hides every item first, so nothing shows before its turn.
