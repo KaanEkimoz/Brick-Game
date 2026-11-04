@@ -12,7 +12,7 @@ namespace Scene
     {
         private const float ScanInterval = 0.25f;
         private const string LogoName = "I_Logo";
-        private const string PlayName = "B_Play";
+        private const string PlayName = "B_PlayMain"; // the main menu builds this from the scene's B_Play
         private const string GameOverPanelName = "GOM_Panel";
         private static readonly string[] PopPanelNames = { "PausePanel", "SettingsPanel", "ContinuePromptPanel" };
 
