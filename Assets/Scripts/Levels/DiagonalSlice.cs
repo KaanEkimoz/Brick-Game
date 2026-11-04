@@ -27,7 +27,7 @@ namespace Levels
         }
 
         /// <summary>Crops the texture further, for a slow drift across the picture. Pan runs
-        /// from -1 to 1 across the spare room the zoom leaves on each axis.</summary>
+        /// from -1 to 1 across the room the zoom frees on each axis.</summary>
         public void SetView(float zoom, Vector2 pan)
         {
             _zoom = Mathf.Max(1f, zoom);
@@ -59,9 +59,11 @@ namespace Levels
                     ? new Vector2(areaAspect / textureAspect, 1f)
                     : new Vector2(1f, textureAspect / areaAspect);
             }
-            uvSize /= _zoom;
-            Vector2 spare = (Vector2.one - uvSize) * 0.5f;
-            Vector2 uvMin = spare + Vector2.Scale(_pan, spare);
+            // The drift only uses the room the zoom frees, so the crop stays centered.
+            Vector2 zoomed = uvSize / _zoom;
+            Vector2 room = (uvSize - zoomed) * 0.5f;
+            Vector2 uvMin = (Vector2.one - uvSize) * 0.5f + room + Vector2.Scale(_pan, room);
+            uvSize = zoomed;
 
             foreach (Vector2 corner in _corners)
             {
