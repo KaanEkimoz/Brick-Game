@@ -79,7 +79,8 @@ namespace Scene
             Vector2[] ends = new Vector2[items.Count];
             for (int i = 0; i < items.Count; i++)
             {
-                groups[i] = items[i].GetComponent<CanvasGroup>() ?? items[i].gameObject.AddComponent<CanvasGroup>();
+                groups[i] = items[i].GetComponent<CanvasGroup>();
+                if (groups[i] == null) groups[i] = items[i].gameObject.AddComponent<CanvasGroup>();
                 groups[i].alpha = 0f;
                 ends[i] = items[i].anchoredPosition;
             }
