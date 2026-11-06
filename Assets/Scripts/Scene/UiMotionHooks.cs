@@ -6,14 +6,13 @@ using UnityEngine.UI;
 namespace Scene
 {
     /// <summary>Adds the menu motion to the scene: every button presses, the scene's panels
-    /// play an entrance, the menu background moves and Play breathes. Buttons built later are found by a
+    /// play an entrance and the menu background moves. Buttons built later are found by a
     /// light periodic scan, the same way their click sound is.</summary>
     public class UiMotionHooks : MonoBehaviour
     {
         private const float ScanInterval = 0.25f;
         private const string MenuBackgroundName = "Background";
         private const string StartMenuName = "StartMenu";
-        private const string PlayName = "B_PlayMain"; // the main menu builds this from the scene's B_Play
         private const string GameOverPanelName = "GOM_Panel";
         private static readonly string[] PopPanelNames = { "PausePanel", "SettingsPanel", "ContinuePromptPanel" };
 
@@ -78,8 +77,8 @@ namespace Scene
                 if (!_seen.Add(button.GetInstanceID())) continue;
                 if (button.transition == Selectable.Transition.Animation || button.GetComponent<ButtonMotion>() != null) continue;
 
-                ButtonMotion motion = button.gameObject.AddComponent<ButtonMotion>();
-                if (button.name == PlayName) motion.EnablePulse();
+                // Play no longer breathes: the Daily button under it pulses instead.
+                button.gameObject.AddComponent<ButtonMotion>();
             }
         }
     }
