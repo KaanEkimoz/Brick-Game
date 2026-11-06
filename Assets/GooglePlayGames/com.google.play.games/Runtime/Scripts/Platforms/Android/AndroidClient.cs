@@ -896,7 +896,9 @@ namespace GooglePlayGames.Android
                     leaderboardId,
                     AndroidJavaConverter.ToLeaderboardVariantTimeSpan(timeSpan),
                     AndroidJavaConverter.ToLeaderboardVariantCollection(collection),
-                    rowCount))
+                    rowCount,
+                    // Brick Game: ask the server, so new scores show up at once instead of after the cache expires.
+                    /* forceReload= */ true))
                 {
                     AndroidTaskUtils.AddOnSuccessListener<AndroidJavaObject>(
                         task,
