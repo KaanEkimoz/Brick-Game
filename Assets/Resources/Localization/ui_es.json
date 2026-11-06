@@ -635,6 +635,26 @@
   {
    "en": "Try Again",
    "text": "Reintentar"
+  },
+  {
+   "en": "Daily reminder",
+   "text": "Recordatorio diario"
+  },
+  {
+   "en": "A reminder to keep your daily streak",
+   "text": "Un recordatorio para mantener tu racha diaria"
+  },
+  {
+   "en": "Keep your streak going",
+   "text": "Mantén tu racha"
+  },
+  {
+   "en": "Today's challenge is waiting. Don't lose your {0}-day streak!",
+   "text": "El desafío de hoy te espera. ¡No pierdas tu racha de {0} días!"
+  },
+  {
+   "en": "Today's challenge is waiting",
+   "text": "El desafío de hoy te espera"
   }
  ]
 }

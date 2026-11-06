@@ -46,6 +46,7 @@ namespace Daily
             go.AddComponent<AudioSource>();
             go.AddComponent<DailySession>();
             go.AddComponent<DailyUi>();
+            go.AddComponent<DailyMenuEntry>();
         }
 
         private void Awake()
@@ -53,6 +54,13 @@ namespace Daily
             Instance = this;
             GameMode.IsDaily = false;
             PieceBag.SetSeed(null);
+            DailyReminder.Refresh();
+        }
+
+        // Plans tonight's reminder from the latest state whenever the player leaves the app.
+        private void OnApplicationPause(bool paused)
+        {
+            if (paused) DailyReminder.Refresh();
         }
 
         private void OnEnable()
@@ -129,7 +137,12 @@ namespace Daily
             _running = false;
 
             DailyResult result = BuildResult(won);
-            if (won) result.FreezesUsed = DailyStreak.Record(result);
+            if (won)
+            {
+                result.FreezesUsed = DailyStreak.Record(result);
+                DailyReminder.AskOnce();
+                DailyReminder.Refresh();
+            }
             OnRunFinished?.Invoke(result);
         }
 

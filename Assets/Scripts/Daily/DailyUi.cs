@@ -58,6 +58,9 @@ namespace Daily
         private Button _buttonTemplate;
         private Outline _tagOutline;
 
+        /// <summary>Set before a scene reload to open the daily panel once the menu is back.</summary>
+        public static bool OpenIntroOnLoad;
+
         private void Awake()
         {
             BuildCanvas();
@@ -70,6 +73,10 @@ namespace Daily
             _plainFont = PlainFont.Asset;
             _frame = Scene.PanelStyle.FindFrame();
             _buttonTemplate = Scene.PanelStyle.FindButton();
+
+            if (!OpenIntroOnLoad) return;
+            OpenIntroOnLoad = false;
+            ShowIntro();
         }
 
         private void OnEnable()
@@ -146,7 +153,7 @@ namespace Daily
             Place(sub.rectTransform, new Vector2(0f, -30f), new Vector2(TagSize.x - 30f, 44f));
         }
 
-        private void ShowIntro()
+        public void ShowIntro()
         {
             _tagOutline = null;
             int day = DailyChallenge.Today;

@@ -62,6 +62,13 @@ namespace Daily
             }
         }
 
+        /// <summary>True when winning the given day would still continue the streak.</summary>
+        public static bool CanStillKeep(int day)
+        {
+            int last = PlayerPrefs.GetInt(LastDayKey, 0);
+            return last > 0 && day - last - 1 <= Freezes;
+        }
+
         /// <summary>Whether the day was played, covered by a freeze, or neither.</summary>
         public static DayMark MarkOf(int day)
         {

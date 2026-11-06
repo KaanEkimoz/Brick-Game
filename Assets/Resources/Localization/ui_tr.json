@@ -635,6 +635,26 @@
   {
    "en": "Try Again",
    "text": "Tekrar Dene"
+  },
+  {
+   "en": "Daily reminder",
+   "text": "Günlük hatırlatma"
+  },
+  {
+   "en": "A reminder to keep your daily streak",
+   "text": "Günlük serini korumak için hatırlatma"
+  },
+  {
+   "en": "Keep your streak going",
+   "text": "Serini koru"
+  },
+  {
+   "en": "Today's challenge is waiting. Don't lose your {0}-day streak!",
+   "text": "Bugünün görevi seni bekliyor. {0} günlük serini kaybetme!"
+  },
+  {
+   "en": "Today's challenge is waiting",
+   "text": "Bugünün görevi seni bekliyor"
   }
  ]
 }
