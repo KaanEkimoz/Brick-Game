@@ -30,6 +30,13 @@ namespace Ekimoz.Splash
         private const float HoldUntil = 2.9f;
         private const float FadeLength = 0.45f;
         private const float SkipAfter = 0.5f;
+        // The first frames of a launch stall while the game's scene starts. The show waits for a
+        // few smooth frames, and a later stall slows it down instead of skipping blocks.
+        private const int SmoothFramesNeeded = 4;
+        private const float SmoothFrameSeconds = 1f / 30f;
+        private const float MaxWaitSeconds = 2f;
+        private const float MaxStep = 1f / 30f;
+        private const float SoundVolume = 0.6f;
 
         private const float TileSize = 82f;
         private const float TileGap = 10f;
@@ -83,8 +90,10 @@ namespace Ekimoz.Splash
         private Image _glow;
         private TextMeshProUGUI _word;
         private TextMeshProUGUI _sub;
-        private float _startTime = -1f;
-        private float _skipOffset;
+        private bool _started;
+        private int _smoothFrames;
+        private float _waited;
+        private float _time;
         private bool _skipped;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
@@ -104,24 +113,26 @@ namespace Ekimoz.Splash
 
         private void Update()
         {
-            // The clock starts on the first frame, after the first scene has loaded underneath, and
-            // follows real time so the picture stays in step with the jingle.
-            if (_startTime < 0f)
+            float delta = Time.unscaledDeltaTime;
+            if (!_started)
             {
-                _startTime = Time.unscaledTime;
+                _waited += delta;
+                _smoothFrames = delta <= SmoothFrameSeconds ? _smoothFrames + 1 : 0;
+                if (_smoothFrames < SmoothFramesNeeded && _waited < MaxWaitSeconds) return;
+                _started = true;
                 PlaySound();
+                return;
             }
 
-            float t = Time.unscaledTime - _startTime + _skipOffset;
-            if (!_skipped && t > SkipAfter && t < HoldUntil && Input.GetMouseButtonDown(0))
+            _time += Mathf.Min(delta, MaxStep);
+            if (!_skipped && _time > SkipAfter && _time < HoldUntil && Input.GetMouseButtonDown(0))
             {
                 _skipped = true;
-                _skipOffset += HoldUntil - t;
-                t = HoldUntil;
+                _time = HoldUntil;
             }
 
-            Animate(t);
-            if (t >= HoldUntil + FadeLength) Finish();
+            Animate(_time);
+            if (_time >= HoldUntil + FadeLength) Finish();
         }
 
         private void Finish()
@@ -139,7 +150,7 @@ namespace Ekimoz.Splash
             AudioSource source = gameObject.AddComponent<AudioSource>();
             source.playOnAwake = false;
             source.ignoreListenerPause = true;
-            source.PlayOneShot(clip);
+            source.PlayOneShot(clip, SoundVolume);
         }
 
         // --- animation ---

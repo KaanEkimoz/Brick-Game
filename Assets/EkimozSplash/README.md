@@ -2,7 +2,7 @@
 
 Plays the Ekimoz Games intro once per app launch, before the first scene shows: ten blocks fall
 into an "E", a light runs over them, EKIMOZ rises in letter by letter and GAMES settles under it.
-About 3.3 seconds; a tap skips to the fade-out. Everything is drawn in code, the font and the
+About 3.3 seconds once the first frames run smoothly; a tap skips to the fade-out. Everything is drawn in code, the font and the
 jingle sit in `Resources/EkimozSplash/`.
 
 ## Use in another game
