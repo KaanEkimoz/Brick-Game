@@ -10,7 +10,7 @@ namespace Daily
     /// </summary>
     public static class DailyChallenge
     {
-        public const int PieceLimit = 100;
+        public const int PieceLimit = 50;
         public const string Objective = "Daily";
 
         // Day 1 of the challenge. Changing it renumbers every day and resets streaks.
