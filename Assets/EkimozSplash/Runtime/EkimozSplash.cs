@@ -31,8 +31,8 @@ namespace Ekimoz.Splash
         private const float FadeLength = 0.45f;
         private const float SkipAfter = 0.5f;
 
-        private const float TileSize = 66f;
-        private const float TileGap = 8f;
+        private const float TileSize = 82f;
+        private const float TileGap = 10f;
         private const float FallHeight = 520f;
         private const float LetterRise = 28f;
         private const float SubSpacingFrom = 70f;
@@ -43,7 +43,7 @@ namespace Ekimoz.Splash
         private const string SoundPath = "EkimozSplash/ekimoz_splash";
 
         private static readonly Vector2 ReferenceResolution = new Vector2(1080f, 1920f);
-        private static readonly Vector2 MarkCenter = new Vector2(0f, 200f);
+        private static readonly Vector2 MarkCenter = new Vector2(0f, 250f);
         private static readonly Color Background = new Color(0.03f, 0.035f, 0.08f, 1f);
         private static readonly Color VignetteColor = new Color(0f, 0f, 0f, 0.55f);
         private static readonly Color GlowColor = new Color(0.45f, 0.4f, 1f, 0.35f);
@@ -235,7 +235,7 @@ namespace Ekimoz.Splash
             Stretch(vignette.rectTransform);
 
             _glow = CreateImage(transform, "Glow", SplashArt.Glow, Color.clear);
-            Place(_glow.rectTransform, MarkCenter, new Vector2(760f, 760f));
+            Place(_glow.rectTransform, MarkCenter, new Vector2(900f, 900f));
 
             GameObject mark = new GameObject("Mark", typeof(RectTransform));
             mark.transform.SetParent(transform, false);
@@ -251,8 +251,8 @@ namespace Ekimoz.Splash
             }
 
             TMP_FontAsset font = Resources.Load<TMP_FontAsset>(FontPath);
-            _word = CreateText("Word", "EKIMOZ", font, 112f, WordColor, new Vector2(0f, -110f), 18f);
-            _sub = CreateText("Sub", "GAMES", font, 44f, SubColor, new Vector2(0f, -205f), SubSpacingFrom);
+            _word = CreateText("Word", "EKIMOZ", font, 120f, WordColor, new Vector2(0f, -115f), 18f);
+            _sub = CreateText("Sub", "GAMES", font, 46f, SubColor, new Vector2(0f, -215f), SubSpacingFrom);
         }
 
         // Cyan at the bottom left, through violet, to pink at the top right.
