@@ -575,6 +575,66 @@
   {
    "en": "Completed",
    "text": "Tamamlandı"
+  },
+  {
+   "en": "{0} pieces",
+   "text": "{0} parça"
+  },
+  {
+   "en": "{0} seconds",
+   "text": "{0} saniye"
+  },
+  {
+   "en": "Only {0}",
+   "text": "Sadece {0}"
+  },
+  {
+   "en": "Bombs",
+   "text": "Bombalar"
+  },
+  {
+   "en": "Lasers",
+   "text": "Lazerler"
+  },
+  {
+   "en": "Patches",
+   "text": "Yamalar"
+  },
+  {
+   "en": "Mixed abilities",
+   "text": "Karışık yetenekler"
+  },
+  {
+   "en": "Ability bar",
+   "text": "Yetenek barı"
+  },
+  {
+   "en": "Rising garbage",
+   "text": "Yükselen çöp"
+  },
+  {
+   "en": "No ghost",
+   "text": "Hayalet yok"
+  },
+  {
+   "en": "No preview",
+   "text": "Önizleme yok"
+  },
+  {
+   "en": "High speed",
+   "text": "Yüksek hız"
+  },
+  {
+   "en": "Completed!",
+   "text": "Tamamlandı!"
+  },
+  {
+   "en": "Not this time",
+   "text": "Bu sefer olmadı"
+  },
+  {
+   "en": "Try Again",
+   "text": "Tekrar Dene"
   }
  ]
 }

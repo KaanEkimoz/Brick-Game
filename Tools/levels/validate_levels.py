@@ -434,7 +434,12 @@ def default_files():
 def main():
     failed = False
     everything = []
-    for path in sys.argv[1:] or default_files():
+    # --daily: the daily challenge pool. Only the per-level rules and the layout check apply;
+    # the ordering rules are about the 115-level campaign.
+    args = sys.argv[1:]
+    daily = "--daily" in args
+    args = [arg for arg in args if arg != "--daily"]
+    for path in args or default_files():
         with open(path, encoding="utf-8") as handle:
             levels = json.load(handle)["levels"]
         for level in levels:
@@ -445,6 +450,8 @@ def main():
         everything += levels
     if all(type(level.get("id")) is int and "rows" in level for level in everything):
         for level_id, error in check_set(everything):
+            if daily and not error.startswith("same layout"):
+                continue
             failed = True
             print(f"level {level_id}: {error}")
     print("FAILED" if failed else "OK")

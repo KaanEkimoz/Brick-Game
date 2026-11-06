@@ -575,6 +575,66 @@
   {
    "en": "Completed",
    "text": "Completado"
+  },
+  {
+   "en": "{0} pieces",
+   "text": "{0} piezas"
+  },
+  {
+   "en": "{0} seconds",
+   "text": "{0} segundos"
+  },
+  {
+   "en": "Only {0}",
+   "text": "Solo {0}"
+  },
+  {
+   "en": "Bombs",
+   "text": "Bombas"
+  },
+  {
+   "en": "Lasers",
+   "text": "Láseres"
+  },
+  {
+   "en": "Patches",
+   "text": "Parches"
+  },
+  {
+   "en": "Mixed abilities",
+   "text": "Habilidades mixtas"
+  },
+  {
+   "en": "Ability bar",
+   "text": "Barra de habilidad"
+  },
+  {
+   "en": "Rising garbage",
+   "text": "Basura que sube"
+  },
+  {
+   "en": "No ghost",
+   "text": "Sin fantasma"
+  },
+  {
+   "en": "No preview",
+   "text": "Sin vista previa"
+  },
+  {
+   "en": "High speed",
+   "text": "Alta velocidad"
+  },
+  {
+   "en": "Completed!",
+   "text": "¡Completado!"
+  },
+  {
+   "en": "Not this time",
+   "text": "Esta vez no"
+  },
+  {
+   "en": "Try Again",
+   "text": "Reintentar"
   }
  ]
 }

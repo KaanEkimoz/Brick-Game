@@ -288,7 +288,6 @@ namespace Levels
                 case "Tetrises": return Objective("Quads: {0}/{1}", value, level.target);
                 case "Combo": return Objective("Combo: {0}/{1}", value, level.target);
                 case "Gold": return Objective("Gold left: {0}", value, level.target);
-                case Daily.DailyChallenge.Objective: return Loc.Caps("Daily Challenge");
                 default: return Loc.F("Blue tiles left: {0}", value);
             }
         }
@@ -551,7 +550,7 @@ namespace Levels
             ShowTutorial();
         }
 
-        private static string DescribeGoal(LevelDefinition level)
+        public static string DescribeGoal(LevelDefinition level)
         {
             switch (level.objective)
             {
@@ -567,6 +566,7 @@ namespace Levels
 
         private void CelebrateWin(LevelDefinition level)
         {
+            if (Gameplay.GameMode.IsDaily) return; // the daily challenge shows its own result
             StartCoroutine(PlayWinCelebration(level));
         }
 

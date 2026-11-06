@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Extras;
 using Levels;
 using Localization;
@@ -10,7 +11,7 @@ using UnityEngine.UI;
 namespace Daily
 {
     /// <summary>
-    /// The daily challenge screens: a tag on the mode screen, the rules panel before a run and
+    /// The daily challenge screens: a tag on the mode screen, the goal panel before a run and
     /// the result panel after it. Built at runtime on its own canvas above the Levels screens.
     /// </summary>
     public class DailyUi : MonoBehaviour
@@ -18,6 +19,9 @@ namespace Daily
         private const int CanvasOrder = 110;
         private const float MenuButtonFontSize = 58f;
         private const float ResultDelaySeconds = 0.6f;
+        private const float WinDelaySeconds = 1.6f;
+        private const int FastDropLevel = 9;
+        private const string WinSoundPath = "LevelAudio/level_win";
 
         private static readonly Vector2 ReferenceResolution = new Vector2(1080f, 1920f);
         private static readonly Vector2 TagSize = new Vector2(330f, 118f);
@@ -29,8 +33,8 @@ namespace Daily
         private const float RingWidth = 7f;
         private const float DoneAlpha = 0.75f;
 
-        private static readonly Vector2 IntroPanelSize = new Vector2(900f, 860f);
-        private static readonly Vector2 ResultPanelSize = new Vector2(900f, 1040f);
+        private static readonly Vector2 IntroPanelSize = new Vector2(900f, 1000f);
+        private static readonly Vector2 ResultPanelSize = new Vector2(900f, 1080f);
         private static readonly Color FrozenBall = new Color(0.45f, 0.8f, 1f, 1f);
         private static readonly Color EmptyBall = new Color(0.55f, 0.65f, 0.9f, 0.55f);
         private static Sprite _ballSprite;
@@ -42,6 +46,7 @@ namespace Daily
         private static readonly Color DailyAccent = new Color(1f, 0.6f, 0.2f, 1f);
         private static readonly Color TagColor = new Color(0.01f, 0.03f, 0.14f, 0.9f);
         private static readonly Color MutedText = new Color(0.8f, 0.86f, 1f, 1f);
+        private static readonly Color WinGold = new Color(1f, 0.84f, 0.25f, 1f);
 
         [SerializeField] private float _tagPulseSpeed = 2.4f;
 
@@ -145,17 +150,46 @@ namespace Daily
         {
             _tagOutline = null;
             int day = DailyChallenge.Today;
+            LevelDefinition challenge = DailySession.TodayChallenge;
 
             RectTransform panel = OpenPanel(IntroPanelSize);
             float top = IntroPanelSize.y * 0.5f;
             AddHeading(panel, top - 95f);
             AddLine(panel, DateLine(day), 42f, DailyAccent, top - 180f, 60f);
-            AddStreakRow(panel, top - 360f);
+            if (challenge != null)
+            {
+                AddLine(panel, LevelUi.DescribeGoal(challenge), 46f, Color.white, top - 275f, 70f);
+                AddLine(panel, RulesLine(challenge), 32f, MutedText, top - 340f, 50f);
+            }
+            AddStreakRow(panel, top - 490f);
 
-            float y = top - 560f;
-            Button play = AddButton(panel, DailySession.TodayIsOpen ? "Play" : "Completed", StartRun, y);
-            if (!DailySession.TodayIsOpen) ShowAsDone(play);
+            bool open = DailySession.TodayIsOpen && challenge != null;
+            float y = top - 660f;
+            Button play = AddButton(panel, open ? "Play" : "Completed", StartRun, y);
+            if (!open) ShowAsDone(play);
             AddBackLink(panel, "Back", CloseScreen, y - 150f);
+        }
+
+        // The day's twists in a short line, e.g. "40 pieces · No ghost".
+        private static string RulesLine(LevelDefinition level)
+        {
+            List<string> rules = new List<string>();
+            if (level.pieceLimit > 0) rules.Add(Loc.F("{0} pieces", level.pieceLimit));
+            if (level.timeLimit > 0) rules.Add(Loc.F("{0} seconds", level.timeLimit));
+            if (!string.IsNullOrEmpty(level.pieces)) rules.Add(Loc.F("Only {0}", string.Join(" ", level.pieces.ToCharArray())));
+            switch (level.abilityMode)
+            {
+                case "bomb": rules.Add(Loc.T("Bombs")); break;
+                case "laser": rules.Add(Loc.T("Lasers")); break;
+                case "patch": rules.Add(Loc.T("Patches")); break;
+                case "mixed": rules.Add(Loc.T("Mixed abilities")); break;
+                case "bar": rules.Add(Loc.T("Ability bar")); break;
+            }
+            if (level.garbageEvery > 0) rules.Add(Loc.T("Rising garbage"));
+            if (level.hideGhost) rules.Add(Loc.T("No ghost"));
+            if (level.hideNext) rules.Add(Loc.T("No preview"));
+            if (level.dropLevel >= FastDropLevel) rules.Add(Loc.T("High speed"));
+            return string.Join("  \u00b7  ", rules);
         }
 
         // A finished day keeps the button's place, faded and without a tap.
@@ -178,10 +212,16 @@ namespace Daily
             StartCoroutine(ShowResultSoon(result));
         }
 
-        // A short beat lets the last clear and the game over sound land first.
+        // A win gets the level confetti and sound first; a loss only a short beat.
         private IEnumerator ShowResultSoon(DailyResult result)
         {
-            yield return new WaitForSecondsRealtime(ResultDelaySeconds);
+            if (result.Won)
+            {
+                FindAnyObjectByType<TetrisCelebrationEffect>(FindObjectsInactive.Include)?.Celebrate();
+                AudioSource source = GetComponent<AudioSource>();
+                if (SFXToggle.IsSfxEnabled && source != null) source.PlayOneShot(Resources.Load<AudioClip>(WinSoundPath));
+            }
+            yield return new WaitForSecondsRealtime(result.Won ? WinDelaySeconds : ResultDelaySeconds);
             ShowResult(result);
         }
 
@@ -192,12 +232,21 @@ namespace Daily
             AddHeading(panel, top - 95f);
             AddLine(panel, DateLine(result.Day), 42f, DailyAccent, top - 180f, 60f);
 
-            TextMeshProUGUI score = CreateText(panel, Loc.Caps("Score") + "\n" + result.Score, 76f, Color.white, false);
-            Place(score.rectTransform, new Vector2(0f, top - 310f), new Vector2(800f, 180f));
-            AddStreakRow(panel, top - 540f);
+            TextMeshProUGUI banner = CreateText(panel, Loc.Caps(result.Won ? "Completed!" : "Not this time"), 72f,
+                result.Won ? WinGold : Color.white, false);
+            Scene.PanelStyle.FitLine(banner, 72f);
+            Place(banner.rectTransform, new Vector2(0f, top - 285f), new Vector2(800f, 110f));
 
-            float y = top - 725f;
-            AddButton(panel, "Share", () => DailyShare.Share(DailyShare.BuildText(result, DailyStreak.CurrentStreak)), y);
+            LevelDefinition challenge = DailySession.TodayChallenge;
+            string detail = result.Won
+                ? Loc.F("Score: {0}", result.Score) + "  \u00b7  " + Loc.F("{0} pieces", result.Pieces)
+                : (challenge != null ? LevelUi.DescribeGoal(challenge) : "");
+            AddLine(panel, detail, 40f, MutedText, top - 370f, 60f);
+            AddStreakRow(panel, top - 570f);
+
+            float y = top - 740f;
+            if (result.Won) AddButton(panel, "Share", () => DailyShare.Share(DailyShare.BuildText(result, DailyStreak.CurrentStreak)), y);
+            else AddButton(panel, "Try Again", StartRun, y);
             AddBackLink(panel, "Menu", () => { if (LevelSession.Instance != null) LevelSession.Instance.ReturnToMenu(); }, y - 150f);
         }
 

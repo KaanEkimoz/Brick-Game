@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Text;
 using Board;
 using Extras;
@@ -12,9 +11,10 @@ using UnityEngine.SceneManagement;
 namespace Daily
 {
     /// <summary>
-    /// Runs the daily challenge on top of <see cref="LevelSession"/>: seeds the piece bag with
-    /// the day, counts the clears for the share card and records the day's first run. Created at
-    /// runtime on every scene load, like the Levels runtime.
+    /// Runs the day's challenge on top of <see cref="LevelSession"/>: a level from the daily
+    /// pool, with the piece order seeded by the day. A win completes the day and moves the
+    /// streak; a loss can be retried. Created at runtime on every scene load, like the Levels
+    /// runtime.
     /// </summary>
     public class DailySession : MonoBehaviour
     {
@@ -22,12 +22,11 @@ namespace Daily
 
         public static DailySession Instance { get; private set; }
 
-        /// <summary>Fires when a daily run ends, by top-out, piece limit or restart.</summary>
+        /// <summary>Fires when a daily run ends, won or lost.</summary>
         public static Action<DailyResult> OnRunFinished;
 
         private readonly StringBuilder _clears = new StringBuilder();
         private bool _running;
-        private bool _official;
         private bool _starting;
         private int _day;
         private int _lines;
@@ -44,6 +43,7 @@ namespace Daily
         {
             if (Instance != null) return;
             GameObject go = new GameObject("DailyRuntime");
+            go.AddComponent<AudioSource>();
             go.AddComponent<DailySession>();
             go.AddComponent<DailyUi>();
         }
@@ -53,55 +53,49 @@ namespace Daily
             Instance = this;
             GameMode.IsDaily = false;
             PieceBag.SetSeed(null);
-            DailyStreak.FinishAbandoned();
         }
 
         private void OnEnable()
         {
             PiecesController.OnGameOver += HandleGameOver;
+            LevelSession.OnLevelWon += HandleLevelWon;
             BoardController.OnBoardCleared += HandleBoardCleared;
             BoardController.OnLinesCleared += HandleLinesCleared;
-            ScoreController.OnScoreAdded += HandleScoreAdded;
         }
 
         private void OnDisable()
         {
             PiecesController.OnGameOver -= HandleGameOver;
+            LevelSession.OnLevelWon -= HandleLevelWon;
             BoardController.OnBoardCleared -= HandleBoardCleared;
             BoardController.OnLinesCleared -= HandleLinesCleared;
-            ScoreController.OnScoreAdded -= HandleScoreAdded;
         }
 
-        // Leaving through the menu reloads the scene; the official run counts as it stands.
         private void OnDestroy()
         {
-            if (_running && _official) DailyStreak.Record(BuildResult());
             if (Instance == this) Instance = null;
         }
 
-        private void OnApplicationPause(bool paused)
-        {
-            if (paused) PlayerPrefs.Save();
-        }
-
-        /// <summary>True when today's run would count.</summary>
+        /// <summary>True until today's challenge is won.</summary>
         public static bool TodayIsOpen => !DailyStreak.HasPlayed(DailyChallenge.Today);
 
-        /// <summary>Starts today's challenge. Each day can be played once.</summary>
+        /// <summary>Today's challenge, or null when the pool is missing.</summary>
+        public static LevelDefinition TodayChallenge => DailyChallenge.ForDay(DailyChallenge.Today);
+
+        /// <summary>Starts or retries today's challenge, until it is won.</summary>
         public void Begin()
         {
-            if (LevelSession.Instance == null || !TodayIsOpen) return;
+            LevelDefinition challenge = TodayChallenge;
+            if (LevelSession.Instance == null || challenge == null || !TodayIsOpen) return;
 
             _running = false;
             _day = DailyChallenge.Today;
-            _official = true;
             GameMode.IsDaily = true;
             PieceBag.SetSeed(DailyChallenge.Seed(_day));
-            if (_official) DailyStreak.MarkStarted(_day);
 
-            // Begin clears the board on a retry; that is not a restart to record.
+            // Begin clears the board on a retry; that is not a restart to count.
             _starting = true;
-            LevelSession.Instance.Begin(DailyChallenge.Definition());
+            LevelSession.Instance.Begin(challenge);
             _starting = false;
 
             ResetCounters();
@@ -115,7 +109,7 @@ namespace Daily
             _clears.Length = 0;
         }
 
-        private DailyResult BuildResult()
+        private DailyResult BuildResult(bool won)
         {
             return new DailyResult
             {
@@ -123,40 +117,36 @@ namespace Daily
                 Score = ScoreController.score,
                 Lines = _lines,
                 Quads = _quads,
+                Pieces = LevelSession.Instance != null ? LevelSession.Instance.PiecesUsed : 0,
                 Clears = _clears.ToString(),
-                Official = _official,
+                Won = won,
             };
         }
 
-        private void Finish()
+        private void Finish(bool won)
         {
             if (!_running) return;
             _running = false;
 
-            DailyResult result = BuildResult();
-            if (_official) result.FreezesUsed = DailyStreak.Record(result);
-            _official = false;
+            DailyResult result = BuildResult(won);
+            if (won) result.FreezesUsed = DailyStreak.Record(result);
             OnRunFinished?.Invoke(result);
+        }
+
+        private void HandleLevelWon(LevelDefinition level)
+        {
+            Finish(true);
         }
 
         private void HandleGameOver()
         {
-            Finish();
+            Finish(false);
         }
 
-        // The pause menu's Restart clears the board first, while the score is still there.
-        // The day ends with that score; the piece the restart spawns is stopped a frame later.
+        // The pause menu's Restart starts the challenge over; the counters follow.
         private void HandleBoardCleared()
         {
-            if (_starting || !_running) return;
-            Finish();
-            StartCoroutine(StopRestartedRun());
-        }
-
-        private IEnumerator StopRestartedRun()
-        {
-            yield return null;
-            if (PiecesController.Instance != null) PiecesController.Instance.EndRound();
+            if (!_starting && _running) ResetCounters();
         }
 
         private void HandleLinesCleared(int count)
@@ -165,17 +155,6 @@ namespace Daily
             _lines += count;
             if (count >= QuadLines) _quads++;
             _clears.Append((char)('0' + Mathf.Min(count, QuadLines)));
-            SaveLive();
-        }
-
-        private void HandleScoreAdded(int gained, int total)
-        {
-            if (_running) SaveLive();
-        }
-
-        private void SaveLive()
-        {
-            if (_official) DailyStreak.SaveLive(ScoreController.score, _lines, _quads, _clears.ToString());
         }
     }
 }

@@ -9,10 +9,11 @@ namespace Daily
         public int Score;
         public int Lines;
         public int Quads;
+        public int Pieces;
         /// <summary>One digit per clear, 1 to 4 lines, in the order they happened.</summary>
         public string Clears;
-        /// <summary>False for every run after the day's first.</summary>
-        public bool Official;
+        /// <summary>True when the challenge was completed; only wins are recorded.</summary>
+        public bool Won;
         public int FreezesUsed;
     }
 
@@ -20,8 +21,8 @@ namespace Daily
     public enum DayMark { None, Played, Frozen }
 
     /// <summary>
-    /// The day's official result and the play streak, kept in PlayerPrefs. Only the first run of
-    /// a day counts; a missed day is covered by a streak freeze when one is left.
+    /// The day's winning result and the streak, kept in PlayerPrefs. A day counts once its
+    /// challenge is won; a missed day is covered by a streak freeze when one is left.
     /// </summary>
     public static class DailyStreak
     {
@@ -38,11 +39,7 @@ namespace Daily
         private const string ResultLinesKey = "daily_result_lines";
         private const string ResultQuadsKey = "daily_result_quads";
         private const string ResultClearsKey = "daily_result_clears";
-        private const string StartedDayKey = "daily_started_day";
-        private const string LiveScoreKey = "daily_live_score";
-        private const string LiveLinesKey = "daily_live_lines";
-        private const string LiveQuadsKey = "daily_live_quads";
-        private const string LiveClearsKey = "daily_live_clears";
+        private const string ResultPiecesKey = "daily_result_pieces";
         private const string HistoryKey = "daily_history";
         private const char FrozenSuffix = 'f';
         private const int HistoryLength = 14;
@@ -88,7 +85,7 @@ namespace Daily
             PlayerPrefs.SetString(HistoryKey, history);
         }
 
-        /// <summary>The official result for the given day, if it was played.</summary>
+        /// <summary>The winning result for the given day, if it was won.</summary>
         public static bool TryGetResult(int day, out DailyResult result)
         {
             result = default;
@@ -99,52 +96,14 @@ namespace Daily
                 Score = PlayerPrefs.GetInt(ResultScoreKey, 0),
                 Lines = PlayerPrefs.GetInt(ResultLinesKey, 0),
                 Quads = PlayerPrefs.GetInt(ResultQuadsKey, 0),
+                Pieces = PlayerPrefs.GetInt(ResultPiecesKey, 0),
                 Clears = PlayerPrefs.GetString(ResultClearsKey, ""),
-                Official = true,
+                Won = true,
             };
             return true;
         }
 
-        /// <summary>Marks the official run as begun, so quitting midway still uses up the day.</summary>
-        public static void MarkStarted(int day)
-        {
-            PlayerPrefs.SetInt(StartedDayKey, day);
-            SaveLive(0, 0, 0, "");
-            PlayerPrefs.Save();
-        }
-
-        /// <summary>Progress of the running official attempt, read back if the app is killed.</summary>
-        public static void SaveLive(int score, int lines, int quads, string clears)
-        {
-            PlayerPrefs.SetInt(LiveScoreKey, score);
-            PlayerPrefs.SetInt(LiveLinesKey, lines);
-            PlayerPrefs.SetInt(LiveQuadsKey, quads);
-            PlayerPrefs.SetString(LiveClearsKey, clears);
-        }
-
-        /// <summary>An official run that never reached its end screen (the app was closed)
-        /// counts with the progress it had.</summary>
-        public static void FinishAbandoned()
-        {
-            int started = PlayerPrefs.GetInt(StartedDayKey, 0);
-            if (started <= 0) return;
-            if (!HasPlayed(started))
-            {
-                Record(new DailyResult
-                {
-                    Day = started,
-                    Score = PlayerPrefs.GetInt(LiveScoreKey, 0),
-                    Lines = PlayerPrefs.GetInt(LiveLinesKey, 0),
-                    Quads = PlayerPrefs.GetInt(LiveQuadsKey, 0),
-                    Clears = PlayerPrefs.GetString(LiveClearsKey, ""),
-                    Official = true,
-                });
-            }
-            PlayerPrefs.DeleteKey(StartedDayKey);
-            PlayerPrefs.Save();
-        }
-
-        /// <summary>Stores the official result and moves the streak on. Returns the number of
+        /// <summary>Stores the day's win and moves the streak on. Returns the number of
         /// freezes spent on missed days.</summary>
         public static int Record(DailyResult result)
         {
@@ -186,8 +145,8 @@ namespace Daily
             PlayerPrefs.SetInt(ResultScoreKey, result.Score);
             PlayerPrefs.SetInt(ResultLinesKey, result.Lines);
             PlayerPrefs.SetInt(ResultQuadsKey, result.Quads);
+            PlayerPrefs.SetInt(ResultPiecesKey, result.Pieces);
             PlayerPrefs.SetString(ResultClearsKey, result.Clears ?? "");
-            PlayerPrefs.DeleteKey(StartedDayKey);
             PlayerPrefs.Save();
             return used;
         }

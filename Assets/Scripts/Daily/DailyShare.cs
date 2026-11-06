@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Daily
 {
     /// <summary>
-    /// Builds the spoiler-free result text (one colored square per clear) and hands it to the
+    /// Builds the result text (the day's goal, the score, one colored square per clear) and hands it to the
     /// Android share sheet. Outside Android it goes to the clipboard.
     /// </summary>
     public static class DailyShare
@@ -27,8 +27,10 @@ namespace Daily
         public static string BuildText(DailyResult result, int streak)
         {
             StringBuilder text = new StringBuilder();
-            text.Append("Brick Game · ").Append(Loc.F("Daily #{0}", result.Day)).Append('\n');
-            text.Append(Loc.F("Score: {0}", result.Score));
+            text.Append("Brick Game · ").Append(Loc.F("Daily #{0}", result.Day)).Append(" \u2705\n");
+            Levels.LevelDefinition challenge = DailyChallenge.ForDay(result.Day);
+            if (challenge != null) text.Append(Levels.LevelUi.DescribeGoal(challenge)).Append('\n');
+            text.Append(Loc.F("Score: {0}", result.Score)).Append(" · ").Append(Loc.F("{0} pieces", result.Pieces));
             if (streak > 1) text.Append("  \U0001F525 ").Append(streak);
             text.Append('\n');
 
