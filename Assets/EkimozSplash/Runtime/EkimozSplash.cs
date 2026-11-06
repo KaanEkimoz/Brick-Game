@@ -95,6 +95,7 @@ namespace Ekimoz.Splash
         private float _waited;
         private float _time;
         private bool _skipped;
+        private AudioSource _audio;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Launch()
@@ -124,7 +125,13 @@ namespace Ekimoz.Splash
                 return;
             }
 
-            _time += Mathf.Min(delta, MaxStep);
+            // While the jingle plays, its playback position is the clock, so every block lands on
+            // its tick. Without sound (or after a skip) a clock steps by at most MaxStep a frame.
+            if (_audio != null && _audio.isPlaying && !_skipped)
+                _time = _audio.timeSamples / (float)_audio.clip.frequency;
+            else
+                _time += Mathf.Min(delta, MaxStep);
+
             if (!_skipped && _time > SkipAfter && _time < HoldUntil && Input.GetMouseButtonDown(0))
             {
                 _skipped = true;
@@ -147,10 +154,12 @@ namespace Ekimoz.Splash
             if (SoundAllowed != null && !SoundAllowed()) return;
             AudioClip clip = Resources.Load<AudioClip>(SoundPath);
             if (clip == null) return;
-            AudioSource source = gameObject.AddComponent<AudioSource>();
-            source.playOnAwake = false;
-            source.ignoreListenerPause = true;
-            source.PlayOneShot(clip, SoundVolume);
+            _audio = gameObject.AddComponent<AudioSource>();
+            _audio.playOnAwake = false;
+            _audio.ignoreListenerPause = true;
+            _audio.clip = clip;
+            _audio.volume = SoundVolume;
+            _audio.Play();
         }
 
         // --- animation ---
@@ -178,7 +187,8 @@ namespace Ekimoz.Splash
             _sub.transform.localScale = Vector3.one * scale;
         }
 
-        // Falls in with a small overshoot, then flashes white as the light runs across.
+        // Falls with gravity, lands exactly at the end of its fall (where the jingle ticks), squashes
+        // a little, then flashes white as the light runs across.
         private void AnimateTile(int index, float t)
         {
             Image tile = _tiles[index];
@@ -187,7 +197,7 @@ namespace Ekimoz.Splash
             float fall = Mathf.Clamp01((t - start) / TileFall);
 
             RectTransform rect = tile.rectTransform;
-            rect.anchoredPosition = rest + Vector2.up * (FallHeight * (1f - EaseOutBack(fall)));
+            rect.anchoredPosition = rest + Vector2.up * (FallHeight * (1f - fall * fall));
             float squash = fall >= 1f ? 1f - 0.12f * Mathf.Exp(-(t - start - TileFall) * 18f) * Mathf.Cos((t - start - TileFall) * 30f) : 1f;
             rect.localScale = new Vector3(2f - squash, squash, 1f);
 
@@ -329,12 +339,5 @@ namespace Ekimoz.Splash
         }
 
         private static float Smooth(float t) => t * t * (3f - 2f * t);
-
-        private static float EaseOutBack(float t)
-        {
-            const float overshoot = 1.4f;
-            float u = t - 1f;
-            return 1f + (overshoot + 1f) * u * u * u + overshoot * u * u;
-        }
     }
 }

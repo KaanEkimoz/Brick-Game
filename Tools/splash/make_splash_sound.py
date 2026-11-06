@@ -30,7 +30,7 @@ for i in range(int(RATE * 0.62)):
 # Landing ticks: short plucks climbing a pentatonic scale.
 scale = [523.25, 587.33, 659.25, 783.99, 880.00, 1046.5, 1174.7, 1318.5, 1568.0, 1760.0]
 for k in range(TILES):
-    start = int(RATE * (TILE_START + k * TILE_STAGGER + TILE_FALL - 0.03))
+    start = int(RATE * (TILE_START + k * TILE_STAGGER + TILE_FALL))  # the block lands here
     f = scale[k]
     for j in range(int(RATE * 0.18)):
         t = j / RATE
