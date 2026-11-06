@@ -546,15 +546,15 @@
   },
   {
    "en": "Daily",
-   "text": "Diario"
+   "text": "Reto diario"
   },
   {
    "en": "Daily Challenge",
-   "text": "Desafío Diario"
+   "text": "Reto diario"
   },
   {
    "en": "Daily #{0}",
-   "text": "Diario #{0}"
+   "text": "Reto diario #{0}"
   },
   {
    "en": "Streak: {0}",
@@ -610,11 +610,11 @@
   },
   {
    "en": "Rising garbage",
-   "text": "Basura que sube"
+   "text": "Basura ascendente"
   },
   {
    "en": "No ghost",
-   "text": "Sin fantasma"
+   "text": "Sin pieza fantasma"
   },
   {
    "en": "No preview",
@@ -650,11 +650,11 @@
   },
   {
    "en": "Today's challenge is waiting. Don't lose your {0}-day streak!",
-   "text": "El desafío de hoy te espera. ¡No pierdas tu racha de {0} días!"
+   "text": "El reto de hoy te espera. ¡No pierdas tu racha de {0} días!"
   },
   {
    "en": "Today's challenge is waiting",
-   "text": "El desafío de hoy te espera"
+   "text": "El reto de hoy te espera"
   }
  ]
 }
