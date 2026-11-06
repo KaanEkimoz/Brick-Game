@@ -161,10 +161,10 @@ namespace Daily
                 AddLine(panel, LevelUi.DescribeGoal(challenge), 46f, Color.white, top - 275f, 70f);
                 AddLine(panel, RulesLine(challenge), 32f, MutedText, top - 340f, 50f);
             }
-            AddStreakRow(panel, top - 490f);
+            AddStreakRow(panel, top - 525f);
 
             bool open = DailySession.TodayIsOpen && challenge != null;
-            float y = top - 660f;
+            float y = top - 690f;
             Button play = AddButton(panel, open ? "Play" : "Completed", StartRun, y);
             if (!open) ShowAsDone(play);
             AddBackLink(panel, "Back", CloseScreen, y - 150f);
