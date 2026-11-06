@@ -196,8 +196,8 @@ namespace Daily
 
             float y = top - 690f;
             AddButton(panel, "Share", () => DailyShare.Share(DailyShare.BuildText(official, DailyStreak.CurrentStreak)), y);
-            AddButton(panel, "Play Again", StartRun, y - 160f);
-            AddBackLink(panel, "Menu", () => { if (LevelSession.Instance != null) LevelSession.Instance.ReturnToMenu(); }, y - 310f);
+            AddButton(panel, "Play Again", StartRun, y - 150f);
+            AddBackLink(panel, "Menu", () => { if (LevelSession.Instance != null) LevelSession.Instance.ReturnToMenu(); }, y - 280f);
         }
 
         private static string DateLine(int day)
