@@ -26,6 +26,10 @@ namespace Gameplay
             }
         }
 
+        /// <summary>True during a daily challenge run, which runs inside Levels. Keeps its own
+        /// high score.</summary>
+        public static bool IsDaily { get; set; }
+
         public static bool IsExtended
         {
             get => _isExtended;

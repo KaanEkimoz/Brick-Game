@@ -23,6 +23,19 @@ namespace InGame
         private static readonly List<PieceType> _current = new List<PieceType>(7);
         private static readonly List<PieceType> _allowed = new List<PieceType>(StandardSeven);
 
+        // Daily challenge: a fixed seed gives every device the same order. Its own generator,
+        // because effects and abilities also draw from UnityEngine.Random.
+        private static int? _seed;
+        private static uint _state;
+
+        /// <summary>Fixes the piece order to a seed; null goes back to random. Every Reset
+        /// starts the sequence over.</summary>
+        public static void SetSeed(int? seed)
+        {
+            _seed = seed;
+            Reset();
+        }
+
         /// <summary>Limits the bag to the given letters (e.g. "IO"). Null or empty allows all seven.</summary>
         public static void SetAllowedPieces(string letters)
         {
@@ -44,7 +57,11 @@ namespace InGame
         }
 
         /// <summary>Resets the bag to empty (next Next() call refills + shuffles).</summary>
-        public static void Reset() => _current.Clear();
+        public static void Reset()
+        {
+            _current.Clear();
+            if (_seed.HasValue) _state = _seed.Value == 0 ? 0x9E3779B9u : (uint)_seed.Value;
+        }
 
         /// <summary>Snapshot of the remaining pieces for the save file (int per PieceType).</summary>
         public static List<int> Snapshot()
@@ -69,6 +86,15 @@ namespace InGame
             }
         }
 
+        // xorshift32: the same numbers on every platform and runtime.
+        private static int SeededIndex(int maxExclusive)
+        {
+            _state ^= _state << 13;
+            _state ^= _state >> 17;
+            _state ^= _state << 5;
+            return (int)(_state % (uint)maxExclusive);
+        }
+
         private static void Refill()
         {
             _current.Clear();
@@ -76,7 +102,7 @@ namespace InGame
             // Fisher–Yates shuffle.
             for (int i = _current.Count - 1; i > 0; i--)
             {
-                int j = Random.Range(0, i + 1);
+                int j = _seed.HasValue ? SeededIndex(i + 1) : Random.Range(0, i + 1);
                 (_current[i], _current[j]) = (_current[j], _current[i]);
             }
         }

@@ -14,8 +14,10 @@ namespace Extras
         private const string ExtendedHighScoreKey = "highScore_Extended";
 
         private const string LevelsHighScoreKey = "highScore_Levels";
+        private const string DailyHighScoreKey = "highScore_Daily";
 
-        private static string HighScoreKey => GameMode.IsLevels ? LevelsHighScoreKey
+        private static string HighScoreKey => GameMode.IsDaily ? DailyHighScoreKey
+            : GameMode.IsLevels ? LevelsHighScoreKey
             : GameMode.IsExtended ? ExtendedHighScoreKey : ClassicHighScoreKey;
 
         /// <summary>Reads the high score for the currently selected GameMode (Classic vs Extended)

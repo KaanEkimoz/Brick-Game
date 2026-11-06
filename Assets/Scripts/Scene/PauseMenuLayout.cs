@@ -218,7 +218,7 @@ namespace Scene
             if (GameMode.IsLevels) rows.Add(LevelGoal);
             rows.AddRange(Controls);
             if (GameMode.IsExtended) rows.AddRange(Pieces);
-            if (GameMode.IsLevels) rows.Add(Patch);
+            if (GameMode.IsLevels && !GameMode.IsDaily) rows.Add(Patch);
 
             for (int i = 0; i < rows.Count; i++)
                 CreateGuideRow(rows[i], GuideTopY - i * GuideRowHeight);

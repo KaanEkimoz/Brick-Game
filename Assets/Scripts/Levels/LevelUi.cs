@@ -79,6 +79,9 @@ namespace Levels
         private Button _extendedButton;
         private readonly List<ParticleSystem> _frozenEffects = new List<ParticleSystem>();
 
+        /// <summary>Fires with the mode screen once it is built, so other modes can add their entry.</summary>
+        public static Action<Transform> OnModeSelectOpened;
+
         private void Awake()
         {
             _session = GetComponent<LevelSession>();
@@ -285,6 +288,7 @@ namespace Levels
                 case "Tetrises": return Objective("Quads: {0}/{1}", value, level.target);
                 case "Combo": return Objective("Combo: {0}/{1}", value, level.target);
                 case "Gold": return Objective("Gold left: {0}", value, level.target);
+                case Daily.DailyChallenge.Objective: return Loc.Caps("Daily Challenge");
                 default: return Loc.F("Blue tiles left: {0}", value);
             }
         }
@@ -322,6 +326,7 @@ namespace Levels
             CreateHighScoreLabel(screen, ScoreController.ExtendedHighScore, extendedAnchor);
 
             CreateBackIcon(screen);
+            OnModeSelectOpened?.Invoke(screen);
         }
 
         // Neon badge with a left chevron, drawn from two slanted quads.
