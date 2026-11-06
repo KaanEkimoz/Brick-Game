@@ -561,64 +561,20 @@
    "text": "Racha: {0}"
   },
   {
-   "en": "Best: {0}",
-   "text": "Mejor: {0}"
-  },
-  {
-   "en": "Streak freezes: {0}",
-   "text": "Congeladores de racha: {0}"
-  },
-  {
-   "en": "Streak freezes used: {0}",
-   "text": "Congeladores usados: {0}"
-  },
-  {
    "en": "New today",
    "text": "Nuevo hoy"
-  },
-  {
-   "en": "Played today",
-   "text": "Jugado hoy"
-  },
-  {
-   "en": "Same pieces for everyone today. Score as much as you can in {0} pieces.",
-   "text": "Hoy todos reciben las mismas piezas. Consigue todos los puntos que puedas en {0} piezas."
-  },
-  {
-   "en": "Only your first run today counts.",
-   "text": "Hoy solo cuenta tu primera partida."
-  },
-  {
-   "en": "Today's score: {0}",
-   "text": "Tu puntuación de hoy: {0}"
-  },
-  {
-   "en": "More runs are practice.",
-   "text": "Las siguientes partidas son de práctica."
-  },
-  {
-   "en": "Practice",
-   "text": "Práctica"
-  },
-  {
-   "en": "Practice. Today's score: {0}",
-   "text": "Práctica. Tu puntuación de hoy: {0}"
   },
   {
    "en": "Share",
    "text": "Compartir"
   },
   {
-   "en": "Play Again",
-   "text": "Jugar de nuevo"
+   "en": "Streak",
+   "text": "Racha"
   },
   {
-   "en": "Lines: {0}",
-   "text": "Líneas: {0}"
-  },
-  {
-   "en": "Quads: {0}",
-   "text": "Cuádruples: {0}"
+   "en": "Completed",
+   "text": "Completado"
   }
  ]
 }

@@ -16,6 +16,9 @@ namespace Daily
         public int FreezesUsed;
     }
 
+    /// <summary>How a past day shows in the streak row.</summary>
+    public enum DayMark { None, Played, Frozen }
+
     /// <summary>
     /// The day's official result and the play streak, kept in PlayerPrefs. Only the first run of
     /// a day counts; a missed day is covered by a streak freeze when one is left.
@@ -40,6 +43,9 @@ namespace Daily
         private const string LiveLinesKey = "daily_live_lines";
         private const string LiveQuadsKey = "daily_live_quads";
         private const string LiveClearsKey = "daily_live_clears";
+        private const string HistoryKey = "daily_history";
+        private const char FrozenSuffix = 'f';
+        private const int HistoryLength = 14;
 
         public static int BestStreak => PlayerPrefs.GetInt(BestStreakKey, 0);
         public static int Freezes => PlayerPrefs.GetInt(FreezesKey, StartingFreezes);
@@ -57,6 +63,29 @@ namespace Daily
                 int missed = DailyChallenge.Today - last - 1;
                 return missed <= Freezes ? PlayerPrefs.GetInt(StreakKey, 0) : 0;
             }
+        }
+
+        /// <summary>Whether the day was played, covered by a freeze, or neither.</summary>
+        public static DayMark MarkOf(int day)
+        {
+            foreach (string entry in PlayerPrefs.GetString(HistoryKey, "").Split(','))
+            {
+                bool frozen = entry.Length > 0 && entry[entry.Length - 1] == FrozenSuffix;
+                string number = frozen ? entry.Substring(0, entry.Length - 1) : entry;
+                if (int.TryParse(number, out int value) && value == day) return frozen ? DayMark.Frozen : DayMark.Played;
+            }
+            return DayMark.None;
+        }
+
+        // Keeps the last two weeks, enough for the seven-day row.
+        private static void AddHistory(string entry)
+        {
+            string history = PlayerPrefs.GetString(HistoryKey, "");
+            history = history.Length == 0 ? entry : history + "," + entry;
+            string[] entries = history.Split(',');
+            if (entries.Length > HistoryLength)
+                history = string.Join(",", entries, entries.Length - HistoryLength, HistoryLength);
+            PlayerPrefs.SetString(HistoryKey, history);
         }
 
         /// <summary>The official result for the given day, if it was played.</summary>
@@ -140,6 +169,7 @@ namespace Daily
                         freezes -= missed;
                         used = missed;
                         streak++;
+                        for (int frozen = last + 1; frozen < result.Day; frozen++) AddHistory(frozen.ToString() + FrozenSuffix);
                     }
                     else streak = 1;
                 }
@@ -147,6 +177,7 @@ namespace Daily
 
             if (streak % FreezeEveryDays == 0) freezes = Mathf.Min(MaxFreezes, freezes + 1);
 
+            AddHistory(result.Day.ToString());
             PlayerPrefs.SetInt(LastDayKey, Mathf.Max(last, result.Day));
             PlayerPrefs.SetInt(StreakKey, streak);
             PlayerPrefs.SetInt(BestStreakKey, Mathf.Max(BestStreak, streak));

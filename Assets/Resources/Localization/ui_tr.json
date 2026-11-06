@@ -561,64 +561,20 @@
    "text": "Seri: {0}"
   },
   {
-   "en": "Best: {0}",
-   "text": "En iyi: {0}"
-  },
-  {
-   "en": "Streak freezes: {0}",
-   "text": "Seri dondurma: {0}"
-  },
-  {
-   "en": "Streak freezes used: {0}",
-   "text": "Kullanılan seri dondurma: {0}"
-  },
-  {
    "en": "New today",
    "text": "Bugün yeni"
-  },
-  {
-   "en": "Played today",
-   "text": "Bugün oynandı"
-  },
-  {
-   "en": "Same pieces for everyone today. Score as much as you can in {0} pieces.",
-   "text": "Bugün herkese aynı parçalar geliyor. {0} parçada olabildiğince çok puan topla."
-  },
-  {
-   "en": "Only your first run today counts.",
-   "text": "Bugün yalnızca ilk oyunun sayılır."
-  },
-  {
-   "en": "Today's score: {0}",
-   "text": "Bugünkü skorun: {0}"
-  },
-  {
-   "en": "More runs are practice.",
-   "text": "Sonraki oyunlar antrenman sayılır."
-  },
-  {
-   "en": "Practice",
-   "text": "Antrenman"
-  },
-  {
-   "en": "Practice. Today's score: {0}",
-   "text": "Antrenman. Bugünkü skorun: {0}"
   },
   {
    "en": "Share",
    "text": "Paylaş"
   },
   {
-   "en": "Play Again",
-   "text": "Tekrar Oyna"
+   "en": "Streak",
+   "text": "Seri"
   },
   {
-   "en": "Lines: {0}",
-   "text": "Satır: {0}"
-  },
-  {
-   "en": "Quads: {0}",
-   "text": "Dörtlü: {0}"
+   "en": "Completed",
+   "text": "Tamamlandı"
   }
  ]
 }

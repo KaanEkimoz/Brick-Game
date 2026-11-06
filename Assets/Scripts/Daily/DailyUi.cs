@@ -22,7 +22,19 @@ namespace Daily
         private static readonly Vector2 ReferenceResolution = new Vector2(1080f, 1920f);
         private static readonly Vector2 TagSize = new Vector2(330f, 118f);
         private static readonly Vector2 TagOffset = new Vector2(-30f, -40f);
-        private static readonly Vector2 PanelSize = new Vector2(900f, 1100f);
+        private const int StreakDays = 7;
+        private const float BallSize = 78f;
+        private const float BallSpacing = 106f;
+        private const int BallTexture = 96;
+        private const float RingWidth = 7f;
+        private const float DoneAlpha = 0.75f;
+
+        private static readonly Vector2 IntroPanelSize = new Vector2(900f, 860f);
+        private static readonly Vector2 ResultPanelSize = new Vector2(900f, 1040f);
+        private static readonly Color FrozenBall = new Color(0.45f, 0.8f, 1f, 1f);
+        private static readonly Color EmptyBall = new Color(0.55f, 0.65f, 0.9f, 0.55f);
+        private static Sprite _ballSprite;
+        private static Sprite _ringSprite;
         private static readonly Vector2 ButtonSize = new Vector2(640f, 150f);
         private static readonly Color PanelBlue = new Color(0.1f, 0.26f, 0.62f, 1f);
         private static readonly Color Dim = new Color(0f, 0f, 0.05f, 0.8f);
@@ -122,7 +134,7 @@ namespace Daily
             int streak = DailyStreak.CurrentStreak;
             string status = DailySession.TodayIsOpen
                 ? (streak > 0 ? Loc.F("Streak: {0}", streak) : Loc.T("New today"))
-                : Loc.T("Played today");
+                : Loc.T("Completed");
             TextMeshProUGUI sub = CreateText(go.transform, Loc.Upper(status), 30f, DailyAccent, true);
             sub.fontStyle = FontStyles.Bold;
             Scene.PanelStyle.FitLine(sub, 30f);
@@ -133,29 +145,26 @@ namespace Daily
         {
             _tagOutline = null;
             int day = DailyChallenge.Today;
-            bool played = DailyStreak.TryGetResult(day, out DailyResult today);
 
-            RectTransform panel = OpenPanel();
-            float top = PanelSize.y * 0.5f;
+            RectTransform panel = OpenPanel(IntroPanelSize);
+            float top = IntroPanelSize.y * 0.5f;
             AddHeading(panel, top - 95f);
-            AddLine(panel, DateLine(day), 40f, DailyAccent, top - 185f, 60f);
-            AddLine(panel, Loc.F("Same pieces for everyone today. Score as much as you can in {0} pieces.", DailyChallenge.PieceLimit),
-                38f, Color.white, top - 300f, 130f);
+            AddLine(panel, DateLine(day), 42f, DailyAccent, top - 180f, 60f);
+            AddStreakRow(panel, top - 360f);
 
-            string status = played
-                ? Loc.F("Today's score: {0}", today.Score) + "\n" + Loc.T("More runs are practice.")
-                : Loc.T("Only your first run today counts.");
-            AddLine(panel, status, 36f, MutedText, top - 440f, 110f);
-            AddLine(panel, StreakLine(), 36f, Color.white, top - 555f, 100f);
-
-            float y = top - 690f;
-            AddButton(panel, played ? "Practice" : "Play", StartRun, y);
-            if (played)
-            {
-                y -= 160f;
-                AddButton(panel, "Share", () => DailyShare.Share(DailyShare.BuildText(today, DailyStreak.CurrentStreak)), y);
-            }
+            float y = top - 560f;
+            Button play = AddButton(panel, DailySession.TodayIsOpen ? "Play" : "Completed", StartRun, y);
+            if (!DailySession.TodayIsOpen) ShowAsDone(play);
             AddBackLink(panel, "Back", CloseScreen, y - 150f);
+        }
+
+        // A finished day keeps the button's place, faded and without a tap.
+        private static void ShowAsDone(Button button)
+        {
+            button.onClick.RemoveAllListeners();
+            CanvasGroup group = button.gameObject.AddComponent<CanvasGroup>();
+            group.alpha = DoneAlpha;
+            group.blocksRaycasts = false;
         }
 
         private void StartRun()
@@ -178,43 +187,105 @@ namespace Daily
 
         private void ShowResult(DailyResult result)
         {
-            if (result.Official || !DailyStreak.TryGetResult(result.Day, out DailyResult official)) official = result;
-
-            RectTransform panel = OpenPanel();
-            float top = PanelSize.y * 0.5f;
+            RectTransform panel = OpenPanel(ResultPanelSize);
+            float top = ResultPanelSize.y * 0.5f;
             AddHeading(panel, top - 95f);
-            AddLine(panel, DateLine(result.Day), 40f, DailyAccent, top - 185f, 60f);
+            AddLine(panel, DateLine(result.Day), 42f, DailyAccent, top - 180f, 60f);
 
             TextMeshProUGUI score = CreateText(panel, Loc.Caps("Score") + "\n" + result.Score, 76f, Color.white, false);
             Place(score.rectTransform, new Vector2(0f, top - 310f), new Vector2(800f, 180f));
+            AddStreakRow(panel, top - 540f);
 
-            string detail = Loc.F("Lines: {0}", result.Lines) + "    " + Loc.F("Quads: {0}", result.Quads);
-            if (!result.Official) detail += "\n" + Loc.F("Practice. Today's score: {0}", official.Score);
-            else if (result.FreezesUsed > 0) detail += "\n" + Loc.F("Streak freezes used: {0}", result.FreezesUsed);
-            AddLine(panel, detail, 36f, MutedText, top - 455f, 110f);
-            AddLine(panel, StreakLine(), 36f, Color.white, top - 565f, 100f);
-
-            float y = top - 690f;
-            AddButton(panel, "Share", () => DailyShare.Share(DailyShare.BuildText(official, DailyStreak.CurrentStreak)), y);
-            AddButton(panel, "Play Again", StartRun, y - 150f);
-            AddBackLink(panel, "Menu", () => { if (LevelSession.Instance != null) LevelSession.Instance.ReturnToMenu(); }, y - 280f);
+            float y = top - 725f;
+            AddButton(panel, "Share", () => DailyShare.Share(DailyShare.BuildText(result, DailyStreak.CurrentStreak)), y);
+            AddBackLink(panel, "Menu", () => { if (LevelSession.Instance != null) LevelSession.Instance.ReturnToMenu(); }, y - 150f);
         }
 
         private static string DateLine(int day)
         {
-            string date = DailyChallenge.DateOf(day).ToString("d MMMM", Loc.Culture);
-            return Loc.Upper(date) + "  ·  " + Loc.F("Daily #{0}", day);
+            return Loc.Upper(DailyChallenge.DateOf(day).ToString("d MMMM", Loc.Culture));
         }
 
-        private static string StreakLine()
+        // The streak count over the last seven days as balls: filled when played, blue when a
+        // freeze covered it, an outline when missed, and today's ring in the daily color.
+        private void AddStreakRow(Transform panel, float y)
         {
-            return Loc.F("Streak: {0}", DailyStreak.CurrentStreak) + "    " + Loc.F("Best: {0}", DailyStreak.BestStreak)
-                + "\n" + Loc.F("Streak freezes: {0}", DailyStreak.Freezes);
+            TextMeshProUGUI count = CreateText(panel, Loc.Caps("Streak") + "  " + DailyStreak.CurrentStreak, 44f, Color.white, false);
+            Place(count.rectTransform, new Vector2(0f, y + 95f), new Vector2(780f, 60f));
+
+            int today = DailyChallenge.Today;
+            string[] dayNames = Loc.Culture.DateTimeFormat.AbbreviatedDayNames;
+            float left = -(StreakDays - 1) * BallSpacing * 0.5f;
+            for (int i = 0; i < StreakDays; i++)
+            {
+                int day = today - (StreakDays - 1) + i;
+                DayMark mark = DailyStreak.MarkOf(day);
+                bool isToday = day == today;
+
+                Color color = mark == DayMark.Played ? DailyAccent
+                    : mark == DayMark.Frozen ? FrozenBall
+                    : isToday ? DailyAccent : EmptyBall;
+                Image ball = CreateBall(panel, mark == DayMark.None ? RingSprite : BallSprite, color);
+                float x = left + i * BallSpacing;
+                Place(ball.rectTransform, new Vector2(x, y), new Vector2(BallSize, BallSize));
+
+                string name = dayNames[(int)DailyChallenge.DateOf(day).DayOfWeek];
+                TextMeshProUGUI label = CreateText(panel, Loc.Upper(name), 26f, isToday ? DailyAccent : MutedText, true);
+                label.fontStyle = FontStyles.Bold;
+                Place(label.rectTransform, new Vector2(x, y - 72f), new Vector2(BallSpacing, 40f));
+            }
+        }
+
+        private static Image CreateBall(Transform parent, Sprite sprite, Color color)
+        {
+            GameObject go = new GameObject("Ball", typeof(RectTransform), typeof(Image));
+            go.transform.SetParent(parent, false);
+            Image image = go.GetComponent<Image>();
+            image.sprite = sprite;
+            image.color = color;
+            image.raycastTarget = false;
+            return image;
+        }
+
+        // Drawn once in white and tinted per ball, so no art files are needed.
+        private static Sprite BallSprite => _ballSprite != null ? _ballSprite : (_ballSprite = DrawBall(false));
+        private static Sprite RingSprite => _ringSprite != null ? _ringSprite : (_ringSprite = DrawBall(true));
+
+        private static Sprite DrawBall(bool ring)
+        {
+            Texture2D texture = new Texture2D(BallTexture, BallTexture, TextureFormat.RGBA32, false);
+            texture.wrapMode = TextureWrapMode.Clamp;
+            float radius = BallTexture * 0.5f - 1f;
+            Vector2 center = new Vector2(BallTexture * 0.5f, BallTexture * 0.5f);
+            Vector2 light = center + new Vector2(-0.35f, 0.35f) * radius; // upper left highlight
+            Color[] pixels = new Color[BallTexture * BallTexture];
+            for (int y = 0; y < BallTexture; y++)
+            {
+                for (int x = 0; x < BallTexture; x++)
+                {
+                    Vector2 p = new Vector2(x + 0.5f, y + 0.5f);
+                    float d = Vector2.Distance(p, center);
+                    float edge = Mathf.Clamp01(radius - d);
+                    float alpha;
+                    float shade = 1f;
+                    if (ring) alpha = edge * Mathf.Clamp01(d - (radius - RingWidth) + 1f);
+                    else
+                    {
+                        alpha = edge;
+                        float toLight = Vector2.Distance(p, light) / (radius * 1.6f);
+                        shade = Mathf.Lerp(1f, 0.62f, Mathf.Clamp01(toLight));
+                    }
+                    pixels[y * BallTexture + x] = new Color(shade, shade, shade, alpha);
+                }
+            }
+            texture.SetPixels(pixels);
+            texture.Apply();
+            return Sprite.Create(texture, new Rect(0f, 0f, BallTexture, BallTexture), new Vector2(0.5f, 0.5f), BallTexture);
         }
 
         // --- building blocks ---
 
-        private RectTransform OpenPanel()
+        private RectTransform OpenPanel(Vector2 size)
         {
             CloseScreen();
             _screen = new GameObject("DailyScreen", typeof(RectTransform), typeof(Image));
@@ -233,7 +304,7 @@ namespace Daily
             image.color = PanelBlue;
             if (_frame != null) Scene.PanelStyle.ApplyFrame(image, _frame);
             RectTransform panel = (RectTransform)go.transform;
-            Place(panel, Vector2.zero, PanelSize);
+            Place(panel, Vector2.zero, size);
             Scene.PanelPop.Add(go, Scene.PanelPop.Style.Pop);
             return panel;
         }
@@ -258,7 +329,7 @@ namespace Daily
         }
 
         // Same glowing button as the main menu's Play.
-        private void AddButton(Transform panel, string label, Action onClick, float y)
+        private Button AddButton(Transform panel, string label, Action onClick, float y)
         {
             Button button;
             if (_buttonTemplate != null)
@@ -291,6 +362,7 @@ namespace Daily
             }
             button.onClick.AddListener(() => onClick());
             Place((RectTransform)button.transform, new Vector2(0f, y), ButtonSize);
+            return button;
         }
 
         private void AddBackLink(Transform panel, string label, Action onClick, float y)

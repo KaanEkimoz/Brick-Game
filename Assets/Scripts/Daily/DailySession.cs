@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Text;
 using Board;
 using Extras;
@@ -86,14 +87,14 @@ namespace Daily
         /// <summary>True when today's run would count.</summary>
         public static bool TodayIsOpen => !DailyStreak.HasPlayed(DailyChallenge.Today);
 
-        /// <summary>Starts today's challenge: the first run of the day counts, later ones are practice.</summary>
+        /// <summary>Starts today's challenge. Each day can be played once.</summary>
         public void Begin()
         {
-            if (LevelSession.Instance == null) return;
+            if (LevelSession.Instance == null || !TodayIsOpen) return;
 
             _running = false;
             _day = DailyChallenge.Today;
-            _official = !DailyStreak.HasPlayed(_day);
+            _official = true;
             GameMode.IsDaily = true;
             PieceBag.SetSeed(DailyChallenge.Seed(_day));
             if (_official) DailyStreak.MarkStarted(_day);
@@ -127,7 +128,7 @@ namespace Daily
             };
         }
 
-        private void Finish(bool announce)
+        private void Finish()
         {
             if (!_running) return;
             _running = false;
@@ -135,22 +136,27 @@ namespace Daily
             DailyResult result = BuildResult();
             if (_official) result.FreezesUsed = DailyStreak.Record(result);
             _official = false;
-            if (announce) OnRunFinished?.Invoke(result);
+            OnRunFinished?.Invoke(result);
         }
 
         private void HandleGameOver()
         {
-            Finish(true);
+            Finish();
         }
 
         // The pause menu's Restart clears the board first, while the score is still there.
-        // The official run ends with that score and the new one is practice.
+        // The day ends with that score; the piece the restart spawns is stopped a frame later.
         private void HandleBoardCleared()
         {
             if (_starting || !_running) return;
-            Finish(false);
-            ResetCounters();
-            _running = true;
+            Finish();
+            StartCoroutine(StopRestartedRun());
+        }
+
+        private IEnumerator StopRestartedRun()
+        {
+            yield return null;
+            if (PiecesController.Instance != null) PiecesController.Instance.EndRound();
         }
 
         private void HandleLinesCleared(int count)
