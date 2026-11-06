@@ -252,6 +252,9 @@ namespace Ekimoz.Splash
 
             TMP_FontAsset font = Resources.Load<TMP_FontAsset>(FontPath);
             _word = CreateText("Word", "EKIMOZ", font, 120f, WordColor, new Vector2(0f, -115f), 18f);
+            // Each frame sets every letter's own alpha; starting clear keeps TextMeshPro's first,
+            // untouched mesh from flashing the whole word.
+            _word.alpha = 0f;
             _sub = CreateText("Sub", "GAMES", font, 46f, SubColor, new Vector2(0f, -215f), SubSpacingFrom);
         }
 
