@@ -16,7 +16,7 @@ PlayerSettings:
   productName: Brick Game
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
-  m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
+  m_SplashScreenBackgroundColor: {r: 0.03, g: 0.035, b: 0.08, a: 1}
   m_ShowUnitySplashScreen: 0
   m_ShowUnitySplashLogo: 0
   m_SplashScreenOverlayOpacity: 1
@@ -269,8 +269,8 @@ PlayerSettings:
   useCustomProguardFile: 1
   AndroidTargetArchitectures: 3
   AndroidAllowedArchitectures: -1
-  AndroidSplashScreenScale: 1
-  androidSplashScreen: {fileID: 2800000, guid: b2b8c7c5131269d42a359347e17a4c5f, type: 3}
+  AndroidSplashScreenScale: 2
+  androidSplashScreen: {fileID: 2800000, guid: 1e66e82474ada4e279125b66e29fe054, type: 3}
   AndroidKeystoreName: /Users/kaanusta/Downloads/Game-Development/Anahtarlar/user.keystore
   AndroidKeyaliasName: ekimozgames
   AndroidEnableArmv9SecurityFeatures: 1
